@@ -28,17 +28,15 @@ class Mug(commands.Cog):
                     "a Dwarf in a penguin costume", "a sleep-deprived college Student", 
                     "Elon Musk!!", "Bill Clinton!!", "Vladamir Putin!!", "a scruffy Puppy with a wallet in it's mouth",
                     "a hyper Ballerina", "a boy dressed as a Stormtrooper", "a girl dressed as Princess Leia",
-                    "Bigfoot!!", "a baby in a stroller"]
+                    "Bigfoot!!", "a baby in a stroller", "Steve Job's corpse", "Rosanne Barr"]
         if target is None or target == author:  # No target or self-mugging
             success = random.choice([True, True, False])
             if success:
                 reward = random.randint(1, 25)
                 await self.update_balance(author, reward)
-                await self.update_wins_losses(author, success=True)
                 await ctx.send(f"**{author.display_name}** successfully mugged *{random.choice(strangers)}* and made off with ${reward}!")
             else:
-                await self.update_wins_losses(author, success=False)
-                await ctx.send(f"**{author.display_name}** looked around for someone to mug but found nothing...")
+                await ctx.send(f"**{author.display_name}** looked around for someone to mug but found no one nearby...")
         else:
             # Separate cooldown for mugging another user
             await self.handle_mug_against_user(ctx, author, target)
@@ -88,16 +86,21 @@ class Mug(commands.Cog):
 
         await ctx.send(f"**{member.display_name}**\nBalance: ${balance}\nWin/Loss Ratio: {ratio}")
 
-    # Admin command to reset a user's stats to 0 (admins can use this)
+    # Admin command to reset a user's info (admins can use this)
     @commands.command()
     @commands.has_permissions(administrator=True)  # Admins can use this command
-    async def mugclear(self, ctx, member: discord.Member):
-        """Reset a user's stats (balance, wins, losses) to 0."""
-        await self.config.user(member).balance.set(0)
+    async def mugclearbal(self, ctx, member: discord.Member):
+        """Reset a user's stats balance to 0."""
+        await self.config.user(member).balance.set(0)     
+        await ctx.send(f"**{member.display_name}**'s Balance have been reset to 0.")
+
+    @commands.command()
+    @commands.has_permissions(administrator=True)  # Admins can use this command
+    async def mugclearrat(self, ctx, member: discord.Member):
+        '''Reset users Wins and Losses to 0'''
         await self.config.user(member).wins.set(0)
         await self.config.user(member).losses.set(0)
-        
-        await ctx.send(f"**{member.display_name}**'s stats have been reset to 0.")
+        await ctx.send(f"**{member.display_name}**'s Wins/Losses have been reset to 0.")
 
     # Helper function to update balance
     async def update_balance(self, user, amount: int):
