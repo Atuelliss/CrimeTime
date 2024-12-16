@@ -28,7 +28,8 @@ class Mug(commands.Cog):
                     "a Dwarf in a penguin costume", "a sleep-deprived college Student", 
                     "Elon Musk!!", "Bill Clinton!!", "Vladamir Putin!!", "a scruffy Puppy with a wallet in it's mouth",
                     "a hyper Ballerina", "a boy dressed as a Stormtrooper", "a girl dressed as Princess Leia",
-                    "Bigfoot!!", "a baby in a stroller", "Steve Job's corpse", "Rosanne Barr"]
+                    "Bigfoot!!", "a baby in a stroller", "Steve Job's corpse", "Rosanne Barr", "another mugger bad the job",
+                    "a man in a transparent banana costume", "Borat!!", "a group of drunk frat boys", "a poor girl doing the morning walk of shame"]
         if target is None or target == author:  # No target or self-mugging
             success = random.choice([True, True, False])
             if success:
