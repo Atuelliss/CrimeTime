@@ -3,6 +3,7 @@ import logging
 import discord
 import random
 
+from redbot.core.utils.chat_formatting import humanize_timedelta
 from redbot.core import commands
 from redbot.core.bot import Red
 from redbot.core.data_manager import cog_data_path
@@ -25,7 +26,7 @@ class CrimeTime(commands.Cog):
         self.db: DB = DB()
         # Cooldowns separated by target or not target
         self.pvpcooldown = commands.CooldownMapping.from_cooldown(1, 15, commands.BucketType.user)
-        self.pvecooldown = commands.CooldownMapping.from_cooldown(1, 3600, commands.BucketType.user)
+        self.pvecooldown = commands.CooldownMapping.from_cooldown(1, 60, commands.BucketType.user)
 
         # States
         self._saving = False
@@ -133,7 +134,8 @@ class CrimeTime(commands.Cog):
         if target is None:
             secondsleft = pvebucket.update_rate_limit()
             if secondsleft:
-                return await ctx.send(f"You must wait {secondsleft} before you can reuse this command.")
+                wait_time = humanize_timedelta(seconds=int(secondsleft))
+                return await ctx.send(f"You must wait {wait_time} before you can reuse this command.")
             # If we are here, no timer and user can mug an npc.
             if difficulty_choice == stranger1:
                 strangerchoice = random.choice(difficulty_choice)
@@ -163,7 +165,8 @@ class CrimeTime(commands.Cog):
             # If we are here, user has targeted another player.
             secondsleft = pvpbucket.update_rate_limit()
             if secondsleft:
-                return await ctx.send(f"You must wait {secondsleft} until you can target another Player!")
+                wait_time = humanize_timedelta(seconds=int(secondsleft))
+                return await ctx.send(f"You must wait {wait_time} until you can target another Player!")
             
             # If we here, user targeted a player and now we check allowed status.
             target_user = guildsettings.get_user(target)
