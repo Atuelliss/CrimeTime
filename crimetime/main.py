@@ -124,7 +124,7 @@ class CrimeTime(commands.Cog):
         rating_easy    = 0.2
         rating_medium  = 0.5
         rating_hard    = 0.7
-        strangerchoice = random.choice(stranger1, stranger2, stranger3)
+        strangerchoice = random.choice([stranger1, stranger2, stranger3])
         guildsettings = self.db.get_conf(ctx.guild)
         mugger_user = guildsettings.get_user(ctx.author)
         pve_attack = random.uniform(0, 1) 
