@@ -25,7 +25,7 @@ class CrimeTime(commands.Cog):
         self.bot: Red = bot
         self.db: DB = DB()
         # Cooldowns separated by target or not target
-        self.pvpcooldown = commands.CooldownMapping.from_cooldown(1, 15, commands.BucketType.user)
+        self.pvpcooldown = commands.CooldownMapping.from_cooldown(1, 30, commands.BucketType.user)
         self.pvecooldown = commands.CooldownMapping.from_cooldown(1, 60, commands.BucketType.user)
 
         # States
