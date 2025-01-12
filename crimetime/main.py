@@ -124,7 +124,7 @@ class CrimeTime(commands.Cog):
         rating_easy    = 0.2
         rating_medium  = 0.5
         rating_hard    = 0.7
-        strangerchoice = random.choice([stranger1, stranger2, stranger3])
+        difficulty_choice = random.choice([stranger1, stranger2, stranger3])
         guildsettings = self.db.get_conf(ctx.guild)
         mugger_user = guildsettings.get_user(ctx.author)
         pve_attack = random.uniform(0, 1) 
@@ -135,21 +135,24 @@ class CrimeTime(commands.Cog):
             if secondsleft:
                 return await ctx.send(f"You must wait {secondsleft} before you can reuse this command.")
             # If we are here, no timer and user can mug an npc.
-            if strangerchoice == stranger1:
+            if difficulty_choice == stranger1:
+                strangerchoice = random.choice(difficulty_choice)
                 if pve_attack > rating_easy:
                     reward = random.randint(1, 25)
                     mugger_user.balance += reward
                     await ctx.send(f"**{author.display_name}** successfully mugged *{strangerchoice}* and made off with ${reward}!")
                 else:
                     await ctx.send(f"**{author.display_name}** looked around for someone to mug but found no one nearby...")
-            elif strangerchoice == stranger2:
+            elif difficulty_choice == stranger2:
+                strangerchoice = random.choice(difficulty_choice)
                 if pve_attack > rating_medium:
                     reward = random.randint(26, 50)
                     mugger_user.balance += reward
                     await ctx.send(f"**{author.display_name}** successfully mugged *{strangerchoice}* and made off with ${reward}!")
                 else:
                     await ctx.send(f"**{author.display_name}** looked around for someone to mug but found no one nearby...")
-            elif strangerchoice == stranger3:
+            elif difficulty_choice == stranger3:
+                strangerchoice = random.choice(difficulty_choice)
                 if pve_attack > rating_hard:
                     reward = random.randint(51, 75)
                     mugger_user.balance += reward
