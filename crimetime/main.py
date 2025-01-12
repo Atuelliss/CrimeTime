@@ -183,16 +183,16 @@ class CrimeTime(commands.Cog):
                 mug_amount = min(int(target_user.balance * 0.03), 1000)
                 mugger_user.balance += mug_amount
                 target_user.balance -= mug_amount
-                await ctx.send(f"You attack {target} with everything you've got!\n You have overwhelmed them this time!\nYou WON!!")
+                await ctx.send(f"You attack {target} with everything you've got!\nYou have overwhelmed them this time and made off with ${mug_amount}!\nYou WON!!")
                 #+1 pwin to attacker, +1 ploss to target
                 mugger_user.p_wins += 1
                 target_user.p_losses += 1
             elif pvp_attack < pvp_defend:
-                await ctx.send(f"You attack {target} and find them well prepared!\n You have failed this time!")
+                await ctx.send(f"You attack {target} and find them well prepared!\nYou have failed this time!")
                 #+1 ploss to attacker, +1 pwin to target
                 mugger_user.p_losses += 1
                 target_user.p_wins += 1
             elif pvp_attack == pvp_defend:
-                await ctx.send(f"You attack {target} and find that you are equally matched!\n You flee before you suffer any losses.")
+                await ctx.send(f"You attack {target} and find that you are equally matched!\nYou flee before you suffer any losses.")
                 #Make no changes from here.
         self.save()
