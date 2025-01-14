@@ -206,14 +206,14 @@ class CrimeTime(commands.Cog):
     @commands.admin_or_permissions(manage_guild=True)  # Only Admins can use this command    
     async def ctclear(self, ctx: commands.Context):
         """Configure CrimeTime User Data"""
-        
+
     @ctclear.command()
-    async def bal(self, ctx: commands.Context, target: discord.Member):
+    async def balance(self, ctx: commands.Context, target: discord.Member):
         """Reset a User's Cash Balance to 0."""
         guildsettings = self.db.get_conf(ctx.guild)
         target_user = guildsettings.get_user(target)
         target_user.balance = 0
-        await ctx.send(f"**{target.display_name}**'s Balance have been reset to 0.")
+        await ctx.send(f"**{target.display_name}**'s Balance has been reset to 0.")
         self.save()
  
     @ctclear.command()
