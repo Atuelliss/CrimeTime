@@ -88,6 +88,8 @@ class CrimeTime(commands.Cog):
             p_bonus = 0.2
         elif p_ratio >= 1:
             p_bonus = 0.1
+        elif p_ratio == 0:
+            p_bonus = 0.0
         elif p_ratio >= -1:
             p_bonus = -0.1
         elif -1 > p_ratio >= -2:
@@ -205,7 +207,7 @@ class CrimeTime(commands.Cog):
 
     @ctset.command()
     async def clearbal(self, ctx: commands.Context, target: discord.Member):
-        """Reset a user's cash balance to 0."""
+        """Reset a User's Cash Balance to 0."""
         guildsettings = self.db.get_conf(ctx.guild)
         target_user = guildsettings.get_user(target)
         target_user.balance = 0
@@ -213,8 +215,20 @@ class CrimeTime(commands.Cog):
         self.save()
     
     @ctset.command()
+    async def setbal(self, ctx: commands.Context, target: discord.Member, amount: int):
+        """Reset a User's Cash Balance to specified amount."""
+        guildsettings = self.db.get_conf(ctx.guild)
+        target_user = guildsettings.get_user(target)
+        if amount < 0:
+            await ctx.send("You cannot set a negative balance!")
+            return
+        target_user.balance = amount
+        await ctx.send(f"**{target.display_name}**'s Balance have been reset to {amount}.")
+        self.save()
+
+    @ctset.command()
     async def clearstat(self, ctx: commands.Context, target: discord.Member):
-        '''Reset users P-Wins and Losses to 0'''
+        '''Reset a User's PvP Wins and Losses to 0.'''
         guildsettings = self.db.get_conf(ctx.guild)
         target_user = guildsettings.get_user(target)
         target_user.p_wins = 0
