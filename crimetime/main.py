@@ -254,7 +254,7 @@ class CrimeTime(commands.Cog):
         """Configure CrimeTime User Data"""
 
     @ctset.command()
-    async def bal(self, ctx: commands.Context, target: discord.Member, amount: int):
+    async def balance(self, ctx: commands.Context, target: discord.Member, amount: int):
         """Set a User's Cash Balance to specified amount."""
         guildsettings = self.db.get_conf(ctx.guild)
         target_user = guildsettings.get_user(target)
