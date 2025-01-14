@@ -204,7 +204,7 @@ class CrimeTime(commands.Cog):
     # This group allows the Administrator to CLEAR amounts, not set them.
     @commands.group()
     @commands.admin_or_permissions(manage_guild=True)  # Only Admins can use this command    
-    async def ctclear(self, ctx: commands.Context):
+    async def ctclear(self, ctx: commands.Context, target: discord.Member):
         """Configure CrimeTime User Data"""
 
     @ctclear.command()
