@@ -232,7 +232,7 @@ class CrimeTime(commands.Cog):
         self.save()
  
     @ctclear.command() # Clears a User's PvP wins and losses.
-    async def pstat(self, ctx: commands.Context, target: discord.Member):
+    async def pstats(self, ctx: commands.Context, target: discord.Member):
         '''Reset a User's PvP Wins and Losses to 0.'''
         guildsettings = self.db.get_conf(ctx.guild)
         target_user = guildsettings.get_user(target)
@@ -242,7 +242,7 @@ class CrimeTime(commands.Cog):
         self.save()
     
     @ctclear.command() # Clear's a Users Rob wins and losses.
-    async def rstat(self, ctx: commands.Context, target: discord.Member):
+    async def rstats(self, ctx: commands.Context, target: discord.Member):
         '''Reset a User's Robbery Wins and Losses to 0.'''
         guildsettings = self.db.get_conf(ctx.guild)
         target_user = guildsettings.get_user(target)
@@ -252,7 +252,7 @@ class CrimeTime(commands.Cog):
         self.save()
     
     @ctclear.command() # Clear's a Users Heist wins and losses.
-    async def rstat(self, ctx: commands.Context, target: discord.Member):
+    async def hstats(self, ctx: commands.Context, target: discord.Member):
         '''Reset a User's Heist Wins and Losses to 0.'''
         guildsettings = self.db.get_conf(ctx.guild)
         target_user = guildsettings.get_user(target)
