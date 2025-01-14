@@ -15,7 +15,7 @@ log = logging.getLogger("red.crimetime")
 
 class CrimeTime(commands.Cog):
     """
-    A mugging mini-game cog for Red-DiscordBot.
+    A crime mini-game cog for Red-DiscordBot.
     """
     __author__ = "Jayar"
     __version__ = "0.0.1"
@@ -198,19 +198,22 @@ class CrimeTime(commands.Cog):
         self.save()
 
     ##########  Admin Commands  ##########
-    @commands.command()
-    @commands.admin_or_permissions(manage_guild=True)  # Admins can use this command
-    async def ctclearbal(self, ctx: commands.Context, target: discord.Member):
-        """Reset a user's stats balance to 0."""
+    @commands.group()
+    @commands.admin_or_permissions(manage_guild=True)  # Only Admins can use this command    
+    async def ctset(self, ctx: commands.Context):
+        """Configure CrimeTime User Data"""
+
+    @ctset.command()
+    async def clearbal(self, ctx: commands.Context, target: discord.Member):
+        """Reset a user's cash balance to 0."""
         guildsettings = self.db.get_conf(ctx.guild)
         target_user = guildsettings.get_user(target)
         target_user.balance = 0
         await ctx.send(f"**{target.display_name}**'s Balance have been reset to 0.")
         self.save()
-
-    @commands.command()
-    @commands.admin_or_permissions(manage_guild=True)  # Admins can use this command
-    async def ctclearstat(self, ctx: commands.Context, target: discord.Member):
+    
+    @ctset.command()
+    async def clearstat(self, ctx: commands.Context, target: discord.Member):
         '''Reset users P-Wins and Losses to 0'''
         guildsettings = self.db.get_conf(ctx.guild)
         target_user = guildsettings.get_user(target)
