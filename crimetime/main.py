@@ -17,7 +17,7 @@ class CrimeTime(commands.Cog):
     """
     A mugging mini-game cog for Red-DiscordBot.
     """
-    __author__ = "author name"
+    __author__ = "Jayar"
     __version__ = "0.0.1"
 
     def __init__(self, bot: Red):
@@ -67,7 +67,7 @@ class CrimeTime(commands.Cog):
     # Check balance and stats
     @commands.command()
     async def mugcheck(self, ctx: commands.Context, member: discord.Member = None):
-        """Checks the Balance, Wins/Losses and Ratio of a User."""
+        """Checks the Balance, Wins/Losses, and Ratio of a User."""
         member  = member or ctx.author
         guildsettings = self.db.get_conf(ctx.guild)
         user = guildsettings.get_user(member)
@@ -195,4 +195,26 @@ class CrimeTime(commands.Cog):
             elif pvp_attack == pvp_defend:
                 await ctx.send(f"You attack {target} and find that you are equally matched!\nYou flee before you suffer any losses.")
                 #Make no changes from here.
+        self.save()
+
+    ##########  Admin Commands  ##########
+    @commands.command()
+    @commands.admin_or_permissions(manage_guild=True)  # Admins can use this command
+    async def ctclearbal(self, ctx: commands.Context, target: discord.Member):
+        """Reset a user's stats balance to 0."""
+        guildsettings = self.db.get_conf(ctx.guild)
+        target_user = guildsettings.get_user(target)
+        target_user.balance = 0
+        await ctx.send(f"**{target.display_name}**'s Balance have been reset to 0.")
+        self.save()
+
+    @commands.command()
+    @commands.admin_or_permissions(manage_guild=True)  # Admins can use this command
+    async def ctclearstat(self, ctx: commands.Context, target: discord.Member):
+        '''Reset users P-Wins and Losses to 0'''
+        guildsettings = self.db.get_conf(ctx.guild)
+        target_user = guildsettings.get_user(target)
+        target_user.p_wins = 0
+        target_user.p_losses = 0
+        await ctx.send(f"**{target.display_name}**'s P-Wins/Losses have been reset to 0.")
         self.save()

@@ -4,12 +4,14 @@ from . import Base
 
 
 class User(Base):
-    balance:  int = 0
-    p_wins:   int = 0
-    p_losses: int = 0
-    p_bonus:  float = 0
-    r_wins:   int = 0
-    r_losses: int = 0
+    balance:  int = 0   #Cash Balance
+    p_wins:   int = 0   #Player Mugging Wins
+    p_losses: int = 0   #Player Mugging Losses
+    p_bonus:  float = 0 #Player Bonus from Win/Loss Ratio
+    r_wins:   int = 0   #Player Robbery Wins - Upcoming
+    r_losses: int = 0   #Player Robbery Losses - Upcoming
+    h_wins:   int = 0   #Player Heist Wins - Upcoming
+    h_losses: int = 0   #Player Heist Losses - Upcoming
 
     @property
     def p_ratio(self) -> float:
