@@ -199,24 +199,52 @@ class CrimeTime(commands.Cog):
                 #Make no changes from here.
         self.save()
 
-    ##########  Admin Commands  ##########
+##########  Admin Commands  ##########
+
+    # This group allows the Administrator to CLEAR amounts, not set them.
     @commands.group()
     @commands.admin_or_permissions(manage_guild=True)  # Only Admins can use this command    
-    async def ctset(self, ctx: commands.Context):
+    async def ctclear(self, ctx: commands.Context):
         """Configure CrimeTime User Data"""
 
-    @ctset.command()
-    async def clearbal(self, ctx: commands.Context, target: discord.Member):
+    @ctclear.command()
+    async def bal(self, ctx: commands.Context, target: discord.Member):
         """Reset a User's Cash Balance to 0."""
         guildsettings = self.db.get_conf(ctx.guild)
         target_user = guildsettings.get_user(target)
         target_user.balance = 0
         await ctx.send(f"**{target.display_name}**'s Balance have been reset to 0.")
         self.save()
+ 
+    @ctclear.command()
+    async def pstat(self, ctx: commands.Context, target: discord.Member):
+        '''Reset a User's PvP Wins and Losses to 0.'''
+        guildsettings = self.db.get_conf(ctx.guild)
+        target_user = guildsettings.get_user(target)
+        target_user.p_wins = 0
+        target_user.p_losses = 0
+        await ctx.send(f"**{target.display_name}**'s P-Wins/Losses have been reset to 0.")
+        self.save()
     
+    @ctclear.command()
+    async def rstat(self, ctx: commands.Context, target: discord.Member):
+        '''Reset a User's PvP Wins and Losses to 0.'''
+        guildsettings = self.db.get_conf(ctx.guild)
+        target_user = guildsettings.get_user(target)
+        target_user.r_wins = 0
+        target_user.r_losses = 0
+        await ctx.send(f"**{target.display_name}**'s P-Wins/Losses have been reset to 0.")
+        self.save()
+
+    # This group allows the Administrator to SET the users stats to specified amounts.
+    @commands.group()
+    @commands.admin_or_permissions(manage_guild=True)  # Only Admins can use this command    
+    async def ctset(self, ctx: commands.Context):
+        """Configure CrimeTime User Data"""
+
     @ctset.command()
-    async def setbal(self, ctx: commands.Context, target: discord.Member, amount: int):
-        """Reset a User's Cash Balance to specified amount."""
+    async def bal(self, ctx: commands.Context, target: discord.Member, amount: int):
+        """Set a User's Cash Balance to specified amount."""
         guildsettings = self.db.get_conf(ctx.guild)
         target_user = guildsettings.get_user(target)
         if amount < 0:
@@ -225,13 +253,27 @@ class CrimeTime(commands.Cog):
         target_user.balance = amount
         await ctx.send(f"**{target.display_name}**'s Balance have been reset to {amount}.")
         self.save()
-
+    
     @ctset.command()
-    async def clearstat(self, ctx: commands.Context, target: discord.Member):
-        '''Reset a User's PvP Wins and Losses to 0.'''
+    async def pwin(self, ctx: commands.Context, target: discord.Member, amount: int):
+        """Set a User's PvP Wins to specified amount."""
         guildsettings = self.db.get_conf(ctx.guild)
         target_user = guildsettings.get_user(target)
-        target_user.p_wins = 0
-        target_user.p_losses = 0
-        await ctx.send(f"**{target.display_name}**'s P-Wins/Losses have been reset to 0.")
+        if amount < 0:
+            await ctx.send("You cannot set a negative amount!")
+            return
+        target_user.p_wins = amount
+        await ctx.send(f"**{target.display_name}**'s Balance have been reset to {amount}.")
+        self.save()
+    
+    @ctset.command()
+    async def ploss(self, ctx: commands.Context, target: discord.Member, amount: int):
+        """Set a User's PvP Losses to specified amount."""
+        guildsettings = self.db.get_conf(ctx.guild)
+        target_user = guildsettings.get_user(target)
+        if amount < 0:
+            await ctx.send("You cannot set a negative amount!")
+            return
+        target_user.p_losses = amount
+        await ctx.send(f"**{target.display_name}**'s Balance have been reset to {amount}.")
         self.save()
