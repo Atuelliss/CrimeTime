@@ -207,18 +207,22 @@ class CrimeTime(commands.Cog):
     async def ctclear(self, ctx: commands.Context):
         """Configure CrimeTime User Data"""
 
-    @ctclear.command()
+    @ctclear.command() # Clears a User's total data file.
     async def all(self, ctx: commands.Context, target: discord.Member):
-        '''Reset a User's PvP Wins and Losses to 0.'''
+        '''Reset a User's total Stat pool to 0.'''
         guildsettings = self.db.get_conf(ctx.guild)
         target_user = guildsettings.get_user(target)
         target_user.balance = 0
         target_user.p_wins = 0
         target_user.p_losses = 0
+        target_user.r_wins = 0
+        target_user.r_losses = 0
+        target_user.h_wins = 0
+        target_user.h_losses = 0
         await ctx.send(f"**{target.display_name}**'s complete record has been reset to 0.")
         self.save()
 
-    @ctclear.command()
+    @ctclear.command() # Clears a User's cash balance
     async def balance(self, ctx: commands.Context, target: discord.Member):
         """Reset a User's Cash Balance to 0."""
         guildsettings = self.db.get_conf(ctx.guild)
@@ -227,24 +231,34 @@ class CrimeTime(commands.Cog):
         await ctx.send(f"**{target.display_name}**'s Balance has been reset to 0.")
         self.save()
  
-    @ctclear.command()
+    @ctclear.command() # Clears a User's PvP wins and losses.
     async def pstat(self, ctx: commands.Context, target: discord.Member):
         '''Reset a User's PvP Wins and Losses to 0.'''
         guildsettings = self.db.get_conf(ctx.guild)
         target_user = guildsettings.get_user(target)
         target_user.p_wins = 0
         target_user.p_losses = 0
-        await ctx.send(f"**{target.display_name}**'s P-Wins/Losses have been reset to 0.")
+        await ctx.send(f"**{target.display_name}**'s PvP Wins/Losses have been reset to 0.")
         self.save()
     
-    @ctclear.command()
+    @ctclear.command() # Clear's a Users Rob wins and losses.
     async def rstat(self, ctx: commands.Context, target: discord.Member):
-        '''Reset a User's PvP Wins and Losses to 0.'''
+        '''Reset a User's Robbery Wins and Losses to 0.'''
         guildsettings = self.db.get_conf(ctx.guild)
         target_user = guildsettings.get_user(target)
         target_user.r_wins = 0
         target_user.r_losses = 0
-        await ctx.send(f"**{target.display_name}**'s P-Wins/Losses have been reset to 0.")
+        await ctx.send(f"**{target.display_name}**'s Robbery Wins/Losses have been reset to 0.")
+        self.save()
+    
+    @ctclear.command() # Clear's a Users Heist wins and losses.
+    async def rstat(self, ctx: commands.Context, target: discord.Member):
+        '''Reset a User's Heist Wins and Losses to 0.'''
+        guildsettings = self.db.get_conf(ctx.guild)
+        target_user = guildsettings.get_user(target)
+        target_user.h_wins = 0
+        target_user.h_losses = 0
+        await ctx.send(f"**{target.display_name}**'s Heist Wins/Losses have been reset to 0.")
         self.save()
 
     # This group allows the Administrator to SET the users stats to specified amounts.
@@ -253,7 +267,7 @@ class CrimeTime(commands.Cog):
     async def ctset(self, ctx: commands.Context):
         """Configure CrimeTime User Data"""
 
-    @ctset.command()
+    @ctset.command() # Set a User's Cash Balance to a specific number.
     async def balance(self, ctx: commands.Context, target: discord.Member, amount: int):
         """Set a User's Cash Balance to specified amount."""
         guildsettings = self.db.get_conf(ctx.guild)
@@ -262,10 +276,10 @@ class CrimeTime(commands.Cog):
             await ctx.send("You cannot set a negative balance!")
             return
         target_user.balance = amount
-        await ctx.send(f"**{target.display_name}**'s Balance have been reset to {amount}.")
+        await ctx.send(f"**{target.display_name}**'s Balance have been set to {amount}.")
         self.save()
     
-    @ctset.command()
+    @ctset.command() # Set a User's PvP wins.
     async def pwin(self, ctx: commands.Context, target: discord.Member, amount: int):
         """Set a User's PvP Wins to specified amount."""
         guildsettings = self.db.get_conf(ctx.guild)
@@ -274,10 +288,10 @@ class CrimeTime(commands.Cog):
             await ctx.send("You cannot set a negative amount!")
             return
         target_user.p_wins = amount
-        await ctx.send(f"**{target.display_name}**'s Balance have been reset to {amount}.")
+        await ctx.send(f"**{target.display_name}**'s Balance have been set to {amount}.")
         self.save()
     
-    @ctset.command()
+    @ctset.command() # Set a User's PvP losses.
     async def ploss(self, ctx: commands.Context, target: discord.Member, amount: int):
         """Set a User's PvP Losses to specified amount."""
         guildsettings = self.db.get_conf(ctx.guild)
@@ -286,5 +300,53 @@ class CrimeTime(commands.Cog):
             await ctx.send("You cannot set a negative amount!")
             return
         target_user.p_losses = amount
-        await ctx.send(f"**{target.display_name}**'s Balance have been reset to {amount}.")
+        await ctx.send(f"**{target.display_name}**'s Balance have been set to {amount}.")
+        self.save()
+
+    @ctset.command() # Set a User's Rob wins.
+    async def rwin(self, ctx: commands.Context, target: discord.Member, amount: int):
+        """Set a User's Robbery Wins to specified amount."""
+        guildsettings = self.db.get_conf(ctx.guild)
+        target_user = guildsettings.get_user(target)
+        if amount < 0:
+            await ctx.send("You cannot set a negative amount!")
+            return
+        target_user.r_wins = amount
+        await ctx.send(f"**{target.display_name}**'s Robbery wins have been set to {amount}.")
+        self.save()
+    
+    @ctset.command() # Set a User's Rob losses.
+    async def rloss(self, ctx: commands.Context, target: discord.Member, amount: int):
+        """Set a User's Robbery loss to specified amount."""
+        guildsettings = self.db.get_conf(ctx.guild)
+        target_user = guildsettings.get_user(target)
+        if amount < 0:
+            await ctx.send("You cannot set a negative amount!")
+            return
+        target_user.r_losses = amount
+        await ctx.send(f"**{target.display_name}**'s Robbery losses have been set to {amount}.")
+        self.save()
+
+    @ctset.command() # Set a User's Heist wins.
+    async def hwin(self, ctx: commands.Context, target: discord.Member, amount: int):
+        """Set a User's Heist Wins to specified amount."""
+        guildsettings = self.db.get_conf(ctx.guild)
+        target_user = guildsettings.get_user(target)
+        if amount < 0:
+            await ctx.send("You cannot set a negative amount!")
+            return
+        target_user.h_wins = amount
+        await ctx.send(f"**{target.display_name}**'s Heist wins have been set to {amount}.")
+        self.save()
+    
+    @ctset.command() # Set a User's Heist losses.
+    async def hloss(self, ctx: commands.Context, target: discord.Member, amount: int):
+        """Set a User's Heist loss to specified amount."""
+        guildsettings = self.db.get_conf(ctx.guild)
+        target_user = guildsettings.get_user(target)
+        if amount < 0:
+            await ctx.send("You cannot set a negative amount!")
+            return
+        target_user.h_losses = amount
+        await ctx.send(f"**{target.display_name}**'s Heist losses have been set to {amount}.")
         self.save()
