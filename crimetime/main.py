@@ -120,7 +120,8 @@ class CrimeTime(commands.Cog):
                     "a random stranger", "a stuffy-looking banker", "a creepy little girl", "a sad-faced clown", "a Dwarf in a penguin costume", 
                     "a sleep-deprived college Student", "a scruffy Puppy with a wallet in it's mouth", "a hyper Ballerina", 
                     "a boy dressed as a Stormtrooper", "a girl dressed as Princess Leia", "a baby in a stroller", "a group of drunk frat boys", 
-                    "a poor girl doing the morning walk of shame", "another mugger bad at the job", "a man in a transparent banana costume"]
+                    "a poor girl doing the morning walk of shame", "another mugger bad at the job", "a man in a transparent banana costume",
+                    "an angry jawa holding an oddly thrusting mechanism", "two Furries fighting over an 'Uwu'", "a dude in drag posting a thirst-trap on tiktok"]
         #Rating = Medium
         stranger2 = ["a man in a business suit", "a doped-out gang-banger", "an off-duty policeman", "a local politician", 
                      "a scrawny meth-head missing most of his teeth", ]
