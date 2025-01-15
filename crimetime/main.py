@@ -104,6 +104,11 @@ class CrimeTime(commands.Cog):
     @commands.command()
     async def mug(self, ctx: commands.Context, target: discord.Member = None):
         """This command can be used for both PvE and PvP mugging."""
+        member  = member or ctx.author
+        guildsettings = self.db.get_conf(ctx.guild)
+        user = guildsettings.get_user(member)
+        pve_win = user.pve_win
+        pve_loss = user.pve_loss
         if target is not None and target == ctx.author:
             await ctx.send("You reach into your pockets and grab your wallet, what now?")
             return
@@ -144,24 +149,30 @@ class CrimeTime(commands.Cog):
                 if pve_attack > rating_easy:
                     reward = random.randint(1, 25)
                     mugger_user.balance += reward
+                    mugger_user.pve_win += 1
                     await ctx.send(f"**{author.display_name}** successfully mugged *{strangerchoice}* and made off with ${reward}!")
                 else:
+                    mugger_user.pve_loss += 1
                     await ctx.send(f"**{author.display_name}** looked around for someone to mug but found no one nearby...")
             elif difficulty_choice == stranger2:
                 strangerchoice = random.choice(difficulty_choice)
                 if pve_attack > rating_medium:
                     reward = random.randint(26, 50)
                     mugger_user.balance += reward
+                    mugger_user.pve_win += 1
                     await ctx.send(f"**{author.display_name}** successfully mugged *{strangerchoice}* and made off with ${reward}!")
                 else:
+                    mugger_user.pve_loss += 1
                     await ctx.send(f"**{author.display_name}** looked around for someone to mug but found no one nearby...")
             elif difficulty_choice == stranger3:
                 strangerchoice = random.choice(difficulty_choice)
                 if pve_attack > rating_hard:
                     reward = random.randint(51, 75)
                     mugger_user.balance += reward
+                    mugger_user.pve_win += 1
                     await ctx.send(f"**{author.display_name}** successfully mugged *{strangerchoice}* and made off with ${reward}!")
                 else:
+                    mugger_user.pve_loss += 1
                     await ctx.send(f"**{author.display_name}** looked around for someone to mug but found no one nearby...")
         else:
             # If we are here, user has targeted another player.
@@ -219,6 +230,8 @@ class CrimeTime(commands.Cog):
         target_user.r_losses = 0
         target_user.h_wins = 0
         target_user.h_losses = 0
+        target_user.pop_up_wins = 0
+        target_user.pop_up_loss = 0
         await ctx.send(f"**{target.display_name}**'s complete record has been reset to 0.")
         self.save()
 
