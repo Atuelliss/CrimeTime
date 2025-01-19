@@ -15,7 +15,7 @@ class User(Base):
     h_wins:   int = 0    #Player Heist Wins - Upcoming
     h_losses: int = 0    #Player Heist Losses - Upcoming
     pop_up_wins: int = 0 #Player Pop-up Challenge victories - upcoming.
-    pop_up_loss: int = 0 #Player Pop-up Challenge losses - upcoming.
+    pop_up_losses: int = 0 #Player Pop-up Challenge losses - upcoming.
 
     # Ratio property sets
     @property # Ratio for player pvp mugging stats
@@ -24,12 +24,24 @@ class User(Base):
     @property
     def p_ratio_str(self) -> str:
         return f"{self.p_wins}:{self.p_losses}"
+    @property # Ratio for Player Robbery stats
+    def r_ratio(self) -> float:
+        return (self.r_wins / self.r_losses) if self.r_losses > 0 else self.r_wins
+    @property
+    def r_ratio_str(self) -> str:
+        return f"{self.r_wins}:{self.r_losses}"
+    @property # Ratio for Player Heist stats
+    def h_ratio(self) -> float:
+        return (self.h_wins / self.h_losses) if self.h_losses > 0 else self.h_wins
+    @property
+    def h_ratio_str(self) -> str:
+        return f"{self.h_wins}:{self.h_losses}"    
     @property  # Ratio for random pop-up mugging challenges
     def pop_up_ratio(self) -> float:
-        return (self.pop_up_wins / self.pop_up_loss) if self.pop_up_loss > 0 else self.pop_up_wins    
+        return (self.pop_up_wins / self.pop_up_losses) if self.pop_up_losses > 0 else self.pop_up_wins    
     @property
     def pop_up_ratio_str(self) -> str:
-        return f"{self.pop_up_wins}:{self.pop_up_loss}"
+        return f"{self.pop_up_wins}:{self.pop_up_losses}"
 
 class GuildSettings(Base):
     users: dict[int, User] = {}

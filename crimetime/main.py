@@ -2,13 +2,15 @@ import asyncio
 import logging
 import discord
 import random
+import typing as t
+import math
 
 from redbot.core.utils.chat_formatting import humanize_timedelta
 from redbot.core import commands
 from redbot.core.bot import Red
 from redbot.core.data_manager import cog_data_path
-from .common.models import DB
-
+from .common.models import DB, User
+from .dynamic_menu import DynamicMenu
 
 log = logging.getLogger("red.crimetime")
 
@@ -24,9 +26,10 @@ class CrimeTime(commands.Cog):
         super().__init__()
         self.bot: Red = bot
         self.db: DB = DB()
-        # Cooldowns separated by target or not target
+        # Cooldowns separated by target or not target.
         self.pvpcooldown = commands.CooldownMapping.from_cooldown(1, 30, commands.BucketType.user)
         self.pvecooldown = commands.CooldownMapping.from_cooldown(1, 60, commands.BucketType.user)
+        # Future colldown spot for Robberies.
 
         # States
         self._saving = False
@@ -78,8 +81,10 @@ class CrimeTime(commands.Cog):
         balance = user.balance
         r_wins = user.r_wins
         r_losses = user.r_losses
+        r_ratio_str = user.r_ratio_str
         h_wins = user.h_wins
         h_losses = user.h_losses
+        h_ratio_str = user.h_ratio_str
 
         # Determine Attack Bonuses against other players.
         if p_ratio >= 3.01:
@@ -100,7 +105,7 @@ class CrimeTime(commands.Cog):
             p_bonus = -0.3
         elif p_ratio <= -3.01:
             p_bonus = -0.5
-        await ctx.send(f"**{member.display_name}**\nBalance: ${balance}\nP-Win/Loss Ratio: {p_ratio_str}\nP-Bonus: {p_bonus}")
+        await ctx.send(f"**{member.display_name}**\nBalance: ${balance}\nP-Win/Loss Ratio: {p_ratio_str}\nP-Bonus: {p_bonus}") #\nRobbery Win/Loss Ratio: {r_ratio_str}")
 
     # Actually run the MUG command.
     @commands.command()
@@ -124,9 +129,10 @@ class CrimeTime(commands.Cog):
                     "an angry jawa holding an oddly thrusting mechanism", "two Furries fighting over an 'Uwu'", "a dude in drag posting a thirst-trap on tiktok"]
         #Rating = Medium
         stranger2 = ["a man in a business suit", "a doped-out gang-banger", "an off-duty policeman", "a local politician", 
-                     "a scrawny meth-head missing most of his teeth", ]
+                     "a scrawny meth-head missing most of his teeth", "Chuck Schumer's personal assistant"]
         #Rating = Hard
-        stranger3 = ["Elon Musk!!", "Bill Clinton!!", "Vladamir Putin!!", "Bigfoot!!", "Steve Job's Corpse", "Roseanne Barr!!", "Borat!!"]
+        stranger3 = ["Elon Musk!!", "Bill Clinton!!", "Vladamir Putin!!", "Bigfoot!!", "Steve Job's Corpse", "Roseanne Barr!!", "Borat!!", 
+                     "a shirtless Florida-man", "Megatron", "John Wick's dog"]
         rating_easy    = 0.2
         rating_medium  = 0.5
         rating_hard    = 0.7
@@ -361,3 +367,39 @@ class CrimeTime(commands.Cog):
         target_user.h_losses = amount
         await ctx.send(f"**{target.display_name}**'s Heist losses have been set to {amount}.")
         self.save()
+
+    @commands.command() # Leaderboard Commands for Mugging
+    async def muglb(self, ctx: commands.Context, stat: t.Literal["balance", "wins", "ratio"]):
+        """Displays leaderboard for Player Mugging stats."""
+        guildsettings = self.db.get_conf(ctx.guild)
+        users: dict[int, User] = guildsettings.users
+        if stat == "balance":
+            sorted_users: list[tuple[int, User]] = sorted(users.items(), key=lambda x: x[1].balance, reverse=True)
+        elif stat == "wins":
+            sorted_users: list[tuple[int, User]] = sorted(users.items(), key=lambda x: x[1].p_wins, reverse=True)
+        else: # Ratio
+            sorted_users: list[tuple[int, User]] = sorted(users.items(), key=lambda x: x[1].p_ratio, reverse=True)
+
+        embeds = []
+        pages = math.ceil(len(sorted_users) / 15)
+        start = 0
+        stop = 15
+        for index in range(pages):
+            stop = min(stop, len(sorted_users))
+            txt = ""
+            for position in range(start, stop):
+                user_id, user_obj = sorted_users[position]
+                if stat == "balance":
+                    value = user_obj.balance
+                elif stat == "wins":
+                    value = user_obj.p_wins
+                else:
+                    value = user_obj.p_ratio
+                txt += f"{position + 1}. <@{user_id}> `{value}`\n"
+            embed = discord.Embed(description=txt)
+            embed.set_footer(text=f"Page {index+1}/{pages}")
+            embeds.append(embed)
+            start += 15
+            stop += 15
+
+        await DynamicMenu(ctx, embeds).refresh()
