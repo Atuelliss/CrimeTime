@@ -87,7 +87,9 @@ class CrimeTime(commands.Cog):
         h_ratio_str = user.h_ratio_str
 
         # Determine Attack Bonuses against other players.
-        if p_ratio >= 3.01:
+        if p_ratio >= 5:
+            p_bonus = 0.25
+        elif p_ratio >= 3.01:
             p_bonus = 0.2
         elif p_ratio >= 3:
             p_bonus = 0.15
@@ -105,6 +107,8 @@ class CrimeTime(commands.Cog):
             p_bonus = -0.15
         elif p_ratio <= -3.01:
             p_bonus = -0.2
+        elif p_ratio <= -5:
+            p_bonus = -0.25
         await ctx.send(f"**{member.display_name}**\nBalance: ${balance}\nP-Win/Loss Ratio: {p_ratio_str}\nP-Bonus: {p_bonus}") #\nRobbery Win/Loss Ratio: {r_ratio_str}")
 
     # Actually run the MUG command.
