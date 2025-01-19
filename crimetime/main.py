@@ -396,7 +396,8 @@ class CrimeTime(commands.Cog):
                 else:
                     value = user_obj.p_ratio
                 txt += f"{position + 1}. <@{user_id}> `{value}`\n"
-            embed = discord.Embed(description=txt)
+            title = f"{stat.capitalize()} Leaderboard!"
+            embed = discord.Embed(description=txt, title=title)
             embed.set_footer(text=f"Page {index+1}/{pages}")
             embeds.append(embed)
             start += 15
