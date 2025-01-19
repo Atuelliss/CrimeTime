@@ -88,23 +88,23 @@ class CrimeTime(commands.Cog):
 
         # Determine Attack Bonuses against other players.
         if p_ratio >= 3.01:
-            p_bonus = 0.5
-        elif p_ratio >= 3:
-            p_bonus = 0.3
-        elif p_ratio >= 2:
             p_bonus = 0.2
-        elif p_ratio >= 1:
+        elif p_ratio >= 3:
+            p_bonus = 0.15
+        elif p_ratio >= 2:
             p_bonus = 0.1
+        elif p_ratio >= 1:
+            p_bonus = 0.05
         elif p_ratio == 0:
             p_bonus = 0.0
         elif p_ratio >= -1:
-            p_bonus = -0.1
+            p_bonus = -0.05
         elif -1 > p_ratio >= -2:
-            p_bonus = -0.2
+            p_bonus = -0.1
         elif -2 > p_ratio >= -3:
-            p_bonus = -0.3
+            p_bonus = -0.15
         elif p_ratio <= -3.01:
-            p_bonus = -0.5
+            p_bonus = -0.2
         await ctx.send(f"**{member.display_name}**\nBalance: ${balance}\nP-Win/Loss Ratio: {p_ratio_str}\nP-Bonus: {p_bonus}") #\nRobbery Win/Loss Ratio: {r_ratio_str}")
 
     # Actually run the MUG command.
@@ -235,7 +235,7 @@ class CrimeTime(commands.Cog):
         target_user.h_wins = 0
         target_user.h_losses = 0
         target_user.pop_up_wins = 0
-        target_user.pop_up_loss = 0
+        target_user.pop_up_losses = 0
         await ctx.send(f"**{target.display_name}**'s complete record has been reset to 0.")
         self.save()
 
