@@ -20,7 +20,7 @@ class User(Base):
     # Ratio property sets
     @property # Ratio for player pvp mugging stats
     def p_ratio(self) -> float:
-        return (self.p_wins / self.p_losses) if self.p_losses > 0 else self.p_wins
+        return round((self.p_wins / self.p_losses) if self.p_losses > 0 else self.p_wins, 2)
     @property
     def p_ratio_str(self) -> str:
         return f"{self.p_wins}:{self.p_losses}"

@@ -375,10 +375,13 @@ class CrimeTime(commands.Cog):
         users: dict[int, User] = guildsettings.users
         if stat == "balance":
             sorted_users: list[tuple[int, User]] = sorted(users.items(), key=lambda x: x[1].balance, reverse=True)
+            sorted_users: list[tuple[int, User]] = [i for i in sorted_users if i[1].balance] # Removes users with 0 for balance.
         elif stat == "wins":
             sorted_users: list[tuple[int, User]] = sorted(users.items(), key=lambda x: x[1].p_wins, reverse=True)
+            sorted_users: list[tuple[int, User]] = [i for i in sorted_users if i[1].p_wins]
         else: # Ratio
             sorted_users: list[tuple[int, User]] = sorted(users.items(), key=lambda x: x[1].p_ratio, reverse=True)
+            sorted_users: list[tuple[int, User]] = [i for i in sorted_users if i[1].p_ratio]
 
         embeds = []
         pages = math.ceil(len(sorted_users) / 15)
