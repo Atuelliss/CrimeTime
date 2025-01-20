@@ -109,7 +109,7 @@ class CrimeTime(commands.Cog):
             p_bonus = -0.2
         elif p_ratio <= -5:
             p_bonus = -0.25
-        await ctx.send(f"**{member.display_name}**\nBalance: ${balance}\nP-Win/Loss Ratio: {p_ratio_str}\nP-Bonus: {p_bonus}") #\nRobbery Win/Loss Ratio: {r_ratio_str}")
+        await ctx.send(f"**{member.display_name}**\nBalance: ${balance}\nP-Win/Loss Ratio: {p_ratio_str}[{p_ratio}]\nP-Bonus: {p_bonus}") #\nRobbery Win/Loss Ratio: {r_ratio_str}")
 
     # Actually run the MUG command.
     @commands.command()
@@ -158,10 +158,10 @@ class CrimeTime(commands.Cog):
                     reward = random.randint(1, 25)
                     mugger_user.balance += reward
                     #mugger_user.pve_win += 1
-                    await ctx.send(f"**{author.display_name}** successfully mugged *{strangerchoice}* and made off with ${reward}!")
+                    await ctx.send(f"**{author.display_name}** successfully mugged *{strangerchoice}* and made off with ${reward}! - {secondsleft}")
                 else:
                     #mugger_user.pve_loss += 1
-                    await ctx.send(f"**{author.display_name}** looked around for someone to mug but found no one nearby...")
+                    await ctx.send(f"**{author.display_name}** looked around for someone to mug but found no one nearby... - {secondsleft}")
             elif difficulty_choice == stranger2:
                 strangerchoice = random.choice(difficulty_choice)
                 if pve_attack > rating_medium:
