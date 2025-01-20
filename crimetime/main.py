@@ -150,7 +150,7 @@ class CrimeTime(commands.Cog):
             secondsleft = pvebucket.update_rate_limit()
             if secondsleft:
                 wait_time = humanize_timedelta(seconds=int(secondsleft))
-                return await ctx.send(f"You must wait {wait_time} before you can reuse this command.")
+                return await ctx.send(f"You must wait {secondsleft} before you can reuse this command.")
             # If we are here, no timer and user can mug an npc.
             if difficulty_choice == stranger1:
                 strangerchoice = random.choice(difficulty_choice)
@@ -158,10 +158,10 @@ class CrimeTime(commands.Cog):
                     reward = random.randint(1, 25)
                     mugger_user.balance += reward
                     #mugger_user.pve_win += 1
-                    await ctx.send(f"**{author.display_name}** successfully mugged *{strangerchoice}* and made off with ${reward}! - {secondsleft}")
+                    await ctx.send(f"**{author.display_name}** successfully mugged *{strangerchoice}* and made off with ${reward}!")
                 else:
                     #mugger_user.pve_loss += 1
-                    await ctx.send(f"**{author.display_name}** looked around for someone to mug but found no one nearby... - {secondsleft}")
+                    await ctx.send(f"**{author.display_name}** looked around for someone to mug but found no one nearby...")
             elif difficulty_choice == stranger2:
                 strangerchoice = random.choice(difficulty_choice)
                 if pve_attack > rating_medium:
