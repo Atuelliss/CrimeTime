@@ -150,7 +150,7 @@ class CrimeTime(commands.Cog):
             secondsleft = pvebucket.update_rate_limit()
             if secondsleft:
                 wait_time = humanize_timedelta(seconds=int(secondsleft))
-                return await ctx.send(f"You must wait {secondsleft} before you can reuse this command.")
+                return await ctx.send(f"You must wait {wait_time} before you can reuse this command.")
             # If we are here, no timer and user can mug an npc.
             if difficulty_choice == stranger1:
                 strangerchoice = random.choice(difficulty_choice)
