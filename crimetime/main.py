@@ -197,7 +197,7 @@ class CrimeTime(commands.Cog):
                 
 
             # If we here, user targeted a player and now we check allowed status.
-            target_user = guildsettings.get_user(target)
+            recent_targets = self.recent_targets.setdefault(ctx.author.id, [])
             if mugger_user.balance < 50:
                 await ctx.send(f"You have less than $50 and cannot mug other Players yet!.")
                 return
