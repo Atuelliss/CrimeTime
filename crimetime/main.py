@@ -19,13 +19,16 @@ class CrimeTime(commands.Cog):
     """
     A crime mini-game cog for Red-DiscordBot.
     """
-    __author__ = "Jayar"
+    __author__ = "Jayar(Vainne)"
     __version__ = "0.0.1"
 
     def __init__(self, bot: Red):
         super().__init__()
         self.bot: Red = bot
         self.db: DB = DB()
+        self.recent_targets = {} # track the most recent targets
+        self.target_limit = 5 # number of targets to track against
+
         # Cooldowns separated by target or not target.
         self.pvpcooldown = commands.CooldownMapping.from_cooldown(1, 30, commands.BucketType.user)
         self.pvecooldown = commands.CooldownMapping.from_cooldown(1, 60, commands.BucketType.user)
@@ -115,14 +118,16 @@ class CrimeTime(commands.Cog):
     @commands.command()
     async def mug(self, ctx: commands.Context, target: discord.Member = None):
         """This command can be used for both PvE and PvP mugging."""
-        if target is not None and target == ctx.author:
+
+        if target is not None and target == ctx.author: # Targetting yourself does nothing.
             await ctx.send("You reach into your pockets and grab your wallet, what now?")
             return
-        if target is not None and target.bot:
+        if target is not None and target.bot: # No targeting Bots!
             await ctx.send("You cannot target the Bots!")
             return
-        pvpbucket = self.pvpcooldown.get_bucket(ctx.message)
-        pvebucket = self.pvecooldown.get_bucket(ctx.message)
+        
+        pvpbucket = self.pvpcooldown.get_bucket(ctx.message) # Cooldown for Mug pve
+        pvebucket = self.pvecooldown.get_bucket(ctx.message) # Cooldown for Mug pvp
         author    = ctx.author
         #Rating = Easy
         stranger1 = ["a smart-mouthed boy", "a grouchy old man", "an elderly woman", "a sweet foreign couple",  "a lady-of-the-night", 
@@ -188,7 +193,9 @@ class CrimeTime(commands.Cog):
             if secondsleft:
                 wait_time = humanize_timedelta(seconds=int(secondsleft))
                 return await ctx.send(f"You must wait {wait_time} until you can target another Player!")
-            
+
+                
+
             # If we here, user targeted a player and now we check allowed status.
             target_user = guildsettings.get_user(target)
             if mugger_user.balance < 50:
@@ -198,8 +205,23 @@ class CrimeTime(commands.Cog):
                 await ctx.send(f"The target has less than $50 and isn't worth mugging.")
                 return
             pvp_defend = random.uniform(0, 1) + target_user.p_bonus #need to add in armor bonus later
-            
+
+            # Track pvp targets and make sure new target is allowed, this prevents attacking the same person over and over.
+            if target:
+                recent_targets = self.recent_targets.get(ctx.author.id, [])
+                if target.id in recent_targets:
+                    required_targets_left = self.target_limit - len(recent_targets)
+                    await ctx.send(f"You cannot target {target.display_name} again until you mug at least {required_targets_left} other players.")
+                    return            
+
             # PvP Mugging, Attacking another User who is not under the minimum amount.
+
+            # Add the target to the recent targets and enforce the limit
+            recent_targets.append(target.id)
+            if len(recent_targets) > self.target_limit:
+                recent_targets.pop(0)  # Remove the oldest target
+                self.recent_targets[ctx.author.id] = recent_targets
+            # Run the actual contested check.    
             if pvp_attack > pvp_defend:
                 mug_amount = min(int(target_user.balance * 0.03), 1000)
                 mugger_user.balance += mug_amount
@@ -215,7 +237,7 @@ class CrimeTime(commands.Cog):
                 target_user.p_wins += 1
             elif pvp_attack == pvp_defend:
                 await ctx.send(f"You attack {target} and find that you are equally matched!\nYou flee before you suffer any losses.")
-                #Make no changes from here.
+                #Make no changes from here for the pvp aspect.
         self.save()
 
 ##########  Admin Commands  ##########
