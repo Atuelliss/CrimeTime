@@ -189,10 +189,6 @@ class CrimeTime(commands.Cog):
                     await ctx.send(f"**{author.display_name}** looked around for someone to mug but found no one nearby...")
         else:
             # If we are here, user has targeted another player.
-            secondsleft = pvpbucket.update_rate_limit()
-            if secondsleft:
-                wait_time = humanize_timedelta(seconds=int(secondsleft))
-                return await ctx.send(f"You must wait {wait_time} until you can target another Player!")
               
             # If we here, user targeted a player and now we check allowed status.
             target_user = guildsettings.get_user(target)
@@ -225,6 +221,10 @@ class CrimeTime(commands.Cog):
             # PvP Mugging, Attacking another User who is not under the minimum amount.
 
             # Run the actual contested check.    
+            secondsleft = pvpbucket.update_rate_limit() # Add pvp timer to user.
+            if secondsleft:
+                wait_time = humanize_timedelta(seconds=int(secondsleft))
+                return await ctx.send(f"You must wait {wait_time} until you can target another Player!")
             if pvp_attack > pvp_defend:
                 mug_amount = min(int(target_user.balance * 0.03), 1000)
                 mugger_user.balance += mug_amount
