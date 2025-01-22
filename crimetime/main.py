@@ -212,8 +212,7 @@ class CrimeTime(commands.Cog):
                 if target.id in recent_targets:
                     required_targets_left = self.target_limit - len(recent_targets)
                     if required_targets_left > 0:
-                        await ctx.send(
-                            f"You cannot target {target.display_name} again until you mug at least {required_targets_left} other players.")
+                        await ctx.send(f"You cannot target {target.display_name} again until you mug at least {required_targets_left} other players.")
                         return
 
             # Update recent targets for the author
