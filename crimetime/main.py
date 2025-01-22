@@ -193,9 +193,7 @@ class CrimeTime(commands.Cog):
             if secondsleft:
                 wait_time = humanize_timedelta(seconds=int(secondsleft))
                 return await ctx.send(f"You must wait {wait_time} until you can target another Player!")
-
-                
-
+              
             # If we here, user targeted a player and now we check allowed status.
             target_user = guildsettings.get_user(target)
             if mugger_user.balance < 50:
@@ -207,20 +205,26 @@ class CrimeTime(commands.Cog):
             pvp_defend = random.uniform(0, 1) + target_user.p_bonus #need to add in armor bonus later
 
             # Track pvp targets and make sure new target is allowed, this prevents attacking the same person over and over.
-            if target:
+            # Check if the target is valid and enforce unique targets
+            if target_user:
                 recent_targets = self.recent_targets.get(ctx.author.id, [])
+    
                 if target.id in recent_targets:
                     required_targets_left = self.target_limit - len(recent_targets)
-                    await ctx.send(f"You cannot target {target.display_name} again until you mug at least {required_targets_left} other players.")
-                    return            
+                    if required_targets_left > 0:
+                        await ctx.send(
+                            f"You cannot target {target.display_name} again until you mug at least {required_targets_left} other players.")
+                        return
 
+            # Update recent targets for the author
+            if target.id not in recent_targets:
+                recent_targets.append(target.id)
+                # Enforce the target limit
+                if len(recent_targets) > self.target_limit:
+                    recent_targets.pop(0)  # Remove the oldest target
+            self.recent_targets[ctx.author.id] = recent_targets
             # PvP Mugging, Attacking another User who is not under the minimum amount.
 
-            # Add the target to the recent targets and enforce the limit
-            recent_targets.append(target.id)
-            if len(recent_targets) > self.target_limit:
-                recent_targets.pop(0)  # Remove the oldest target
-                self.recent_targets[ctx.author.id] = recent_targets
             # Run the actual contested check.    
             if pvp_attack > pvp_defend:
                 mug_amount = min(int(target_user.balance * 0.03), 1000)
