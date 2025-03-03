@@ -99,7 +99,8 @@ class CrimeTime(commands.Cog):
     async def gold(self, ctx: commands.Context, amount: int, member: discord.Member = None):
         """Allows a Player to convert cash to Gold Bars."""
         gold_value = 2500
-        cash_needed = (amount) * (gold_value)
+        bar_count = int(amount)
+        cash_needed = bar_count * gold_value
         # Check investment cooldown for player
         investbucket = self.investcooldown.get_bucket(ctx.message) # Cooldown for Cash conversion.
 
@@ -124,9 +125,9 @@ class CrimeTime(commands.Cog):
 
         # Transfer currency
         user.balance -= cash_needed
-        user.gold += amount
+        user.gold += bar_count
         self.save()
-        await ctx.send(f"You invested ${cash_needed} into {amount} gold bars!!")
+        await ctx.send(f"You invested ${cash_needed} into {bar_count} gold bars!!")
 
     # Check balance and stats
     @commands.command()
