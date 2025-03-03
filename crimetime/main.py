@@ -72,6 +72,23 @@ class CrimeTime(commands.Cog):
 
     # Check balance and stats
     @commands.command()
+    async def ctwealth(self, ctx: commands.Context, member: discord.Member = None):
+        """Checks the total assets of a User."""
+        member  = member or ctx.author
+        guildsettings = self.db.get_conf(ctx.guild)
+        user = guildsettings.get_user(member)
+        balance = user.balance
+        gold = user.gold
+        gold_value = 2500
+        diamond = user.diamond
+        diamond_value = 5000
+        gold_total = gold * gold_value
+        diamond_total = diamond * diamond_value
+        total_value = balance + gold_total + diamond_total
+        await ctx.send(f"**{member.display_name}**\nCash Balance: ${balance}\nGold Bars: {gold}\nDiamonds: {diamond}\n===\nTotal Wealth: ${total_value}")
+
+    # Check balance and stats
+    @commands.command()
     async def mugcheck(self, ctx: commands.Context, member: discord.Member = None):
         """Checks the Balance, Wins/Losses, and Ratio of a User."""
         member  = member or ctx.author
@@ -341,6 +358,8 @@ class CrimeTime(commands.Cog):
         guildsettings = self.db.get_conf(ctx.guild)
         target_user = guildsettings.get_user(target)
         target_user.balance = 0
+        target_user.gold = 0
+        target_user.diamond = 0
         target_user.p_wins = 0
         target_user.p_losses = 0
         target_user.r_wins = 0
@@ -359,6 +378,24 @@ class CrimeTime(commands.Cog):
         target_user = guildsettings.get_user(target)
         target_user.balance = 0
         await ctx.send(f"**{target.display_name}**'s Balance has been reset to 0.")
+        self.save()
+
+    @ctclear.command() # Clears a User's Gold-Bar balance
+    async def gold(self, ctx: commands.Context, target: discord.Member):
+        """Reset a User's Gold Bar Count to 0."""
+        guildsettings = self.db.get_conf(ctx.guild)
+        target_user = guildsettings.get_user(target)
+        target_user.gold = 0
+        await ctx.send(f"**{target.display_name}**'s Gold Bar count has been reset to 0.")
+        self.save()
+    
+    @ctclear.command() # Clears a User's Diamond count balance
+    async def diamonds(self, ctx: commands.Context, target: discord.Member):
+        """Reset a User's Diamond count to 0."""
+        guildsettings = self.db.get_conf(ctx.guild)
+        target_user = guildsettings.get_user(target)
+        target_user.diamond = 0
+        await ctx.send(f"**{target.display_name}**'s Diamond count has been reset to 0.")
         self.save()
  
     @ctclear.command() # Clears a User's PvP wins and losses.
@@ -407,6 +444,30 @@ class CrimeTime(commands.Cog):
             return
         target_user.balance = amount
         await ctx.send(f"**{target.display_name}**'s Balance have been set to {amount}.")
+        self.save()
+
+    @ctset.command() # Set a User's Gold Bar Count to a specific number.
+    async def gold(self, ctx: commands.Context, target: discord.Member, amount: int):
+        """Set a User's Gold Bar count to specified amount."""
+        guildsettings = self.db.get_conf(ctx.guild)
+        target_user = guildsettings.get_user(target)
+        if amount < 0:
+            await ctx.send("You cannot set a negative balance!")
+            return
+        target_user.gold = amount
+        await ctx.send(f"**{target.display_name}**'s Gold Bars have been set to {amount}.")
+        self.save()
+    
+    @ctset.command() # Set a User's Diamond Count to a specific number.
+    async def diamonds(self, ctx: commands.Context, target: discord.Member, amount: int):
+        """Set a User's Diamond count to specified amount."""
+        guildsettings = self.db.get_conf(ctx.guild)
+        target_user = guildsettings.get_user(target)
+        if amount < 0:
+            await ctx.send("You cannot set a negative balance!")
+            return
+        target_user.diamond = amount
+        await ctx.send(f"**{target.display_name}**'s Diamond count has been set to {amount}.")
         self.save()
     
     @ctset.command() # Set a User's PvP wins.
