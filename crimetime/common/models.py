@@ -16,6 +16,7 @@ class User(Base):
     h_losses: int = 0    #Player Heist Losses - Upcoming
     pop_up_wins: int = 0 #Player Pop-up Challenge victories - upcoming.
     pop_up_losses: int = 0 #Player Pop-up Challenge losses - upcoming.
+    mugclear_count: int = 0   #Number of times Player has used "clearratio"
 
     # Ratio property sets
     @property # Ratio for player pvp mugging stats

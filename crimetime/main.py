@@ -243,6 +243,52 @@ class CrimeTime(commands.Cog):
                 #Make no changes from here for the pvp aspect.
         self.save()
 
+
+    @commands.command()
+    async def mugclear(self, ctx: commands.Context, target: discord.Member = None):
+        """Reset a User's PvP Wins and Losses to 0 for an incrimental cost."""
+        # Cost to clear ratio for the first time
+        base_cost = 500
+        # Default to author if no target is provided
+        target = target or ctx.author
+
+        # Prevent using on others
+        if target != ctx.author:
+            await ctx.send("You cannot use this on others.")
+            return
+
+        # Get guild settings and user data
+        guildsettings = self.db.get_conf(ctx.guild)
+        target_user = guildsettings.get_user(target)
+
+        # Calculate cost based on how many times the user has reset
+        cost = base_cost if target_user.mugclear_count == 0 else base_cost * target_user.mugclear_count
+
+        # Check if player can afford to reset
+        if target_user.balance < cost:
+            await ctx.send("You cannot afford to reset your ratio at this time.")
+            return  # Stop execution if they can't afford it
+
+        # Ask for confirmation
+        await ctx.send(f"This will completely reset all of your Win/Loss stats for ${cost}. Type 'yes' to confirm.")
+
+        try:
+            msg = await ctx.bot.wait_for("message", timeout=30, check=lambda m: m.author == ctx.author and m.channel == ctx.channel)
+            if msg.content.lower() != "yes":
+                await ctx.send("Action canceled. PvP stats were not reset.")
+                return
+        except asyncio.TimeoutError:
+            await ctx.send("Confirmation timed out. PvP stats were not reset.")
+            return
+
+        # Reset user's stats
+        target_user.p_wins = 0
+        target_user.p_losses = 0
+        target_user.mugclear_count += 1  # Corrected increment
+
+        await ctx.send("Your PvP Wins/Losses have been reset to 0.")
+        self.save()
+
 ##########  Admin Commands  ##########
 
     # This group allows the Administrator to CLEAR amounts, not set them.
