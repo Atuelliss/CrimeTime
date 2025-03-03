@@ -248,6 +248,7 @@ class CrimeTime(commands.Cog):
     async def mugclear(self, ctx: commands.Context, target: discord.Member = None):
         """Reset a User's PvP Wins and Losses to 0 for an incrimental cost."""
         # Cost to clear ratio for the first time
+        first_free = 0
         base_cost = 500
         # Default to author if no target is provided
         target = target or ctx.author
@@ -262,7 +263,7 @@ class CrimeTime(commands.Cog):
         target_user = guildsettings.get_user(target)
 
         # Calculate cost based on how many times the user has reset
-        cost = base_cost if target_user.mugclear_count == 0 else base_cost * target_user.mugclear_count
+        cost = first_free if target_user.mugclear_count == 0 else base_cost * target_user.mugclear_count
 
         # Check if player can afford to reset
         if target_user.balance < cost:
@@ -381,7 +382,7 @@ class CrimeTime(commands.Cog):
             await ctx.send("You cannot set a negative amount!")
             return
         target_user.p_wins = amount
-        await ctx.send(f"**{target.display_name}**'s Balance have been set to {amount}.")
+        await ctx.send(f"**{target.display_name}**'s PvP Mug Wins have been set to {amount}.")
         self.save()
     
     @ctset.command() # Set a User's PvP losses.
@@ -393,7 +394,7 @@ class CrimeTime(commands.Cog):
             await ctx.send("You cannot set a negative amount!")
             return
         target_user.p_losses = amount
-        await ctx.send(f"**{target.display_name}**'s Balance have been set to {amount}.")
+        await ctx.send(f"**{target.display_name}**'s PvP Mug Losses have been set to {amount}.")
         self.save()
 
     @ctset.command() # Set a User's Rob wins.
