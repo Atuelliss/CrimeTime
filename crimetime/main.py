@@ -98,6 +98,10 @@ class CrimeTime(commands.Cog):
     @ctinvest.command()
     async def gold(self, ctx: commands.Context, amount: int, member: discord.Member = None):
         """Allows a Player to convert cash to Gold Bars."""
+        # Validate amount
+        if amount <= 0:
+            await ctx.send("You must enter a positive amount.")
+            return
         gold_value = 2500
         bar_count = int(amount)
         cash_needed = bar_count * gold_value
@@ -107,11 +111,6 @@ class CrimeTime(commands.Cog):
         # Get user data
         guildsettings = self.db.get_conf(ctx.guild)
         user = guildsettings.get_user(member)
-
-        # Validate amount
-        if amount <= 0:
-            await ctx.send("You must enter a positive amount.")
-            return
         
         # Check to see if user has enough cash.
         if user.balance < cash_needed:
