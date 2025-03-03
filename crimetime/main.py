@@ -285,6 +285,7 @@ class CrimeTime(commands.Cog):
         target_user.p_wins = 0
         target_user.p_losses = 0
         target_user.mugclear_count += 1  # Corrected increment
+        target_user.balance -= cost #Removes the cost of the clear from their balance
 
         await ctx.send("Your PvP Wins/Losses have been reset to 0.")
         self.save()
