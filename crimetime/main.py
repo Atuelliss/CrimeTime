@@ -93,14 +93,13 @@ class CrimeTime(commands.Cog):
     @commands.group(invoke_without_command=True)
     async def ctinvest(self, ctx: commands.Context):
         """Ability for players to convert currency forms."""
-        await ctx.send("Please specify a valid subcommand, e.g.:\n`$ctinvest gold (number of bars you want).`\n`$ctinvest diamonds (how many diamonds you want).")
+        await ctx.send("Please specify a valid subcommand, e.g.:\n`$ctinvest gold (number of bars you want).`\n`$ctinvest diamonds (how many diamonds you want).`")
 
     @ctinvest.command()
     async def gold(self, ctx: commands.Context, amount: int, member: discord.Member = None):
         """Allows a Player to convert cash to Gold Bars."""
-        bar_count = amount
         gold_value = 2500
-        cash_needed = bar_count * gold_value
+        cash_needed = (amount) * (gold_value)
         # Check investment cooldown for player
         investbucket = self.investcooldown.get_bucket(ctx.message) # Cooldown for Cash conversion.
 
@@ -125,9 +124,9 @@ class CrimeTime(commands.Cog):
 
         # Transfer currency
         user.balance -= cash_needed
-        user.gold += bar_count
+        user.gold += amount
         self.save()
-        await ctx.send(f"You invested ${cash_needed} into {bar_count} gold bars!!")
+        await ctx.send(f"You invested ${cash_needed} into {amount} gold bars!!")
 
     # Check balance and stats
     @commands.command()
