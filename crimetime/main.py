@@ -85,7 +85,7 @@ class CrimeTime(commands.Cog):
         gold_total = gold * gold_value
         diamond_total = diamond * diamond_value
         total_value = balance + gold_total + diamond_total
-        await ctx.send(f"**{member.display_name}**\n-=-=-=-=-=-=-=-=-=-=-\n**Cash Balance**: ${balance}\n**Gold Bars**: {gold} - ${gold_value}\n**Diamonds**: {diamond} - ${diamond_value}\n-=-=-=-=-=-=-=-=-=-=-\nTotal Wealth: ${total_value}")
+        await ctx.send(f"**{member.display_name}**\n-=-=-=-=-=-=-=-=-=-=-\n**Cash Balance**: ${balance}\n**Gold Bars**: {gold} - ${gold_total}\n**Diamonds**: {diamond} - ${diamond_total}\n-=-=-=-=-=-=-=-=-=-=-\nTotal Wealth: ${total_value}")
 
     # Check balance and stats
     @commands.command()
