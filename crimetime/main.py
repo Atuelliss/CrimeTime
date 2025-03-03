@@ -292,7 +292,7 @@ class CrimeTime(commands.Cog):
         self.save()
 
 # Ability for Players to give currency to others.
-    @commands.group()
+    @commands.group(invoke_without_command=True)
     async def ctgive(self, ctx: commands.Context):
         """Ability for players to transfer currency forms."""
         await ctx.send("Please specify a valid subcommand, e.g., `!ctgive cash @user amount`.")
