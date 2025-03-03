@@ -32,7 +32,9 @@ class CrimeTime(commands.Cog):
         # Cooldowns separated by target or not target.
         self.pvpcooldown = commands.CooldownMapping.from_cooldown(1, 30, commands.BucketType.user)
         self.pvecooldown = commands.CooldownMapping.from_cooldown(1, 60, commands.BucketType.user)
-        # Future colldown spot for Robberies.
+        # Cooldown for investment command, cash to gold/diamonds. 12hours.
+        self.investcooldown = commands.CooldownMapping.from_cooldown(1, 43200, commands.BucketType.user)
+        # Future cooldown spot for Robberies.
 
         # States
         self._saving = False
@@ -86,6 +88,46 @@ class CrimeTime(commands.Cog):
         diamond_total = diamond * diamond_value
         total_value = balance + gold_total + diamond_total
         await ctx.send(f"**{member.display_name}**\n-=-=-=-=-=-=-=-=-=-=-\n**Cash Balance**: ${balance}\n**Gold Bars**: {gold} - ${gold_total}\n**Diamonds**: {diamond} - ${diamond_total}\n-=-=-=-=-=-=-=-=-=-=-\nTotal Wealth: ${total_value}")
+
+    # Convert Cash to Gold or Diamonds
+    @commands.group(invoke_without_command=True)
+    async def ctinvest(self, ctx: commands.Context):
+        """Ability for players to convert currency forms."""
+        await ctx.send("Please specify a valid subcommand, e.g.:\n`$ctinvest gold (number of bars you want).`\n`$ctinvest diamonds (how many diamonds you want).")
+
+    @ctinvest.command()
+    async def gold(self, ctx: commands.Context, amount: int, member: discord.Member = None):
+        """Allows a Player to convert cash to Gold Bars."""
+        bar_count = amount
+        gold_value = 2500
+        cash_needed = bar_count * gold_value
+        # Check investment cooldown for player
+        investbucket = self.investcooldown.get_bucket(ctx.message) # Cooldown for Cash conversion.
+
+        # Get user data
+        guildsettings = self.db.get_conf(ctx.guild)
+        user = guildsettings.get_user(member)
+
+        # Validate amount
+        if amount <= 0:
+            await ctx.send("You must enter a positive amount.")
+            return
+        
+        # Check to see if user has enough cash.
+        if user.balance < cash_needed:
+            await ctx.send("You do not have enough cash for that transaction.")
+            return
+
+        secondsleft = investbucket.update_rate_limit() # Add invest timer to user.
+        if secondsleft:
+            wait_time = humanize_timedelta(seconds=int(secondsleft))
+            return await ctx.send(f"You must wait {wait_time} until you can invest in more assets!")
+
+        # Transfer currency
+        user.balance -= cash_needed
+        user.gold += bar_count
+        self.save()
+        await ctx.send(f"You invested ${cash_needed} into {bar_count} gold bars!!")
 
     # Check balance and stats
     @commands.command()
