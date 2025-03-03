@@ -243,7 +243,7 @@ class CrimeTime(commands.Cog):
                 #Make no changes from here for the pvp aspect.
         self.save()
 
-
+# Ability for players to clear their win/loss ratios.
     @commands.command()
     async def mugclear(self, ctx: commands.Context, target: discord.Member = None):
         """Reset a User's PvP Wins and Losses to 0 for an incrimental cost."""
@@ -271,7 +271,7 @@ class CrimeTime(commands.Cog):
             return  # Stop execution if they can't afford it
 
         # Ask for confirmation
-        await ctx.send(f"This will completely reset all of your Win/Loss stats for ${cost}. Type 'yes' to confirm.")
+        await ctx.send(f"This will completely reset all of your Win/Loss stats for ${cost}. This can NOT be reverted.\nType 'yes' to confirm.")
 
         try:
             msg = await ctx.bot.wait_for("message", timeout=30, check=lambda m: m.author == ctx.author and m.channel == ctx.channel)
@@ -286,10 +286,46 @@ class CrimeTime(commands.Cog):
         target_user.p_wins = 0
         target_user.p_losses = 0
         target_user.mugclear_count += 1  # Corrected increment
-        target_user.balance -= cost #Removes the cost of the clear from their balance
+        target_user.balance -= cost #Removes the cost of the clear from the users balance.
 
         await ctx.send("Your PvP Wins/Losses have been reset to 0.")
         self.save()
+
+# Ability for Players to give currency to others.
+    @commands.group()
+    async def ctgive(self, ctx: commands.Context):
+        """Ability for players to transfer currency forms."""
+        await ctx.send("Please specify a valid subcommand, e.g., `!ctgive cash @user amount`.")
+
+    @ctgive.command()
+    async def cash(self, ctx: commands.Context, target: discord.Member, amount: int):
+        """Allows a Player to give a form of Currency to another user."""
+        
+        # Ensure target is not None and not the giver
+        if target == ctx.author:
+            await ctx.send("You cannot do this alone; you must target another user.")
+            return
+
+        # Get user data
+        guildsettings = self.db.get_conf(ctx.guild)
+        giver = guildsettings.get_user(ctx.author)
+        target_user = guildsettings.get_user(target)
+
+        # Validate amount
+        if amount <= 0:
+            await ctx.send("You must send a positive amount.")
+            return
+
+        # Ensure giver has enough balance
+        if giver.balance < amount:
+            await ctx.send("You do not have that much to give!!")
+            return
+
+        # Transfer currency
+        giver.balance -= amount
+        target_user.balance += amount
+        self.save()
+        await ctx.send(f"You gave {target.mention} ${amount}.")
 
 ##########  Admin Commands  ##########
 
