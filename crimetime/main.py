@@ -79,39 +79,30 @@ class CrimeTime(commands.Cog):
         member  = member or ctx.author
         guildsettings = self.db.get_conf(ctx.guild)
         user = guildsettings.get_user(member)
-        balance = user.balance
+        cash = user.balance
         gold = user.gold
         gold_value = 2500
-        diamond = user.diamond
+        diamonds = user.diamonds
         diamond_value = 5000
         gold_total = gold * gold_value
-        diamond_total = diamond * diamond_value
-        total_value = balance + gold_total + diamond_total
-        await ctx.send(f"**{member.display_name}**\n-=-=-=-=-=-=-=-=-=-=-\n**Cash Balance**: ${balance}\n**Gold Bars**: {gold} - ${gold_total}\n**Diamonds**: {diamond} - ${diamond_total}\n-=-=-=-=-=-=-=-=-=-=-\nTotal Wealth: ${total_value}")
+        diamond_total = diamonds * diamond_value
+        total_value = cash + gold_total + diamond_total
+        await ctx.send(f"**{member.display_name}**\n-=-=-=-=-=-=-=-=-=-=-\n**Cash Balance**: ${cash}\n**Gold Bars**: {gold} - ${gold_total}\n**Diamonds**: {diamonds} - ${diamond_total}\n-=-=-=-=-=-=-=-=-=-=-\nTotal Wealth: ${total_value}")
 
     # Convert Cash to Gold or Diamonds
     @commands.group(invoke_without_command=True)
     async def ctinvest(self, ctx: commands.Context):
         """Ability for players to convert currency forms."""
         await ctx.send("Please specify a valid subcommand, e.g.:\n"
-                       "`.ctinvest gold <amount>`\n"
-                       "`.ctinvest diamonds <amount>`")
+                       "`!ctinvest gold <amount>`\n"
+                       "`!ctinvest diamonds <amount>`")
 
     @ctinvest.command()
-    async def gold(self, ctx: commands.Context, amount: str = None):
+    async def bars(self, ctx: commands.Context, amount: int = None):
         """Allows a Player to convert cash to Gold Bars."""
-    
-        # Debugging step
-        print(f"ctx type: {type(ctx)}, amount type: {type(amount)}, value: {amount}")
-
+        
         if amount is None:
-            await ctx.send("You must specify the amount of gold bars to invest in. Example: `!ctinvest gold 5`")
-            return
-    
-        try:
-            amount = int(amount)  # Convert the amount to an integer safely
-        except ValueError:
-            await ctx.send("Invalid input! Please enter a number for the amount of gold bars.")
+            await ctx.send("You must specify the amount of gold bars to invest in.\nExample: `!ctinvest gold 5`")
             return
 
         if amount <= 0:

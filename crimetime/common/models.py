@@ -6,7 +6,7 @@ class User(Base):
     '''Stored User Info'''
     balance:  int = 0    #Cash Balance
     gold:     int = 0    #Gold Bars Owned
-    diamond:  int = 0    #Diamonds Owned
+    diamonds:  int = 0    #Diamonds Owned
     p_wins:   int = 0    #Player Mugging Wins
     p_losses: int = 0    #Player Mugging Losses
     p_bonus:  float = 0  #Player Bonus from Win/Loss Ratio
