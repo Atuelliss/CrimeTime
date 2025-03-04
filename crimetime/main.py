@@ -166,8 +166,10 @@ class CrimeTime(commands.Cog):
         user.balance -= cash_needed
         user.gems += amount
         self.save()
-
-        await ctx.send(f"You invested ${cash_needed} into {amount} gems!\nYour investment is safe from mugging for now!")
+        if amount == 1:
+            await ctx.send(f"You invested ${cash_needed} into {amount} gem!\nYour investment is safe from mugging for now!")
+        else:
+            await ctx.send(f"You invested ${cash_needed} into {amount} gems!\nYour investment is safe from mugging for now!")
 
     # Check balance and stats
     @commands.command()
