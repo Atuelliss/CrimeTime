@@ -82,20 +82,20 @@ class CrimeTime(commands.Cog):
         cash = user.balance
         gold = user.gold
         gold_value = 2500
-        diamonds = user.diamonds
-        diamond_value = 5000
+        gems = user.gems
+        gem_value = 5000
         gold_total = gold * gold_value
-        diamond_total = diamonds * diamond_value
-        total_value = cash + gold_total + diamond_total
-        await ctx.send(f"**{member.display_name}**\n-=-=-=-=-=-=-=-=-=-=-\n**Cash Balance**: ${cash}\n**Gold Bars**: {gold} - ${gold_total}\n**Diamonds**: {diamonds} - ${diamond_total}\n-=-=-=-=-=-=-=-=-=-=-\nTotal Wealth: ${total_value}")
+        gem_total = gems * gem_value
+        total_value = cash + gold_total + gem_total
+        await ctx.send(f"**{member.display_name}**\n-=-=-=-=-=-=-=-=-=-=-\n**Cash Balance**: ${cash}\n**Gold Bars**: {gold} - ${gold_total}\n**Gems**: {gems} - ${gem_total}\n-=-=-=-=-=-=-=-=-=-=-\nTotal Wealth: ${total_value}")
 
-    # Convert Cash to Gold or Diamonds
+    # Convert Cash to Gold or Gemstones
     @commands.group(invoke_without_command=True)
     async def ctinvest(self, ctx: commands.Context):
         """Ability for players to convert currency forms."""
         await ctx.send("Please specify a valid subcommand, e.g.:\n"
                        "`!ctinvest bars <amount>`\n"
-                       "`!ctinvest diamonds <amount>`")
+                       "`!ctinvest gems <amount>`")
 
     @ctinvest.command()
     async def bars(self, ctx: commands.Context, amount: int = None):
@@ -134,19 +134,19 @@ class CrimeTime(commands.Cog):
         await ctx.send(f"You invested ${cash_needed} into {amount} gold bars!")
 
     @ctinvest.command()
-    async def diamonds(self, ctx: commands.Context, amount: int = None):
-        """Allows a Player to convert cash to Diamonds."""
+    async def gems(self, ctx: commands.Context, amount: int = None):
+        """Allows a Player to convert cash to gems."""
 
         if amount is None:
-            await ctx.send("You must specify the amount of gold bars to invest in.\nExample: `!ctinvest diamonds 5`")
+            await ctx.send("You must specify the amount of diamonds to invest in.\nExample: `!ctinvest gems 5`")
             return
 
         if amount <= 0:
-            await ctx.send("Please enter a valid number of diamonds to invest in.")
+            await ctx.send("Please enter a valid number of gems to invest in.")
             return
         member = ctx.author
-        diamond_value = 5000
-        cash_needed = amount * diamond_value
+        gem_value = 5000
+        cash_needed = amount * gem_value
 
         investbucket = self.investcooldown.get_bucket(ctx.message)
         guildsettings = self.db.get_conf(ctx.guild)
@@ -164,10 +164,10 @@ class CrimeTime(commands.Cog):
             await ctx.send(f"You must wait {wait_time} before investing again.")
             return
         user.balance -= cash_needed
-        user.diamonds += amount
+        user.gems += amount
         self.save()
 
-        await ctx.send(f"You invested ${cash_needed} into {amount} diamonds!\nYour investment is safe from mugging for now!")
+        await ctx.send(f"You invested ${cash_needed} into {amount} gems!\nYour investment is safe from mugging for now!")
 
     # Check balance and stats
     @commands.command()
