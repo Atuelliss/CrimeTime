@@ -101,8 +101,8 @@ class CrimeTime(commands.Cog):
     async def gold(self, ctx: commands.Context, amount: int = 0):
         """Allows a Player to convert cash to Gold Bars."""
         if amount <= 0:
-            return await ctx.send("Please enter a valid number of gold bars to invest in.")
-
+            await ctx.send("Please enter a valid number of gold bars to invest in.")
+            return
         member = ctx.author
         gold_value = 2500
         cash_needed = amount * gold_value
