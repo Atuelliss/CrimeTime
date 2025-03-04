@@ -112,15 +112,16 @@ class CrimeTime(commands.Cog):
         user = guildsettings.get_user(member)
 
         if not user:
-            return await ctx.send("User data not found. Please try again later.")
-
+            await ctx.send("User data not found. Please try again later.")
+            return
         if user.balance < cash_needed:
-            return await ctx.send("You do not have enough cash for that transaction.")
-
+            await ctx.send("You do not have enough cash for that transaction.")
+            return
         secondsleft = investbucket.update_rate_limit()
         if secondsleft:
             wait_time = humanize_timedelta(seconds=int(secondsleft))
-            return await ctx.send(f"You must wait {wait_time} before investing again.")
+            await ctx.send(f"You must wait {wait_time} before investing again.")
+            return
         user.balance -= cash_needed
         user.gold += amount
         self.save()
