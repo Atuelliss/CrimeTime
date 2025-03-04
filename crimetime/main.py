@@ -80,9 +80,9 @@ class CrimeTime(commands.Cog):
         guildsettings = self.db.get_conf(ctx.guild)
         user = guildsettings.get_user(member)
         cash = user.balance
-        gold = user.gold
+        gold = user.gold_bars
         gold_value = 2500
-        gems = user.gems
+        gems = user.gems_owned
         gem_value = 5000
         gold_total = gold * gold_value
         gem_total = gems * gem_value
@@ -130,7 +130,7 @@ class CrimeTime(commands.Cog):
                 await ctx.send(f"You must wait {wait_time} before investing again.")
                 return
             user.balance -= cash_needed
-            user.gold += amount
+            user.gold_bars += amount
             self.save()
 
             await ctx.send(f"You invested ${cash_needed} into {amount} gold bars!")
@@ -167,7 +167,7 @@ class CrimeTime(commands.Cog):
                 await ctx.send(f"You must wait {wait_time} before investing again.")
                 return
             user.balance -= cash_needed
-            user.gems += amount
+            user.gems_owned += amount
             self.save()
             if amount == 1:
                 await ctx.send(f"You invested ${cash_needed} into {amount} gem!\nYour investment is safe from mugging for now!")
@@ -204,12 +204,12 @@ class CrimeTime(commands.Cog):
         if not user:
             await ctx.send("User data not found. Please try again later.")
             return
-        if user.gold < amount:
+        if user.gold_bars < amount:
             await ctx.send("You do not have enough gold bars for that transaction.")
             return
         else:
             user.balance += cash_payout
-            user.gold -= amount
+            user.gold_bars -= amount
             self.save()
             if amount == 1:
                 await ctx.send(f"You converted {amount} bar into ${cash_payout}!")
@@ -237,12 +237,12 @@ class CrimeTime(commands.Cog):
         if not user:
             await ctx.send("User data not found. Please try again later.")
             return
-        if user.gems < amount:
+        if user.gems_owned < amount:
             await ctx.send("You do not have enough gems for that transaction.")
             return
         else:
             user.balance += cash_payout
-            user.gems -= amount
+            user.gems_owned -= amount
             self.save()
             if amount == 1:
                 await ctx.send(f"You converted {amount} gem into ${cash_payout}!")

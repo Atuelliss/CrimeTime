@@ -4,9 +4,9 @@ from . import Base
 
 class User(Base):
     '''Stored User Info'''
-    balance:  int = 0    #Cash Balance
-    gold:     int = 0    #Gold Bars Owned
-    gems:  int = 0       #Gems Owned
+    balance:  int = 0    #Cash balance
+    gold_bars: int = 0   #Gold Bars Owned
+    gems_owned: int = 0  #Gems Owned
     p_wins:   int = 0    #Player Mugging Wins
     p_losses: int = 0    #Player Mugging Losses
     p_bonus:  float = 0  #Player Bonus from Win/Loss Ratio
