@@ -94,15 +94,26 @@ class CrimeTime(commands.Cog):
     async def ctinvest(self, ctx: commands.Context):
         """Ability for players to convert currency forms."""
         await ctx.send("Please specify a valid subcommand, e.g.:\n"
-                       "`!ctinvest gold <amount>`\n"
-                       "`!ctinvest diamonds <amount>`")
+                       "`.ctinvest gold <amount>`\n"
+                       "`.ctinvest diamonds <amount>`")
 
     @ctinvest.command()
-    async def gold(self, ctx: commands.Context, amount: int = None):
+    async def gold(self, ctx: commands.Context, amount: str = None):
         """Allows a Player to convert cash to Gold Bars."""
+    
+        # Debugging step
+        print(f"ctx type: {type(ctx)}, amount type: {type(amount)}, value: {amount}")
+
         if amount is None:
             await ctx.send("You must specify the amount of gold bars to invest in. Example: `!ctinvest gold 5`")
             return
+    
+        try:
+            amount = int(amount)  # Convert the amount to an integer safely
+        except ValueError:
+            await ctx.send("Invalid input! Please enter a number for the amount of gold bars.")
+            return
+
         if amount <= 0:
             await ctx.send("Please enter a valid number of gold bars to invest in.")
             return
