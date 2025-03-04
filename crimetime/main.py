@@ -93,18 +93,17 @@ class CrimeTime(commands.Cog):
     @commands.group(invoke_without_command=True)
     async def ctinvest(self, ctx: commands.Context):
         """Ability for players to convert currency forms."""
-        await ctx.send("Please specify a valid subcommand, e.g.:\n`$ctinvest gold (number of bars you want).`\n`$ctinvest diamonds (how many diamonds you want).`")
+        await ctx.send(f"Please specify a valid subcommand, e.g.:\n`$ctinvest gold (number of bars you want).`\n`$ctinvest diamonds (how many diamonds you want).`")
 
     @ctinvest.command()
-    async def gold(self, ctx: commands.Context, amount: int, member: discord.Member = None):
+    async def gold(self, ctx: commands.Context, amount: int):
         """Allows a Player to convert cash to Gold Bars."""
         # Ensure a valid amount is entered
         if amount is None or amount <= 0:
             await ctx.send("You must enter a positive amount of gold bars to invest in.")
             return
         # Default to author if no target is provided
-        member = member or ctx.author
-
+        member = ctx.author
         gold_value = 2500
         bar_count = int(amount)
         cash_needed = bar_count * gold_value
