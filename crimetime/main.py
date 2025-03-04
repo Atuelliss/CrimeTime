@@ -93,42 +93,39 @@ class CrimeTime(commands.Cog):
     @commands.group(invoke_without_command=True)
     async def ctinvest(self, ctx: commands.Context):
         """Ability for players to convert currency forms."""
-        await ctx.send(f"Please specify a valid subcommand, e.g.:\n`$ctinvest gold (number of bars you want).`\n`$ctinvest diamonds (how many diamonds you want).`")
+        await ctx.send("Please specify a valid subcommand, e.g.:\n"
+                       "`!ctinvest gold <amount>`\n"
+                       "`!ctinvest diamonds <amount>`")
 
     @ctinvest.command()
     async def gold(self, ctx: commands.Context, amount: int = 0):
         """Allows a Player to convert cash to Gold Bars."""
-        bar_count = amount
-        # Ensure a valid amount is entered
-        if bar_count <= 0:
-            await ctx.send("You must enter a positive amount of gold bars to invest in.")
-            return
-        # Default to author if no target is provided
-        member = ctx.author
-        gold_value = int(2500)
-        cash_needed = bar_count * gold_value
-        # Check investment cooldown for player
-        investbucket = self.investcooldown.get_bucket(ctx.message) # Cooldown for Cash conversion.
+        if amount <= 0:
+            return await ctx.send("Please enter a valid number of gold bars to invest in.")
 
-        # Get user data
+        member = ctx.author
+        gold_value = 2500
+        cash_needed = amount * gold_value
+
+        investbucket = self.investcooldown.get_bucket(ctx.message)
         guildsettings = self.db.get_conf(ctx.guild)
         user = guildsettings.get_user(member)
-        
-        # Check to see if user has enough cash.
-        if user.balance < cash_needed:
-            await ctx.send("You do not have enough cash for that transaction.")
-            return
 
-        secondsleft = investbucket.update_rate_limit() # Add invest timer to user.
+        if not user:
+            return await ctx.send("User data not found. Please try again later.")
+
+        if user.balance < cash_needed:
+            return await ctx.send("You do not have enough cash for that transaction.")
+
+        secondsleft = investbucket.update_rate_limit()
         if secondsleft:
             wait_time = humanize_timedelta(seconds=int(secondsleft))
-            return await ctx.send(f"You must wait {wait_time} until you can invest in more assets!")
-
-        # Transfer currency
+            return await ctx.send(f"You must wait {wait_time} before investing again.")
         user.balance -= cash_needed
-        user.gold += bar_count
+        user.gold += amount
         self.save()
-        await ctx.send(f"You invested ${cash_needed} into {bar_count} gold bars!!")
+
+        await ctx.send(f"You invested ${cash_needed} into {amount} gold bars!")
 
     # Check balance and stats
     @commands.command()
