@@ -96,7 +96,7 @@ class CrimeTime(commands.Cog):
         await ctx.send(f"Please specify a valid subcommand, e.g.:\n`$ctinvest gold (number of bars you want).`\n`$ctinvest diamonds (how many diamonds you want).`")
 
     @ctinvest.command()
-    async def gold(self, ctx: commands.Context, amount: int):
+    async def gold(self, ctx: commands.Context, amount: int = 0):
         """Allows a Player to convert cash to Gold Bars."""
         bar_count = amount
         # Ensure a valid amount is entered
