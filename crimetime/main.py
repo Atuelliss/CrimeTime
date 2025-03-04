@@ -98,8 +98,11 @@ class CrimeTime(commands.Cog):
                        "`!ctinvest diamonds <amount>`")
 
     @ctinvest.command()
-    async def gold(self, ctx: commands.Context, amount: int = 0):
+    async def gold(self, ctx: commands.Context, amount: int = None):
         """Allows a Player to convert cash to Gold Bars."""
+        if amount is None:
+            await ctx.send("You must specify the amount of gold bars to invest in. Example: `!ctinvest gold 5`")
+            return
         if amount <= 0:
             await ctx.send("Please enter a valid number of gold bars to invest in.")
             return
