@@ -105,7 +105,7 @@ class CrimeTime(commands.Cog):
         # Default to author if no target is provided
         member = ctx.author
         gold_value = 2500
-        bar_count = int(amount)
+        bar_count = amount
         cash_needed = bar_count * gold_value
         # Check investment cooldown for player
         investbucket = self.investcooldown.get_bucket(ctx.message) # Cooldown for Cash conversion.
