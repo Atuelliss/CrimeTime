@@ -75,14 +75,14 @@ class CrimeTime(commands.Cog):
 # CtInvest function
     # Convert Cash to Gold or Gemstones
     @commands.group(invoke_without_command=True)
-    async def ctinvest(self, ctx: commands.Context) -> None:
+    async def ctinvest(self, ctx: commands.Context):
         """Ability for players to convert currency forms."""
         await ctx.send("Please specify a valid subcommand, e.g.:\n"
                        "`.ctinvest bars <amount>`\n"
                        "`.ctinvest gems <amount>`")
 
-    @ctinvest.command()
-    async def bars(self, ctx: commands.Context, amount: int = None):
+    @ctinvest.command(name="bars")
+    async def invest_bars(self, ctx: commands.Context, amount: int = None):
         """Allows a Player to convert cash to Gold Bars."""
         member = ctx.author
         investbucket = self.investcooldown.get_bucket(ctx.message)
@@ -118,8 +118,8 @@ class CrimeTime(commands.Cog):
             else:
                 await ctx.send(f"You invested ${cash_needed} into {amount} gold bars!\nYour investment is safe from mugging for now!")
 
-    @ctinvest.command()
-    async def gems(self, ctx: commands.Context, amount: int = None):
+    @ctinvest.command(name="gems")
+    async def invest_gems(self, ctx: commands.Context, amount: int = None):
         """Allows a Player to convert cash to gems."""
         member = ctx.author
         investbucket = self.investcooldown.get_bucket(ctx.message)
@@ -158,14 +158,14 @@ class CrimeTime(commands.Cog):
 # ctLiquidate
     # Convert Assets to Cash
     @commands.group(invoke_without_command=True)
-    async def ctliquidate(self, ctx: commands.Context) -> None:
+    async def ctliquidate(self, ctx: commands.Context):
         """Ability for players to convert currency forms."""
         await ctx.send("Please specify a valid subcommand, e.g.:\n"
                        "`.ctliquidate bars <amount>`\n"
                        "`.ctliquidate gems <amount>`")
 
-    @ctliquidate.command()
-    async def bars(self, ctx: commands.Context, amount: int = None):
+    @ctliquidate.command(name="bars")
+    async def liquidate_bars(self, ctx: commands.Context, amount: int = None):
         """Allows a Player to convert Gold Bars to Cash."""
         member = ctx.author
         guildsettings = self.db.get_conf(ctx.guild)
@@ -195,8 +195,8 @@ class CrimeTime(commands.Cog):
             else:
                 await ctx.send(f"You converted {amount} bars into ${cash_payout}!")
 
-    @ctliquidate.command()
-    async def gems(self, ctx: commands.Context, amount: int = None):
+    @ctliquidate.command(name="gems")
+    async def liquidate_gems(self, ctx: commands.Context, amount: int = None):
         """Allows a Player to convert gems to cash."""
         member = ctx.author
         guildsettings = self.db.get_conf(ctx.guild)
@@ -472,8 +472,8 @@ class CrimeTime(commands.Cog):
         """Ability for players to transfer currency forms."""
         await ctx.send("Please specify a valid subcommand, e.g., `!ctgive cash @user amount`.")
 
-    @ctgive.command()
-    async def cash(self, ctx: commands.Context, target: discord.Member, amount: int):
+    @ctgive.command(name="cash")
+    async def give_cash(self, ctx: commands.Context, target: discord.Member, amount: int):
         """Allows a Player to give a form of Currency to another user."""
         
         # Ensure target is not None and not the giver
@@ -529,8 +529,8 @@ class CrimeTime(commands.Cog):
         await ctx.send(f"**{target.display_name}**'s complete record has been reset to 0.")
         self.save()
 
-    @ctclear.command() # Clears a User's cash balance
-    async def balance(self, ctx: commands.Context, target: discord.Member):
+    @ctclear.command(name="balance") # Clears a User's cash balance
+    async def clear_balance(self, ctx: commands.Context, target: discord.Member):
         """Reset a User's Cash Balance to 0."""
         guildsettings = self.db.get_conf(ctx.guild)
         target_user = guildsettings.get_user(target)
@@ -538,8 +538,8 @@ class CrimeTime(commands.Cog):
         await ctx.send(f"**{target.display_name}**'s Balance has been reset to 0.")
         self.save()
 
-    @ctclear.command() # Clears a User's Gold-Bar balance
-    async def bars(self, ctx: commands.Context, target: discord.Member):
+    @ctclear.command(name="bars") # Clears a User's Gold-Bar balance
+    async def clear_bars(self, ctx: commands.Context, target: discord.Member):
         """Reset a User's Gold Bar Count to 0."""
         guildsettings = self.db.get_conf(ctx.guild)
         target_user = guildsettings.get_user(target)
@@ -547,8 +547,8 @@ class CrimeTime(commands.Cog):
         await ctx.send(f"**{target.display_name}**'s Gold Bar count has been reset to 0.")
         self.save()
     
-    @ctclear.command() # Clears a User's Gem count balance
-    async def gems(self, ctx: commands.Context, target: discord.Member):
+    @ctclear.command(name="gems") # Clears a User's Gem count balance
+    async def clear_gems(self, ctx: commands.Context, target: discord.Member):
         """Reset a User's Gem count to 0."""
         guildsettings = self.db.get_conf(ctx.guild)
         target_user = guildsettings.get_user(target)
@@ -556,8 +556,8 @@ class CrimeTime(commands.Cog):
         await ctx.send(f"**{target.display_name}**'s Gem count has been reset to 0.")
         self.save()
  
-    @ctclear.command() # Clears a User's PvP wins and losses.
-    async def pstats(self, ctx: commands.Context, target: discord.Member):
+    @ctclear.command(name="pstats") # Clears a User's PvP wins and losses.
+    async def clear_pstats(self, ctx: commands.Context, target: discord.Member):
         '''Reset a User's PvP Wins and Losses to 0.'''
         guildsettings = self.db.get_conf(ctx.guild)
         target_user = guildsettings.get_user(target)
@@ -566,8 +566,8 @@ class CrimeTime(commands.Cog):
         await ctx.send(f"**{target.display_name}**'s PvP Wins/Losses have been reset to 0.")
         self.save()
     
-    @ctclear.command() # Clear's a Users Rob wins and losses.
-    async def rstats(self, ctx: commands.Context, target: discord.Member):
+    @ctclear.command(name="rstats") # Clear's a Users Rob wins and losses.
+    async def clear_rstats(self, ctx: commands.Context, target: discord.Member):
         '''Reset a User's Robbery Wins and Losses to 0.'''
         guildsettings = self.db.get_conf(ctx.guild)
         target_user = guildsettings.get_user(target)
@@ -576,8 +576,8 @@ class CrimeTime(commands.Cog):
         await ctx.send(f"**{target.display_name}**'s Robbery Wins/Losses have been reset to 0.")
         self.save()
     
-    @ctclear.command() # Clear's a Users Heist wins and losses.
-    async def hstats(self, ctx: commands.Context, target: discord.Member):
+    @ctclear.command(name="hstats") # Clear's a Users Heist wins and losses.
+    async def clear_hstats(self, ctx: commands.Context, target: discord.Member):
         '''Reset a User's Heist Wins and Losses to 0.'''
         guildsettings = self.db.get_conf(ctx.guild)
         target_user = guildsettings.get_user(target)
@@ -592,8 +592,8 @@ class CrimeTime(commands.Cog):
     async def ctset(self, ctx: commands.Context):
         """Configure CrimeTime User Data"""
 
-    @ctset.command() # Set a User's Cash Balance to a specific number.
-    async def balance(self, ctx: commands.Context, target: discord.Member, amount: int):
+    @ctset.command(name="balance") # Set a User's Cash Balance to a specific number.
+    async def set_balance(self, ctx: commands.Context, target: discord.Member, amount: int):
         """Set a User's Cash Balance to specified amount."""
         guildsettings = self.db.get_conf(ctx.guild)
         target_user = guildsettings.get_user(target)
@@ -604,8 +604,8 @@ class CrimeTime(commands.Cog):
         await ctx.send(f"**{target.display_name}**'s Balance have been set to {amount}.")
         self.save()
 
-    @ctset.command() # Set a User's Gold Bar Count to a specific number.
-    async def gold(self, ctx: commands.Context, target: discord.Member, amount: int):
+    @ctset.command(name="bars") # Set a User's Gold Bar Count to a specific number.
+    async def set_bars(self, ctx: commands.Context, target: discord.Member, amount: int):
         """Set a User's Gold Bar count to specified amount."""
         guildsettings = self.db.get_conf(ctx.guild)
         target_user = guildsettings.get_user(target)
@@ -616,8 +616,8 @@ class CrimeTime(commands.Cog):
         await ctx.send(f"**{target.display_name}**'s Gold Bars have been set to {amount}.")
         self.save()
     
-    @ctset.command() # Set a User's Gem Count to a specific number.
-    async def gems(self, ctx: commands.Context, target: discord.Member, amount: int):
+    @ctset.command(name="gems") # Set a User's Gem Count to a specific number.
+    async def set_gems(self, ctx: commands.Context, target: discord.Member, amount: int):
         """Set a User's Gems count to specified amount."""
         guildsettings = self.db.get_conf(ctx.guild)
         target_user = guildsettings.get_user(target)
@@ -628,8 +628,8 @@ class CrimeTime(commands.Cog):
         await ctx.send(f"**{target.display_name}**'s Gem count has been set to {amount}.")
         self.save()
     
-    @ctset.command() # Set a User's PvP wins.
-    async def pwin(self, ctx: commands.Context, target: discord.Member, amount: int):
+    @ctset.command(name="pwin") # Set a User's PvP wins.
+    async def set_pwin(self, ctx: commands.Context, target: discord.Member, amount: int):
         """Set a User's PvP Wins to specified amount."""
         guildsettings = self.db.get_conf(ctx.guild)
         target_user = guildsettings.get_user(target)
@@ -640,8 +640,8 @@ class CrimeTime(commands.Cog):
         await ctx.send(f"**{target.display_name}**'s PvP Mug Wins have been set to {amount}.")
         self.save()
     
-    @ctset.command() # Set a User's PvP losses.
-    async def ploss(self, ctx: commands.Context, target: discord.Member, amount: int):
+    @ctset.command(name="ploss") # Set a User's PvP losses.
+    async def set_ploss(self, ctx: commands.Context, target: discord.Member, amount: int):
         """Set a User's PvP Losses to specified amount."""
         guildsettings = self.db.get_conf(ctx.guild)
         target_user = guildsettings.get_user(target)
@@ -652,8 +652,8 @@ class CrimeTime(commands.Cog):
         await ctx.send(f"**{target.display_name}**'s PvP Mug Losses have been set to {amount}.")
         self.save()
 
-    @ctset.command() # Set a User's Rob wins.
-    async def rwin(self, ctx: commands.Context, target: discord.Member, amount: int):
+    @ctset.command(name="rwin") # Set a User's Rob wins.
+    async def set_rwin(self, ctx: commands.Context, target: discord.Member, amount: int):
         """Set a User's Robbery Wins to specified amount."""
         guildsettings = self.db.get_conf(ctx.guild)
         target_user = guildsettings.get_user(target)
@@ -664,8 +664,8 @@ class CrimeTime(commands.Cog):
         await ctx.send(f"**{target.display_name}**'s Robbery wins have been set to {amount}.")
         self.save()
     
-    @ctset.command() # Set a User's Rob losses.
-    async def rloss(self, ctx: commands.Context, target: discord.Member, amount: int):
+    @ctset.command(name="rloss") # Set a User's Rob losses.
+    async def set_rloss(self, ctx: commands.Context, target: discord.Member, amount: int):
         """Set a User's Robbery loss to specified amount."""
         guildsettings = self.db.get_conf(ctx.guild)
         target_user = guildsettings.get_user(target)
@@ -676,8 +676,8 @@ class CrimeTime(commands.Cog):
         await ctx.send(f"**{target.display_name}**'s Robbery losses have been set to {amount}.")
         self.save()
 
-    @ctset.command() # Set a User's Heist wins.
-    async def hwin(self, ctx: commands.Context, target: discord.Member, amount: int):
+    @ctset.command(name="hwin") # Set a User's Heist wins.
+    async def set_hwin(self, ctx: commands.Context, target: discord.Member, amount: int):
         """Set a User's Heist Wins to specified amount."""
         guildsettings = self.db.get_conf(ctx.guild)
         target_user = guildsettings.get_user(target)
@@ -688,8 +688,8 @@ class CrimeTime(commands.Cog):
         await ctx.send(f"**{target.display_name}**'s Heist wins have been set to {amount}.")
         self.save()
     
-    @ctset.command() # Set a User's Heist losses.
-    async def hloss(self, ctx: commands.Context, target: discord.Member, amount: int):
+    @ctset.command(name="hloss") # Set a User's Heist losses.
+    async def set_hloss(self, ctx: commands.Context, target: discord.Member, amount: int):
         """Set a User's Heist loss to specified amount."""
         guildsettings = self.db.get_conf(ctx.guild)
         target_user = guildsettings.get_user(target)
@@ -700,6 +700,7 @@ class CrimeTime(commands.Cog):
         await ctx.send(f"**{target.display_name}**'s Heist losses have been set to {amount}.")
         self.save()
 
+###### Start of Leaderboard Commands
     @commands.command() # Leaderboard Commands for Mugging
     async def muglb(self, ctx: commands.Context, stat: t.Literal["balance", "wins", "ratio"]):
         """Displays leaderboard for Player Mugging stats."""
