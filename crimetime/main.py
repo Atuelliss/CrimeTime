@@ -105,25 +105,23 @@ class CrimeTime(commands.Cog):
         investbucket = self.investcooldown.get_bucket(ctx.message)
         guildsettings = self.db.get_conf(ctx.guild)
         user = guildsettings.get_user(member)  
-        gold_value = 2500
-        cash_needed = amount * gold_value
-
+        if user is None:
+            await ctx.send("User data not found. Please try again later.")
+            return
         if amount is None:
             await ctx.send("You must specify the amount of gold bars to invest in.")
             return
+        if amount <= 0:
+            await ctx.send("Please enter a valid number of gold bars to invest in.")
+            return
+
+        gold_value = 2500
+        cash_needed = amount * gold_value
 
         secondsleft = investbucket.update_rate_limit()
         if secondsleft:
             wait_time = humanize_timedelta(seconds=int(secondsleft))
             await ctx.send(f"You must wait {wait_time} before investing again.")
-            return
-
-        if amount <= 0:
-            await ctx.send("Please enter a valid number of gold bars to invest in.")
-            return
-        
-        if not user:
-            await ctx.send("User data not found. Please try again later.")
             return
         if user.balance < cash_needed:
             await ctx.send(f"You do not have the ${cash_needed} needed for that transaction.")
@@ -144,25 +142,23 @@ class CrimeTime(commands.Cog):
         investbucket = self.investcooldown.get_bucket(ctx.message)
         guildsettings = self.db.get_conf(ctx.guild)
         user = guildsettings.get_user(member)
-        gem_value = 5000
-        cash_needed = amount * gem_value
-
+        if user is None:
+            await ctx.send("User data not found. Please try again later.")
+            return
         if amount is None:
             await ctx.send("You must specify the amount of gems to invest in.")
             return
+        if amount <= 0:
+            await ctx.send("Please enter a valid number of gems to invest in.")
+            return
+
+        gem_value = 5000
+        cash_needed = amount * gem_value
 
         secondsleft = investbucket.update_rate_limit()
         if secondsleft:
             wait_time = humanize_timedelta(seconds=int(secondsleft))
             await ctx.send(f"You must wait {wait_time} before investing again.")
-            return
-
-        if amount <= 0:
-            await ctx.send("Please enter a valid number of gems to invest in.")
-            return
-               
-        if not user:
-            await ctx.send("User data not found. Please try again later.")
             return
         if user.balance < cash_needed:
             await ctx.send(f"You do not have the ${cash_needed} for that transaction.")
@@ -191,20 +187,19 @@ class CrimeTime(commands.Cog):
         member = ctx.author
         guildsettings = self.db.get_conf(ctx.guild)
         user = guildsettings.get_user(member)
-        gold_value = 2500
-        cash_payout = amount * gold_value
-
+        if user is None:
+            await ctx.send("User data not found. Please try again later.")
+            return
         if amount is None:
             await ctx.send("You must specify the amount of gold bars to convert.")
             return
-
         if amount <= 0:
             await ctx.send("Please enter a valid number of gold bars to convert.")
             return
         
-        if not user:
-            await ctx.send("User data not found. Please try again later.")
-            return
+        gold_value = 2500
+        cash_payout = amount * gold_value
+
         if user.gold_bars < amount:
             await ctx.send("You do not have enough gold bars for that transaction.")
             return
@@ -223,20 +218,19 @@ class CrimeTime(commands.Cog):
         member = ctx.author
         guildsettings = self.db.get_conf(ctx.guild)
         user = guildsettings.get_user(member)
-        gem_value = 5000
-        cash_payout = amount * gem_value
-
+        if user is None:
+            await ctx.send("User data not found. Please try again later.")
+            return
         if amount is None:
             await ctx.send("You must specify the amount of gems to liquidate.")
             return
-
         if amount <= 0:
             await ctx.send("Please enter a valid number of gems to liquidate.")
             return       
-               
-        if not user:
-            await ctx.send("User data not found. Please try again later.")
-            return
+
+        gem_value = 5000
+        cash_payout = amount * gem_value
+
         if user.gems_owned < amount:
             await ctx.send("You do not have enough gems for that transaction.")
             return
