@@ -72,27 +72,10 @@ class CrimeTime(commands.Cog):
 
         asyncio.create_task(_save())
 
-    # Check balance and stats
-    @commands.command()
-    async def ctwealth(self, ctx: commands.Context, member: discord.Member = None):
-        """Checks the total assets of a User."""
-        member  = member or ctx.author
-        guildsettings = self.db.get_conf(ctx.guild)
-        user = guildsettings.get_user(member)
-        cash = user.balance
-        gold = user.gold_bars
-        gold_value = 2500
-        gems = user.gems_owned
-        gem_value = 5000
-        gold_total = gold * gold_value
-        gem_total = gems * gem_value
-        total_value = cash + gold_total + gem_total
-        await ctx.send(f"**{member.display_name}**\n-=-=-=-=-=-=-=-=-=-=-\n**Cash Balance**: ${cash}\n**Gold Bars**: {gold} - ${gold_total}\n**Gems**: {gems} - ${gem_total}\n-=-=-=-=-=-=-=-=-=-=-\nTotal Wealth: ${total_value}")
-
 # CtInvest function
     # Convert Cash to Gold or Gemstones
     @commands.group(invoke_without_command=True)
-    async def ctinvest(self, ctx: commands.Context):
+    async def ctinvest(self, ctx: commands.Context) -> None:
         """Ability for players to convert currency forms."""
         await ctx.send("Please specify a valid subcommand, e.g.:\n"
                        "`.ctinvest bars <amount>`\n"
@@ -175,7 +158,7 @@ class CrimeTime(commands.Cog):
 # ctLiquidate
     # Convert Assets to Cash
     @commands.group(invoke_without_command=True)
-    async def ctliquidate(self, ctx: commands.Context):
+    async def ctliquidate(self, ctx: commands.Context) -> None:
         """Ability for players to convert currency forms."""
         await ctx.send("Please specify a valid subcommand, e.g.:\n"
                        "`.ctliquidate bars <amount>`\n"
@@ -243,7 +226,25 @@ class CrimeTime(commands.Cog):
             else:
                 await ctx.send(f"You converted {amount} gems into ${cash_payout}!")
 
-    # Check balance and stats
+###### "Check" commands:
+    # Check total wealth of all currencies.
+    @commands.command()
+    async def ctwealth(self, ctx: commands.Context, member: discord.Member = None):
+        """Checks the total assets of a User."""
+        member  = member or ctx.author
+        guildsettings = self.db.get_conf(ctx.guild)
+        user = guildsettings.get_user(member)
+        cash = user.balance
+        gold = user.gold_bars
+        gold_value = 2500
+        gems = user.gems_owned
+        gem_value = 5000
+        gold_total = gold * gold_value
+        gem_total = gems * gem_value
+        total_value = cash + gold_total + gem_total
+        await ctx.send(f"**{member.display_name}**\n-=-=-=-=-=-=-=-=-=-=-\n**Cash Balance**: ${cash}\n**Gold Bars**: {gold} - ${gold_total}\n**Gems**: {gems} - ${gem_total}\n-=-=-=-=-=-=-=-=-=-=-\nTotal Wealth: ${total_value}")
+
+    # Check balance and stats specifically attributed to the Mug command.
     @commands.command()
     async def mugcheck(self, ctx: commands.Context, member: discord.Member = None):
         """Checks the Balance, Wins/Losses, and Ratio of a User."""
