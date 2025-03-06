@@ -101,71 +101,73 @@ class CrimeTime(commands.Cog):
     @ctinvest.command()
     async def bars(self, ctx: commands.Context, amount: int = None):
         """Allows a Player to convert cash to Gold Bars."""
+        member = ctx.author
+        investbucket = self.investcooldown.get_bucket(ctx.message)
+        guildsettings = self.db.get_conf(ctx.guild)
+        user = guildsettings.get_user(member)  
+        gold_value = 2500
+        cash_needed = amount * gold_value
 
         if amount is None:
             await ctx.send("You must specify the amount of gold bars to invest in.")
             return
 
+        secondsleft = investbucket.update_rate_limit()
+        if secondsleft:
+            wait_time = humanize_timedelta(seconds=int(secondsleft))
+            await ctx.send(f"You must wait {wait_time} before investing again.")
+            return
+
         if amount <= 0:
             await ctx.send("Please enter a valid number of gold bars to invest in.")
             return
-        member = ctx.author
-        gold_value = 2500
-        cash_needed = amount * gold_value
-
-        investbucket = self.investcooldown.get_bucket(ctx.message)
-        guildsettings = self.db.get_conf(ctx.guild)
-        user = guildsettings.get_user(member)
-
+        
         if not user:
             await ctx.send("User data not found. Please try again later.")
             return
         if user.balance < cash_needed:
-            await ctx.send("You do not have enough cash for that transaction.")
+            await ctx.send(f"You do not have the ${cash_needed} needed for that transaction.")
             return
         else:
-            secondsleft = investbucket.update_rate_limit()
-            if secondsleft:
-                wait_time = humanize_timedelta(seconds=int(secondsleft))
-                await ctx.send(f"You must wait {wait_time} before investing again.")
-                return
             user.balance -= cash_needed
             user.gold_bars += amount
             self.save()
-
-            await ctx.send(f"You invested ${cash_needed} into {amount} gold bars!")
+            if amount == 1:
+                await ctx.send(f"You invested ${cash_needed} into {amount} gold bar!\nYour investment is safe from mugging for now!")
+            else:
+                await ctx.send(f"You invested ${cash_needed} into {amount} gold bars!\nYour investment is safe from mugging for now!")
 
     @ctinvest.command()
     async def gems(self, ctx: commands.Context, amount: int = None):
         """Allows a Player to convert cash to gems."""
+        member = ctx.author
+        investbucket = self.investcooldown.get_bucket(ctx.message)
+        guildsettings = self.db.get_conf(ctx.guild)
+        user = guildsettings.get_user(member)
+        gem_value = 5000
+        cash_needed = amount * gem_value
 
         if amount is None:
             await ctx.send("You must specify the amount of gems to invest in.")
             return
 
+        secondsleft = investbucket.update_rate_limit()
+        if secondsleft:
+            wait_time = humanize_timedelta(seconds=int(secondsleft))
+            await ctx.send(f"You must wait {wait_time} before investing again.")
+            return
+
         if amount <= 0:
             await ctx.send("Please enter a valid number of gems to invest in.")
             return
-        member = ctx.author
-        gem_value = 5000
-        cash_needed = amount * gem_value
-
-        investbucket = self.investcooldown.get_bucket(ctx.message)
-        guildsettings = self.db.get_conf(ctx.guild)
-        user = guildsettings.get_user(member)
-
+               
         if not user:
             await ctx.send("User data not found. Please try again later.")
             return
         if user.balance < cash_needed:
-            await ctx.send("You do not have enough cash for that transaction.")
+            await ctx.send(f"You do not have the ${cash_needed} for that transaction.")
             return
         else:
-            secondsleft = investbucket.update_rate_limit()
-            if secondsleft:
-                wait_time = humanize_timedelta(seconds=int(secondsleft))
-                await ctx.send(f"You must wait {wait_time} before investing again.")
-                return
             user.balance -= cash_needed
             user.gems_owned += amount
             self.save()
@@ -186,6 +188,11 @@ class CrimeTime(commands.Cog):
     @ctliquidate.command()
     async def bars(self, ctx: commands.Context, amount: int = None):
         """Allows a Player to convert Gold Bars to Cash."""
+        member = ctx.author
+        guildsettings = self.db.get_conf(ctx.guild)
+        user = guildsettings.get_user(member)
+        gold_value = 2500
+        cash_payout = amount * gold_value
 
         if amount is None:
             await ctx.send("You must specify the amount of gold bars to convert.")
@@ -194,13 +201,7 @@ class CrimeTime(commands.Cog):
         if amount <= 0:
             await ctx.send("Please enter a valid number of gold bars to convert.")
             return
-        member = ctx.author
-        gold_value = 2500
-        cash_payout = amount * gold_value
-
-        guildsettings = self.db.get_conf(ctx.guild)
-        user = guildsettings.get_user(member)
-
+        
         if not user:
             await ctx.send("User data not found. Please try again later.")
             return
@@ -219,6 +220,11 @@ class CrimeTime(commands.Cog):
     @ctliquidate.command()
     async def gems(self, ctx: commands.Context, amount: int = None):
         """Allows a Player to convert gems to cash."""
+        member = ctx.author
+        guildsettings = self.db.get_conf(ctx.guild)
+        user = guildsettings.get_user(member)
+        gem_value = 5000
+        cash_payout = amount * gem_value
 
         if amount is None:
             await ctx.send("You must specify the amount of gems to liquidate.")
@@ -226,14 +232,8 @@ class CrimeTime(commands.Cog):
 
         if amount <= 0:
             await ctx.send("Please enter a valid number of gems to liquidate.")
-            return
-        member = ctx.author
-        gem_value = 5000
-        cash_payout = amount * gem_value
-
-        guildsettings = self.db.get_conf(ctx.guild)
-        user = guildsettings.get_user(member)
-
+            return       
+               
         if not user:
             await ctx.send("User data not found. Please try again later.")
             return
@@ -544,7 +544,7 @@ class CrimeTime(commands.Cog):
         self.save()
 
     @ctclear.command() # Clears a User's Gold-Bar balance
-    async def gold(self, ctx: commands.Context, target: discord.Member):
+    async def bars(self, ctx: commands.Context, target: discord.Member):
         """Reset a User's Gold Bar Count to 0."""
         guildsettings = self.db.get_conf(ctx.guild)
         target_user = guildsettings.get_user(target)
@@ -553,7 +553,7 @@ class CrimeTime(commands.Cog):
         self.save()
     
     @ctclear.command() # Clears a User's Gem count balance
-    async def diamonds(self, ctx: commands.Context, target: discord.Member):
+    async def gems(self, ctx: commands.Context, target: discord.Member):
         """Reset a User's Gem count to 0."""
         guildsettings = self.db.get_conf(ctx.guild)
         target_user = guildsettings.get_user(target)
