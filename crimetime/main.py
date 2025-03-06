@@ -157,7 +157,7 @@ class CrimeTime(commands.Cog):
 
 # ctLiquidate
     # Convert Assets to Cash
-    @commands.group(invoke_without_command=True)
+    @commands.group(invoke_without_command=True, aliases=["ctld"])
     async def ctliquidate(self, ctx: commands.Context):
         """Ability for players to convert currency forms."""
         await ctx.send("Please specify a valid subcommand, e.g.:\n"
