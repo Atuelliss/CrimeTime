@@ -314,7 +314,8 @@ class CrimeTime(commands.Cog):
                     "a sleep-deprived college Student", "a scruffy Puppy with a wallet in it's mouth", "a hyper Ballerina", 
                     "a boy dressed as a Stormtrooper", "a girl dressed as Princess Leia", "a baby in a stroller", "a group of drunk frat boys", 
                     "a poor girl doing the morning walk of shame", "another mugger bad at the job", "a man in a transparent banana costume",
-                    "an angry jawa holding an oddly thrusting mechanism", "two Furries fighting over an 'Uwu'", "a dude in drag posting a thirst-trap on tiktok"]
+                    "an angry jawa holding an oddly-thrusting mechanism", "two Furries fighting over an 'Uwu'",
+                    "a dude in drag posting a thirst-trap on tiktok"]
         #Rating = Medium
         stranger2 = ["a man in a business suit", "a doped-out gang-banger", "an off-duty policeman", "a local politician", 
                      "a scrawny meth-head missing most of his teeth", "Chuck Schumer's personal assistant"]
@@ -520,8 +521,8 @@ class CrimeTime(commands.Cog):
         guildsettings = self.db.get_conf(ctx.guild)
         target_user = guildsettings.get_user(target)
         target_user.balance = 0
-        target_user.gold = 0
-        target_user.gems = 0
+        target_user.gold_bars = 0
+        target_user.gems_owned = 0
         target_user.p_wins = 0
         target_user.p_losses = 0
         target_user.r_wins = 0
@@ -547,7 +548,7 @@ class CrimeTime(commands.Cog):
         """Reset a User's Gold Bar Count to 0."""
         guildsettings = self.db.get_conf(ctx.guild)
         target_user = guildsettings.get_user(target)
-        target_user.gold = 0
+        target_user.gold_bars = 0
         await ctx.send(f"**{target.display_name}**'s Gold Bar count has been reset to 0.")
         self.save()
     
@@ -556,7 +557,7 @@ class CrimeTime(commands.Cog):
         """Reset a User's Gem count to 0."""
         guildsettings = self.db.get_conf(ctx.guild)
         target_user = guildsettings.get_user(target)
-        target_user.gems = 0
+        target_user.gems_owned = 0
         await ctx.send(f"**{target.display_name}**'s Gem count has been reset to 0.")
         self.save()
  
@@ -616,7 +617,7 @@ class CrimeTime(commands.Cog):
         if amount < 0:
             await ctx.send("You cannot set a negative balance!")
             return
-        target_user.gold = amount
+        target_user.gold_bars = amount
         await ctx.send(f"**{target.display_name}**'s Gold Bars have been set to {amount}.")
         self.save()
     
@@ -628,7 +629,7 @@ class CrimeTime(commands.Cog):
         if amount < 0:
             await ctx.send("You cannot set a negative balance!")
             return
-        target_user.gems = amount
+        target_user.gems_owned = amount
         await ctx.send(f"**{target.display_name}**'s Gem count has been set to {amount}.")
         self.save()
     
