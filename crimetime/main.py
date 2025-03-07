@@ -729,6 +729,7 @@ class CrimeTime(commands.Cog):
 
 # Admin-Initiated Events
     @commands.group(invoke_without_command=True)
+    @commands.admin_or_permissions(manage_guild=True)  # Only Admins can use this command
     async def ctevent(self, ctx: commands.Context):
         """Ability for Admins to initiate a group event."""
         await ctx.send("Please specify a valid subcommand, e.g.:\n"
@@ -747,7 +748,7 @@ class CrimeTime(commands.Cog):
                 color=0x00FF)
             info_embed.add_field(
                 name="Events:",
-                value="1  -  A heavily-crowded walkway. (Max $300)\n2  -  A broken ATM Machine. (Max $150)\n3  -  A blocked Armored Car. (Max $2000)",
+                value="1  -  A heavily-crowded walkway. (Max $300)\n2  -  A broken ATM Machine. (Max $500)\n3  -  A blocked Armored Car. (Max $2000)\n \n* - More will be added over time.",
                 inline=False)
             await ctx.send(embed=info_embed)
         except discord.HTTPException:
