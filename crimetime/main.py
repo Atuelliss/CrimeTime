@@ -93,23 +93,9 @@ class CrimeTime(commands.Cog):
                 name="What commands can you use in the game?",
                 value="Currently, the `$mug`, `$mugcheck`, `$mugclear`, `$ctwealth`, `$ctgive`, `$ctinvest`, and `$ctliquidate` commands can be used.",
                 inline=False)
-            
-            # Create a button view
-            class DeleteButtonView(discord.ui.View):
-                def __init__(self, author: discord.Member):
-                    super().__init__()
-                    self.author = author  # Store the message author's ID
-
-                @discord.ui.button(label="", style=discord.ButtonStyle.danger, emoji="❌")
-                async def delete_button(self, interaction: discord.Interaction, button: discord.ui.Button):
-                    if interaction.user.id == self.author.id:
-                        await interaction.message.delete()
-                    else:
-                        await interaction.response.send_message("Only the author can delete this message!", ephemeral=True)
-
-            # Send the embed with the delete button
-            view = DeleteButtonView(ctx.author)
-            await ctx.send(embed=info_embed, view=view)
+            await ctx.send(embed=info_embed)
+        except discord.HTTPException:
+            await ctx.send("An error occurred while sending the message. Please try again later.")
             
 # CtInvest function
     # Convert Cash to Gold or Gemstones
