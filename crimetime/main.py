@@ -77,9 +77,9 @@ class CrimeTime(commands.Cog):
     async def crimetime(self, ctx: commands.Context, target: discord.Member = None):
         """Sends an embeded message with information on the overall game."""
         info_embed = discord.Embed(title="What is CrimeTime?", description="A criminal mini-game cog for Red-DiscordBot.", color=0xffd700)
-	    info_embed.add_field(name="What is the purpose of the game?", value="Crimetime is a Discord game designed to allow Players to take on the role of a Criminal and attempt to gain as much wealth as possible through various means. The game came about as a joke at first on the Vertyco Ark Servers but has since expanded in scope after interest from Players was shown. It is currently in development and is nowhere near complete yet.", inline=False)
-	    info_embed.add_field(name="What commands can you use in the game?", value="Currently the `$mug`, `$mugcheck`, `$mugclear`, `$ctwealth`, `$ctgive`, `$ctinvest`, and `$ctliquidate` commands can be used.", inline=False)
-	    await ctx.send(embed=info_embed)
+        info_embed.add_field(name="What is the purpose of the game?", value="Crimetime is a Discord game designed to allow Players to take on the role of a Criminal and attempt to gain as much wealth as possible through various means. The game came about as a joke at first on the Vertyco Ark Servers but has since expanded in scope after interest from Players was shown. It is currently in development and is nowhere near complete yet.", inline=False)
+        info_embed.add_field(name="What commands can you use in the game?", value="Currently the `$mug`, `$mugcheck`, `$mugclear`, `$ctwealth`, `$ctgive`, `$ctinvest`, and `$ctliquidate` commands can be used.", inline=False)
+        await ctx.send(embed=info_embed)
 
 # CtInvest function
     # Convert Cash to Gold or Gemstones
