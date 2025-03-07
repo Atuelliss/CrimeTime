@@ -727,6 +727,34 @@ class CrimeTime(commands.Cog):
         await ctx.send(f"**{target.display_name}**'s Heist losses have been set to {amount}.")
         self.save()
 
+# Admin-Initiated Events
+    @commands.group(invoke_without_command=True)
+    async def ctevent(self, ctx: commands.Context):
+        """Ability for Admins to initiate a group event."""
+        await ctx.send("Please specify a valid subcommand, e.g.:\n"
+                       "`.ctevent list`\n"
+                       "`.ctevent run <event number>`")
+
+    @ctevent.command(name="list")
+    async def list_event(self, ctx: commands.Context):
+    	# Check if the bot has permission to send embeds
+        if not ctx.channel.permissions_for(ctx.me).embed_links:
+            return await ctx.send("I need the 'Embed Links' permission to display this message properly.")
+        try:
+            info_embed = discord.Embed(
+                title="CrimeTime Events!!", 
+                description="An Admin-initiated Event List.", 
+                color=0x00FF)
+            info_embed.add_field(
+                name="Events:",
+                value="1  -  A heavily-crowded walkway. (Max $300)\n2  -  A broken ATM Machine. (Max $150)\n3  -  A blocked Armored Car. (Max $2000)",
+                inline=False)
+            await ctx.send(embed=info_embed)
+        except discord.HTTPException:
+            await ctx.send("An error occurred while sending the message. Please try again later.")
+
+##########  End of Admin Commands  ##########
+
 ###### Start of Leaderboard Commands
     @commands.command() # Leaderboard Commands for Mugging
     async def muglb(self, ctx: commands.Context, stat: t.Literal["balance", "wins", "ratio"]):
