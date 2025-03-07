@@ -30,8 +30,8 @@ class CrimeTime(commands.Cog):
         self.target_limit = 5 # number of targets to track against
 
         # Cooldowns separated by target or not target.
-        self.pvpcooldown = commands.CooldownMapping.from_cooldown(1, 30, commands.BucketType.user)
-        self.pvecooldown = commands.CooldownMapping.from_cooldown(1, 60, commands.BucketType.user)
+        self.pvpcooldown = commands.CooldownMapping.from_cooldown(1, 60, commands.BucketType.user)
+        self.pvecooldown = commands.CooldownMapping.from_cooldown(1, 30, commands.BucketType.user)
         # Cooldown for investment command, cash to gold/diamonds. 12hours.
         self.investcooldown = commands.CooldownMapping.from_cooldown(1, 43200, commands.BucketType.user)
         # Future cooldown spot for Robberies.
@@ -72,6 +72,11 @@ class CrimeTime(commands.Cog):
 
         asyncio.create_task(_save())
 
+##### Crimetime Info Message
+    @commands.command()
+    async def crimetime(self, ctx: commands.Context, target: discord.Member = None):
+        await ctx.send("Crimetime is a Discord game designed to allow Players to take on the role of a Criminal and attempt\nto gain as much wealth as possible through various means. It is currently in development\nand is nowhere near complete yet. So far the basic commands to use are: `$mug`, `$mugcheck` and `$muglb`.\n \nThere are additional commands which can be found in the Pinned-Messages section of the channel.")
+        
 # CtInvest function
     # Convert Cash to Gold or Gemstones
     @commands.group(invoke_without_command=True)
@@ -310,13 +315,15 @@ class CrimeTime(commands.Cog):
                     "a boy dressed as a Stormtrooper", "a girl dressed as Princess Leia", "a baby in a stroller", "a group of drunk frat boys", 
                     "a poor girl doing the morning walk of shame", "another mugger bad at the job", "a man in a transparent banana costume",
                     "an angry jawa holding an oddly-thrusting mechanism", "two Furries fighting over an 'Uwu'",
-                    "a dude in drag posting a thirst-trap on tiktok"]
+                    "a dude in drag posting a thirst-trap on tiktok", "a mighty keyboard-warrior with cheetoh dust on his face", "a goat-hearder"
+                    ""]
         #Rating = Medium
         stranger2 = ["a man in a business suit", "a doped-out gang-banger", "an off-duty policeman", "a local politician", 
-                     "a scrawny meth-head missing most of his teeth", "Chuck Schumer's personal assistant"]
+                     "a scrawny meth-head missing most of his teeth", "Chuck Schumer's personal assistant", "the *Villainess Heiress*"]
         #Rating = Hard
-        stranger3 = ["Elon Musk!!", "Bill Clinton!!", "Vladamir Putin!!", "Bigfoot!!", "Steve Job's Corpse", "Roseanne Barr!!", "Borat!!", 
-                     "a shirtless Florida-man", "Megatron", "John Wick's dog"]
+        stranger3 = ["Elon Musk!!", "Bill Clinton!!", "Vladamir Putin!!", "Bigfoot!!", "Steve Job's Corpse", "Roseanne Barr running from a BET awards show", "Borat!!", 
+                     "a shirtless Florida-man", "Megatron", "John Wick's dog", "Bill Murray in a tracksuit with a cigar", "Joe Rogan", "Michelle Obama eating an ice-cream cone"
+                     "Will Smith's right-hand"]
         rating_easy    = 0.2
         rating_medium  = 0.5
         rating_hard    = 0.7
