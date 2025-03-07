@@ -87,16 +87,30 @@ class CrimeTime(commands.Cog):
                 color=0xffd700)
             info_embed.add_field(
                 name="What is the purpose of the game?",
-                value="Crimetime is a Discord game designed to allow Players to take on the role of a Criminal and attempt to gain as much wealth as possible through various means. The game came about as a joke at first on the Vertyco Ark Servers but has since expanded in scope after interest from Players was shown. It is currently in development and is nowhere near complete yet.",
+                value="Crimetime is a Discord game designed to allow Players to take on the role of a Criminal and attempt to gain as much wealth as possible through various means.\n \nThe game came about as a joke at first on the Vertyco Ark Servers but has since expanded in scope after interest from Players was shown. It is currently in development and is nowhere near complete yet.",
                 inline=False)
             info_embed.add_field(
                 name="What commands can you use in the game?",
                 value="Currently, the `$mug`, `$mugcheck`, `$mugclear`, `$ctwealth`, `$ctgive`, `$ctinvest`, and `$ctliquidate` commands can be used.",
                 inline=False)
-            await ctx.send(embed=info_embed)
-        except discord.HTTPException:
-            await ctx.send("An error occurred while sending the message. Please try again later.")
+            
+            # Create a button view
+            class DeleteButtonView(discord.ui.View):
+                def __init__(self, author: discord.Member):
+                    super().__init__()
+                    self.author = author  # Store the message author's ID
 
+                @discord.ui.button(label="", style=discord.ButtonStyle.danger, emoji="❌")
+                async def delete_button(self, interaction: discord.Interaction, button: discord.ui.Button):
+                    if interaction.user.id == self.author.id:
+                        await interaction.message.delete()
+                    else:
+                        await interaction.response.send_message("Only the author can delete this message!", ephemeral=True)
+
+            # Send the embed with the delete button
+            view = DeleteButtonView(ctx.author)
+            await ctx.send(embed=info_embed, view=view)
+            
 # CtInvest function
     # Convert Cash to Gold or Gemstones
     @commands.group(invoke_without_command=True)
