@@ -366,7 +366,7 @@ class CrimeTime(commands.Cog):
                     mugger_user.balance += reward
                     #mugger_user.pve_win += 1
                     await ctx.send(f"**{author.display_name}** successfully mugged *{strangerchoice}* and made off with ${reward}!")
-                    mugger_user.player_exp += 1 # +1 to Player Experience
+#Temp                    mugger_user.player_exp += 1 # +1 to Player Experience
                 else:
                     #mugger_user.pve_loss += 1
                     await ctx.send(f"**{author.display_name}** looked around for someone to mug but found no one nearby...")
@@ -377,7 +377,7 @@ class CrimeTime(commands.Cog):
                     mugger_user.balance += reward
                     #mugger_user.pve_win += 1
                     await ctx.send(f"**{author.display_name}** successfully mugged *{strangerchoice}* and made off with ${reward}!")
-                    mugger_user.player_exp += 2 # +2 to Player Experience
+#Temp                    mugger_user.player_exp += 2 # +2 to Player Experience
                 else:
                     #mugger_user.pve_loss += 1
                     await ctx.send(f"**{author.display_name}** looked around for someone to mug but found no one nearby...")
@@ -388,7 +388,7 @@ class CrimeTime(commands.Cog):
                     mugger_user.balance += reward
                     #mugger_user.pve_win += 1
                     await ctx.send(f"**{author.display_name}** successfully mugged *{strangerchoice}* and made off with ${reward}!")
-                    mugger_user.player_exp += 3 # +3 to Player Experience
+#Temp                    mugger_user.player_exp += 3 # +3 to Player Experience
                 else:
                     #mugger_user.pve_loss += 1
                     await ctx.send(f"**{author.display_name}** looked around for someone to mug but found no one nearby...")
@@ -432,7 +432,7 @@ class CrimeTime(commands.Cog):
                 return await ctx.send(f"You must wait {wait_time} until you can target another Player!")
             if pvp_attack > pvp_defend:
                 mug_amount = min(int(target_user.balance * 0.03), 1000)
-                mugger_user.player_exp += 5 # +5 to Player Experience
+#Temp                mugger_user.player_exp += 5 # +5 to Player Experience
                 mugger_user.balance += mug_amount
                 target_user.balance -= mug_amount
                 await ctx.send(f"You attack {target} with everything you've got!\nYou have overwhelmed them this time and made off with ${mug_amount}!\nYou WON!!")
@@ -630,7 +630,7 @@ class CrimeTime(commands.Cog):
         target_user = guildsettings.get_user(target)
         target_exp = target_user.player_exp
         target_level = target_user.player_level
-        await ctx.send(f"-=-=-=-=-=-=-=-=-=-=-\n**{target.display_name}**\n-=-=-=-=-=-=-=-=-=-=-\nLevel - {target_level}\nExp   - {target_exp}")
+        await ctx.send(f"-=-=-=-=-=-=-=-=-=-=-\n**{target.display_name}**\n-=-=-=-=-=-=-=-=-=-=-\nLevel - {target_level}\nExp    - {target_exp}")
 
     @ctset.command(name="balance") # Set a User's Cash Balance to a specific number.
     async def set_balance(self, ctx: commands.Context, target: discord.Member, amount: int):
