@@ -339,10 +339,10 @@ class CrimeTime(commands.Cog):
                     ""]
         #Rating = Medium
         stranger2 = ["a man in a business suit", "a doped-out gang-banger", "an off-duty policeman", "a local politician", 
-                     "a scrawny meth-head missing most of his teeth", "Chuck Schumer's personal assistant", "the *Villainess Heiress*"]
+                     "a scrawny meth-head missing most of his teeth", "Chuck Schumer's personal assistant", "the Villainess Heiress"]
         #Rating = Hard
         stranger3 = ["Elon Musk!!", "Bill Clinton!!", "Vladamir Putin!!", "Bigfoot!!", "Steve Job's Corpse", "Roseanne Barr running from a BET awards show", "Borat!!", 
-                     "a shirtless Florida-man", "Megatron", "John Wick's dog", "Bill Murray in a tracksuit with a cigar", "Joe Rogan", "Michelle Obama eating an ice-cream cone"
+                     "a shirtless Florida-man", "Megatron", "John Wick's dog", "Bill Murray in a tracksuit with a cigar", "Joe Rogan", "Michelle Obama eating an ice-cream cone",
                      "Will Smith's right-hand"]
         rating_easy    = 0.2
         rating_medium  = 0.5
@@ -366,16 +366,18 @@ class CrimeTime(commands.Cog):
                     mugger_user.balance += reward
                     #mugger_user.pve_win += 1
                     await ctx.send(f"**{author.display_name}** successfully mugged *{strangerchoice}* and made off with ${reward}!")
+                    mugger_user.player_exp += 1 # +1 to Player Experience
                 else:
                     #mugger_user.pve_loss += 1
                     await ctx.send(f"**{author.display_name}** looked around for someone to mug but found no one nearby...")
-            elif difficulty_choice == stranger2:
+                elif difficulty_choice == stranger2:
                 strangerchoice = random.choice(difficulty_choice)
                 if pve_attack > rating_medium:
                     reward = random.randint(26, 50)
                     mugger_user.balance += reward
                     #mugger_user.pve_win += 1
                     await ctx.send(f"**{author.display_name}** successfully mugged *{strangerchoice}* and made off with ${reward}!")
+                    mugger_user.player_exp += 2 # +2 to Player Experience
                 else:
                     #mugger_user.pve_loss += 1
                     await ctx.send(f"**{author.display_name}** looked around for someone to mug but found no one nearby...")
@@ -384,8 +386,9 @@ class CrimeTime(commands.Cog):
                 if pve_attack > rating_hard:
                     reward = random.randint(51, 75)
                     mugger_user.balance += reward
-                    #
+                    #mugger_user.pve_win += 1
                     await ctx.send(f"**{author.display_name}** successfully mugged *{strangerchoice}* and made off with ${reward}!")
+                    mugger_user.player_exp += 3 # +3 to Player Experience
                 else:
                     #mugger_user.pve_loss += 1
                     await ctx.send(f"**{author.display_name}** looked around for someone to mug but found no one nearby...")
@@ -429,6 +432,7 @@ class CrimeTime(commands.Cog):
                 return await ctx.send(f"You must wait {wait_time} until you can target another Player!")
             if pvp_attack > pvp_defend:
                 mug_amount = min(int(target_user.balance * 0.03), 1000)
+                mugger_user.player_exp += 5 # +5 to Player Experience
                 mugger_user.balance += mug_amount
                 target_user.balance -= mug_amount
                 await ctx.send(f"You attack {target} with everything you've got!\nYou have overwhelmed them this time and made off with ${mug_amount}!\nYou WON!!")
@@ -748,7 +752,7 @@ class CrimeTime(commands.Cog):
                 color=0x00FF)
             info_embed.add_field(
                 name="Events:",
-                value="1  -  A heavily-crowded walkway. (Max $300)\n2  -  A broken ATM Machine. (Max $500)\n3  -  A blocked Armored Car. (Max $2000)\n \n* - More will be added over time.",
+                value="1  -  A heavily-crowded walkway. (Max $300)\n2  -  A broken ATM Machine. (Max $500)\n3  -  A blocked Armored Car. (Max $2000)\n \n* More will be added over time.",
                 inline=False)
             await ctx.send(embed=info_embed)
         except discord.HTTPException:

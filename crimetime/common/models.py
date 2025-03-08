@@ -4,9 +4,9 @@ from . import Base
 
 class User(Base):
     '''Stored User Info'''
-    balance: int = 0    #Cash Balance
-    gold_bars: int = 0    #Gold Bars Owned
-    gems_owned: int = 0       #Gems Owned
+    balance: int = 0     #Cash Balance
+    gold_bars: int = 0   #Gold Bars Owned
+    gems_owned: int = 0  #Gems Owned
     p_wins:   int = 0    #Player Mugging Wins
     p_losses: int = 0    #Player Mugging Losses
     p_bonus:  float = 0  #Player Bonus from Win/Loss Ratio
@@ -19,6 +19,9 @@ class User(Base):
     pop_up_wins: int = 0 #Player Pop-up Challenge victories - upcoming.
     pop_up_losses: int = 0 #Player Pop-up Challenge losses - upcoming.
     mugclear_count: int = 0   #Number of times Player has used "clearratio"
+    player_exp: int = 0   #Total player experience.
+    player_level: int = 0 #Future variable for Player level.
+
 
     # Ratio property sets
     @property # Ratio for player pvp mugging stats
