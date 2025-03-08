@@ -629,9 +629,9 @@ class CrimeTime(commands.Cog):
         member  = ctx.author
         guildsettings = self.db.get_conf(ctx.guild)
         target_user = guildsettings.get_user(target)
-        target_exp = target.player_exp
-        target_level = target.player_level
-        await ctx.send(f"**{target_user.display_name}\n-=-=-=-=-=-=-=-=-=-=-\nLevel - {target_level}\nExp - {target_exp}")
+        target_exp = target_user.player_exp
+        target_level = target_user.player_level
+        await ctx.send(f"**{target_user}\n-=-=-=-=-=-=-=-=-=-=-\nLevel - {target_level}\nExp - {target_exp}")
 
     @ctset.command(name="balance") # Set a User's Cash Balance to a specific number.
     async def set_balance(self, ctx: commands.Context, target: discord.Member, amount: int):
