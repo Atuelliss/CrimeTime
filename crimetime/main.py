@@ -370,7 +370,7 @@ class CrimeTime(commands.Cog):
                 else:
                     #mugger_user.pve_loss += 1
                     await ctx.send(f"**{author.display_name}** looked around for someone to mug but found no one nearby...")
-                elif difficulty_choice == stranger2:
+            elif difficulty_choice == stranger2:
                 strangerchoice = random.choice(difficulty_choice)
                 if pve_attack > rating_medium:
                     reward = random.randint(26, 50)
@@ -622,6 +622,16 @@ class CrimeTime(commands.Cog):
     @commands.admin_or_permissions(manage_guild=True)  # Only Admins can use this command    
     async def ctset(self, ctx: commands.Context):
         """Configure CrimeTime User Data"""
+
+    @ctset.command(name="view") # View a Users info.
+    async def view_player(self, ctx: commands.Context, target: discord.Member = None):
+        """Checks the total info of a User."""
+        member  = ctx.author
+        guildsettings = self.db.get_conf(ctx.guild)
+        target_user = guildsettings.get_user(target)
+        target_exp = target.player_exp
+        target_level = target.player_level
+        await ctx.send(f"**{target_user.display_name}\n-=-=-=-=-=-=-=-=-=-=-\nLevel - {target_level}\nExp - {target_exp}")
 
     @ctset.command(name="balance") # Set a User's Cash Balance to a specific number.
     async def set_balance(self, ctx: commands.Context, target: discord.Member, amount: int):
