@@ -566,10 +566,10 @@ class CrimeTime(commands.Cog):
         target_user.gold_bars += amount
         self.save()
         if amount == 1:
-            await ctx.send(f"You gave {target.mention} ${amount} gold bar.")
+            await ctx.send(f"You gave {target.mention} {amount} gold bar.")
         else:
-            await ctx.send(f"You gave {target.mention} ${amount} gold bars.")
-            
+            await ctx.send(f"You gave {target.mention} {amount} gold bars.")
+
 ##########  Admin Commands  ##########
 
     # This group allows the Administrator to CLEAR amounts, not set them.
