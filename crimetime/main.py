@@ -34,6 +34,8 @@ class CrimeTime(commands.Cog):
         self.pvecooldown = commands.CooldownMapping.from_cooldown(1, 30, commands.BucketType.user)
         # Cooldown for investment command, cash to gold/diamonds. 12hours.
         self.investcooldown = commands.CooldownMapping.from_cooldown(1, 43200, commands.BucketType.user)
+        # Cooldown for Blitz command, once per hour players can join each other attacking things.
+        self.blitzcooldown = commands.CooldownMapping.from_cooldown(1, 3600, commands.BucketType.user)
         # Future cooldown spot for Robberies.
 
         # States
@@ -336,14 +338,16 @@ class CrimeTime(commands.Cog):
                     "a poor girl doing the morning walk of shame", "another mugger bad at the job", "a man in a transparent banana costume",
                     "an angry jawa holding an oddly-thrusting mechanism", "two Furries fighting over an 'Uwu'",
                     "a dude in drag posting a thirst-trap on tiktok", "a mighty keyboard-warrior with cheetoh dust on his face", "a goat-hearder"
-                    ""]
+                    "Stormtrooper TK-421 who's firing at you and missing every shot", "an escaped mental patient oblivious to their surroundings",
+                    "a Mogwai doused in water"]
         #Rating = Medium
         stranger2 = ["a man in a business suit", "a doped-out gang-banger", "an off-duty policeman", "a local politician", 
-                     "a scrawny meth-head missing most of his teeth", "Chuck Schumer's personal assistant", "the Villainess Heiress"]
+                     "a scrawny meth-head missing most of his teeth", "Chuck Schumer's personal assistant", "the Villainess Heiress", 
+                     "an Elvis Presley impersonator shaking his hips to a song", "E.T. trying to hitchike home", "some juggling seals balancing on beach balls"]
         #Rating = Hard
         stranger3 = ["Elon Musk!!", "Bill Clinton!!", "Vladamir Putin!!", "Bigfoot!!", "Steve Job's Corpse", "Roseanne Barr running from a BET awards show", "Borat!!", 
                      "a shirtless Florida-man", "Megatron", "John Wick's dog", "Bill Murray in a tracksuit with a cigar", "Joe Rogan", "Michelle Obama eating an ice-cream cone",
-                     "Will Smith's right-hand"]
+                     "Will Smith's right-hand", "Macho-Man Randy Savage, 'Oooooh yeeeah'"]
         rating_easy    = 0.2
         rating_medium  = 0.5
         rating_hard    = 0.7
@@ -533,6 +537,39 @@ class CrimeTime(commands.Cog):
         self.save()
         await ctx.send(f"You gave {target.mention} ${amount}.")
 
+    @ctgive.command(name="bars")
+    async def give_gold_bars(self, ctx: commands.Context, target: discord.Member, amount: int):
+        """Allows a Player to give a form of Currency to another user."""
+        
+        # Ensure target is not None and not the giver
+        if target == ctx.author:
+            await ctx.send("You cannot do this alone; you must target another user.")
+            return
+
+        # Get user data
+        guildsettings = self.db.get_conf(ctx.guild)
+        giver = guildsettings.get_user(ctx.author)
+        target_user = guildsettings.get_user(target)
+
+        # Validate amount
+        if amount <= 0:
+            await ctx.send("You must send a positive amount.")
+            return
+
+        # Ensure giver has enough balance
+        if giver.gold_bars < amount:
+            await ctx.send("You do not have that much to give!!")
+            return
+
+        # Transfer currency
+        giver.gold_bars -= amount
+        target_user.gold_bars += amount
+        self.save()
+        if amount == 1:
+            await ctx.send(f"You gave {target.mention} ${amount} gold bar.")
+        else:
+            await ctx.send(f"You gave {target.mention} ${amount} gold bars.")
+            
 ##########  Admin Commands  ##########
 
     # This group allows the Administrator to CLEAR amounts, not set them.
