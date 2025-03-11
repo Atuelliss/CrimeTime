@@ -369,7 +369,7 @@ class CrimeTime(commands.Cog):
             if difficulty_choice == stranger1:
                 strangerchoice = random.choice(difficulty_choice)
                 if pve_attack > rating_easy:
-                    reward = random.randint(1, 25)
+                    reward = random.randint(1, 35)
                     mugger_user.balance += reward
                     #mugger_user.pve_win += 1
                     await ctx.send(f"**{author.display_name}** successfully mugged *{strangerchoice}* and made off with ${reward}!")
@@ -380,7 +380,7 @@ class CrimeTime(commands.Cog):
             elif difficulty_choice == stranger2:
                 strangerchoice = random.choice(difficulty_choice)
                 if pve_attack > rating_medium:
-                    reward = random.randint(26, 50)
+                    reward = random.randint(36, 65)
                     mugger_user.balance += reward
                     #mugger_user.pve_win += 1
                     await ctx.send(f"**{author.display_name}** successfully mugged *{strangerchoice}* and made off with ${reward}!")
@@ -391,7 +391,7 @@ class CrimeTime(commands.Cog):
             elif difficulty_choice == stranger3:
                 strangerchoice = random.choice(difficulty_choice)
                 if pve_attack > rating_hard:
-                    reward = random.randint(51, 75)
+                    reward = random.randint(66, 95)
                     mugger_user.balance += reward
                     #mugger_user.pve_win += 1
                     await ctx.send(f"**{author.display_name}** successfully mugged *{strangerchoice}* and made off with ${reward}!")
@@ -438,7 +438,7 @@ class CrimeTime(commands.Cog):
                 wait_time = humanize_timedelta(seconds=int(secondsleft))
                 return await ctx.send(f"You must wait {wait_time} until you can target another Player!")
             if pvp_attack > pvp_defend:
-                mug_amount = min(int(target_user.balance * 0.03), 1000)
+                mug_amount = min(round(target_user.balance * 0.07), 1000)
 #Temp                mugger_user.player_exp += 5 # +5 to Player Experience
                 mugger_user.balance += mug_amount
                 target_user.balance -= mug_amount
