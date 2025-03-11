@@ -22,7 +22,6 @@ class User(Base):
     player_exp: int = 0   #Total player experience.
     player_level: int = 0 #Future variable for Player level.
 
-
     # Ratio property sets
     @property # Ratio for player pvp mugging stats
     def p_ratio(self) -> float:
@@ -48,6 +47,9 @@ class User(Base):
     @property
     def pop_up_ratio_str(self) -> str:
         return f"{self.pop_up_wins}:{self.pop_up_losses}"
+    @property
+    def total_pve_mug(self) -> str:
+        return f"{self.mug_pve_win_count}:{self.mug_pve_loss_count}"
 
 class GuildSettings(Base):
     users: dict[int, User] = {}
