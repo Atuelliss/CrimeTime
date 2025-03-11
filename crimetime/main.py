@@ -254,6 +254,64 @@ class CrimeTime(commands.Cog):
                 await ctx.send(f"You converted {amount} gems into ${cash_payout}!")
 
 ###### "Check" commands:
+    # Check balance and stats specifically attributed to the Mug command.
+    @commands.command()
+    async def ctstat(self, ctx: commands.Context, member: discord.Member = None):
+        """Displays Player's wealth, gear, and stats."""
+        member  = member or ctx.author
+        guildsettings = self.db.get_conf(ctx.guild)
+        user = guildsettings.get_user(member)
+        cash = user.balance
+        bars = user.gold_bars
+        bar_value = bars * 2500
+        gems = user.gems_owned
+        gem_value = gems * 5000
+        total_wealth = cash + bar_value + gem_value
+        gear_bonus = str("Attack Bonus: Unused / Defense Bonus: Unused")
+        head_armor = str("Future Use")
+        chest_armor = str("Future Use")
+        leg_armor = str("Future Use")
+        foot_armor = str("Future Use")
+        weapon_slot = str("Future Use")
+        consume_slot = str("Future Use")
+        p_wins = user.p_wins
+        p_losses = user.p_losses
+        p_ratio = user.p_ratio
+        p_ratio_str = user.p_ratio_str
+        balance = user.balance
+        r_wins = user.r_wins
+        r_loss = user.r_losses
+        r_ratio = user.r_ratio_str
+        h_wins = user.h_wins
+        h_loss = user.h_losses
+        h_ratio = user.h_ratio_str
+
+        # Determine PvP-Ratio Bonuses against other players.
+        if p_ratio >= 5:
+            p_bonus = 0.25
+        elif p_ratio >= 3.01:
+            p_bonus = 0.2
+        elif p_ratio >= 3:
+            p_bonus = 0.15
+        elif p_ratio >= 2:
+            p_bonus = 0.1
+        elif p_ratio >= 1:
+            p_bonus = 0.05
+        elif p_ratio == 0:
+            p_bonus = 0.0
+        elif p_ratio >= -1:
+            p_bonus = -0.05
+        elif -1 > p_ratio >= -2:
+            p_bonus = -0.1
+        elif -2 > p_ratio >= -3:
+            p_bonus = -0.15
+        elif p_ratio <= -3.01:
+            p_bonus = -0.2
+        elif p_ratio <= -5:
+            p_bonus = -0.25
+        await ctx.sendf("------------------------------------------------------\n[Info]\n**Name**: {member}\n**Level**: (Future Use)\n**Exp**: (Future Use)\n**ToNextLevel**: (Future Use)\n------------------------------------------------------\n[Wealth]\n**Gems**: {user.gems_owned} : {gem_value}\n**Gold**: {user.gold_bars}  : {bar_value}\n**Cash**: {user.balance}\n**Total Wealth**: {total_wealth}\n------------------------------------------------------\n[Gear]\n(Head)       - Future Use\n(Chest)      - Future Use\n(Legs)       - Future Use\n(Feet)       - Future Use\n(Weapon)     - Future Use\n(Consumable) - Future Use\n \nAttack Bonus : (Future Use)\nDefense Bonus: (Future Use)\n------------------------------------------------------\nPvP Stats     - {p_wins}/{p_loss} : {p_ratio}\nRobbery Stats - {r_wins}/{r_loss} : {r_ratio}\nHeist Stats   - {h_wins}/{h_loss} : {h_ratio}\n------------------------------------------------------")
+
+
     # Check total wealth of all currencies.
     @commands.command()
     async def ctwealth(self, ctx: commands.Context, member: discord.Member = None):
@@ -339,18 +397,20 @@ class CrimeTime(commands.Cog):
                     "an angry jawa holding an oddly-thrusting mechanism", "two Furries fighting over an 'Uwu'",
                     "a dude in drag posting a thirst-trap on tiktok", "a mighty keyboard-warrior with cheetoh dust on his face", "a goat-hearder"
                     "Stormtrooper TK-421 who's firing at you and missing every shot", "an escaped mental patient oblivious to their surroundings",
-                    "a Mogwai doused in water"]
+                    "a Mogwai doused in water", "a tiny fairy trying to eat an oversized grape"]
         #Rating = Medium
         stranger2 = ["a man in a business suit", "a doped-out gang-banger", "an off-duty policeman", "a local politician", 
                      "a scrawny meth-head missing most of his teeth", "Chuck Schumer's personal assistant", "the Villainess Heiress", 
                      "an Elvis Presley impersonator shaking his hips to a song", "E.T. trying to hitchike home", "some juggling seals balancing on beach balls",
                      "an elderly woman just trying to cross the street", "a ten-year old little punk", "a meth-gator from the Florida swamps", 
-                     "a Canadian Goose with squinty eyes", "Kano from Mortal Kombat, down on his luck", "a Jordanian terrorist searching for the Zohan"]
+                     "a Canadian Goose with squinty eyes", "Kano from Mortal Kombat, down on his luck", "a Jordanian terrorist searching for the Zohan",
+                     "a clothed Carcharodontosaurus, wiping his runny nose with a kleenex", "Bart Simpson coming out of a firework stand"]
         #Rating = Hard
-        stranger3 = ["Elon Musk leaving a DOGE meeting", "Bill Clinton, walking with his zipper down", "Vladamir Putin, humming 'Putting on the ritz'", "Bigfoot!!", "Steve Job's Corpse", "Roseanne Barr running from a BET awards show", "Borat!!", 
-                     "a shirtless Florida-man", "Megatron", "John Wick's dog", "Bill Murray in a tracksuit with a cigar", "Joe Rogan", "Michelle Obama eating an ice-cream cone",
-                     "Will Smith's right-hand", "Macho-Man Randy Savage, 'Oooooh yeeeah'", "Greta Thunberg chasing cow farts", "Bill Murray in a zombie costume staring into the distance", 
-                     "Mrs. Doubtfire awkwardly running to help someone", "90-year old Hulk Hogan in his iconic red/yellow wrestling gear"]
+        stranger3 = ["Elon Musk leaving a DOGE meeting", "Bill Clinton, walking with his zipper down", "Vladamir Putin, humming 'Putin on the ritz'", "Bigfoot!!", "Steve Job's Corpse", 
+                     "Roseanne Barr running from a BET awards show", "Borat!!", "a shirtless Florida-man", "Megatron", "John Wick's dog", "Bill Murray in a tracksuit with a cigar", 
+                     "Joe Rogan", "Michelle Obama eating an ice-cream cone", "Will Smith's right-hand", "Macho-Man Randy Savage, 'Oooooh yeeeah'", "Greta Thunberg chasing cow farts", 
+                     "Bill Murray in a zombie costume staring into the distance", "Mrs. Doubtfire awkwardly running to help someone", "90-year old Hulk Hogan in his iconic red/yellow wrestling gear"
+                     "Forest Gump screaming, 'How are you run-nang so fast'"]
         rating_easy    = 0.2
         rating_medium  = 0.5
         rating_hard    = 0.7
@@ -371,33 +431,33 @@ class CrimeTime(commands.Cog):
                 if pve_attack > rating_easy:
                     reward = random.randint(1, 35)
                     mugger_user.balance += reward
-                    #mugger_user.pve_win += 1
+                    mugger_user.pve_win += 1                    
                     await ctx.send(f"**{author.display_name}** successfully mugged *{strangerchoice}* and made off with ${reward}!")
 #Temp                    mugger_user.player_exp += 1 # +1 to Player Experience
                 else:
-                    #mugger_user.pve_loss += 1
+                    mugger_user.pve_loss += 1
                     await ctx.send(f"**{author.display_name}** looked around for someone to mug but found no one nearby...")
             elif difficulty_choice == stranger2:
                 strangerchoice = random.choice(difficulty_choice)
                 if pve_attack > rating_medium:
                     reward = random.randint(36, 65)
                     mugger_user.balance += reward
-                    #mugger_user.pve_win += 1
+                    mugger_user.pve_win += 1
                     await ctx.send(f"**{author.display_name}** successfully mugged *{strangerchoice}* and made off with ${reward}!")
 #Temp                    mugger_user.player_exp += 2 # +2 to Player Experience
                 else:
-                    #mugger_user.pve_loss += 1
+                    mugger_user.pve_loss += 1
                     await ctx.send(f"**{author.display_name}** looked around for someone to mug but found no one nearby...")
             elif difficulty_choice == stranger3:
                 strangerchoice = random.choice(difficulty_choice)
                 if pve_attack > rating_hard:
                     reward = random.randint(66, 95)
                     mugger_user.balance += reward
-                    #mugger_user.pve_win += 1
+                    mugger_user.pve_win += 1
                     await ctx.send(f"**{author.display_name}** successfully mugged *{strangerchoice}* and made off with ${reward}!")
 #Temp                    mugger_user.player_exp += 3 # +3 to Player Experience
                 else:
-                    #mugger_user.pve_loss += 1
+                    mugger_user.pve_loss += 1
                     await ctx.send(f"**{author.display_name}** looked around for someone to mug but found no one nearby...")
         else:
             # If we are here, user has targeted another player.
