@@ -335,7 +335,7 @@ class CrimeTime(commands.Cog):
                     "a random stranger", "a stuffy-looking banker", "a creepy little girl", "a sad-faced clown", "a Dwarf in a penguin costume", 
                     "a sleep-deprived college Student", "a scruffy Puppy with a wallet in it's mouth", "a hyper Ballerina", 
                     "a boy dressed as a Stormtrooper", "a girl dressed as Princess Leia", "a baby in a stroller", "a group of drunk frat boys", 
-                    "a poor girl doing the morning walk of shame", "another mugger bad at the job", "a man in a transparent banana costume",
+                    "a poor girl doing the morning walk of shame", "another mugger who's bad at their job", "a man in a transparent banana costume",
                     "an angry jawa holding an oddly-thrusting mechanism", "two Furries fighting over an 'Uwu'",
                     "a dude in drag posting a thirst-trap on tiktok", "a mighty keyboard-warrior with cheetoh dust on his face", "a goat-hearder"
                     "Stormtrooper TK-421 who's firing at you and missing every shot", "an escaped mental patient oblivious to their surroundings",
@@ -343,11 +343,14 @@ class CrimeTime(commands.Cog):
         #Rating = Medium
         stranger2 = ["a man in a business suit", "a doped-out gang-banger", "an off-duty policeman", "a local politician", 
                      "a scrawny meth-head missing most of his teeth", "Chuck Schumer's personal assistant", "the Villainess Heiress", 
-                     "an Elvis Presley impersonator shaking his hips to a song", "E.T. trying to hitchike home", "some juggling seals balancing on beach balls"]
+                     "an Elvis Presley impersonator shaking his hips to a song", "E.T. trying to hitchike home", "some juggling seals balancing on beach balls",
+                     "an elderly woman just trying to cross the street", "a ten-year old little punk", "a meth-gator from the Florida swamps", 
+                     "a Canadian Goose with squinty eyes", "Kano from Mortal Kombat, down on his luck", "a Jordanian terrorist searching for the Zohan"]
         #Rating = Hard
-        stranger3 = ["Elon Musk!!", "Bill Clinton!!", "Vladamir Putin!!", "Bigfoot!!", "Steve Job's Corpse", "Roseanne Barr running from a BET awards show", "Borat!!", 
+        stranger3 = ["Elon Musk leaving a DOGE meeting", "Bill Clinton, walking with his zipper down", "Vladamir Putin, humming 'Putting on the ritz'", "Bigfoot!!", "Steve Job's Corpse", "Roseanne Barr running from a BET awards show", "Borat!!", 
                      "a shirtless Florida-man", "Megatron", "John Wick's dog", "Bill Murray in a tracksuit with a cigar", "Joe Rogan", "Michelle Obama eating an ice-cream cone",
-                     "Will Smith's right-hand", "Macho-Man Randy Savage, 'Oooooh yeeeah'"]
+                     "Will Smith's right-hand", "Macho-Man Randy Savage, 'Oooooh yeeeah'", "Greta Thunberg chasing cow farts", "Bill Murray in a zombie costume staring into the distance", 
+                     "Mrs. Doubtfire awkwardly running to help someone", "90-year old Hulk Hogan in his iconic red/yellow wrestling gear"]
         rating_easy    = 0.2
         rating_medium  = 0.5
         rating_hard    = 0.7
