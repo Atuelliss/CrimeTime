@@ -275,7 +275,7 @@ class CrimeTime(commands.Cog):
         weapon_slot = str("Future Use")
         consume_slot = str("Future Use")
         p_wins = user.p_wins
-        p_losses = user.p_losses
+        p_loss = user.p_losses
         p_ratio = user.p_ratio
         p_ratio_str = user.p_ratio_str
         balance = user.balance
@@ -309,7 +309,7 @@ class CrimeTime(commands.Cog):
             p_bonus = -0.2
         elif p_ratio <= -5:
             p_bonus = -0.25
-        await ctx.send(f"------------------------------------------------------\n[Info]\n**Name**: {member}\n**Level**: (Future Use)\n**Exp**: (Future Use)\n**ToNextLevel**: (Future Use)\n------------------------------------------------------\n[Wealth]\n**Gems**: {user.gems_owned} : {gem_value}\n**Gold**: {user.gold_bars}  : {bar_value}\n**Cash**: {user.balance}\n**Total Wealth**: {total_wealth}\n------------------------------------------------------\n[Gear]\n(Head)       - Future Use\n(Chest)      - Future Use\n(Legs)       - Future Use\n(Feet)       - Future Use\n(Weapon)     - Future Use\n(Consumable) - Future Use\n \nAttack Bonus : (Future Use)\nDefense Bonus: (Future Use)\n------------------------------------------------------\nPvP Stats     - {p_wins}/{p_loss} : {p_ratio}\nRobbery Stats - {r_wins}/{r_loss} : {r_ratio}\nHeist Stats   - {h_wins}/{h_loss} : {h_ratio}\n------------------------------------------------------")
+        await ctx.send(f"------------------------------------------------------\n[Info]\n**Name**: {member}\n**Level**: (Future Use)\n**Exp**: (Future Use)\n**ToNextLevel**: (Future Use)\n------------------------------------------------------\n[Wealth]\n**Gems**: {gems} : {gem_value}\n**Gold**: {bars}  : {bar_value}\n**Cash**: {balance}\n**Total Wealth**: {total_wealth}\n------------------------------------------------------\n[Gear]\n(Head)       - Future Use\n(Chest)      - Future Use\n(Legs)       - Future Use\n(Feet)       - Future Use\n(Weapon)     - Future Use\n(Consumable) - Future Use\n \nAttack Bonus : (Future Use)\nDefense Bonus: (Future Use)\n------------------------------------------------------\nPvP Stats     - {p_wins}/{p_loss} : {p_ratio}\nRobbery Stats - {r_wins}/{r_loss} : {r_ratio}\nHeist Stats   - {h_wins}/{h_loss} : {h_ratio}\n------------------------------------------------------")
 
 
     # Check total wealth of all currencies.
