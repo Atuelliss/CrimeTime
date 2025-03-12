@@ -21,6 +21,7 @@ class User(Base):
     mugclear_count: int = 0   #Number of times Player has used "clearratio"
     player_exp: int = 0   #Total player experience.
     player_level: int = 0 #Future variable for Player level.
+    tnl_exp: int = 0 #Exp needed for next level.
 
     # Ratio property sets
     @property # Ratio for player pvp mugging stats
