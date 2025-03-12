@@ -40,19 +40,11 @@ ballet_slippers = {"name": "a pair of flimsy white ballet slippers", "keyword": 
 tennis_shoes =    {"name": "a pair black Converse tennis shoes", "keyword": "shoes","wear": 4, "tier": 1, "cost": 4500, "factor": 0.02}
 work_boots =      {"name": "a pair Timberland work boots", "keyword": "boots","wear": 4, "tier": 1, "cost": 4500, "factor": 0.02}
 #Weapon-Slot Items
-<<<<<<< HEAD
 small_rock =     {"name": "a small smooth-faced rock", "keyword": "rock","wear": 5, "tier": 1, "cost": 5000, "factor": 0.03}
 wood_stick =     {"name": "a small pointy wood stick", "keyword": "stick","wear": 5, "tier": 1, "cost": 5000, "factor": 0.03}
 leather_gloves = {"name": "a pair of fingerless black leather gloves", "keyword": "gloves","wear": 5, "tier": 1, "cost": 5000, "factor": 0.04}
 wood_club =      {"name": "a small wooden club", "keyword": "club","wear": 5, "tier": 1, "cost": 7500, "factor": 0.04}
 brass_knuckles = {"name": "a set of dull brass knuckles", "keyword": "knuckles","wear": 5, "tier": 1, "cost": 7500, "factor": 0.05}
-=======
-small_rock =     {"name": "a small smooth-faced rock", "keyword": "rock","wear": 5, "tier": 1, "cost": 5000, "factor": 0.01}
-wood_stick =     {"name": "a small pointy wood stick", "keyword": "stick","wear": 5, "tier": 1, "cost": 5000, "factor": 0.01}
-leather_gloves = {"name": "a pair of fingerless black leather gloves", "keyword": "gloves","wear": 5, "tier": 1, "cost": 5000, "factor": 0.01}
-wood_club =      {"name": "a small wooden club", "keyword": "club","wear": 5, "tier": 1, "cost": 7500, "factor": 0.02}
-brass_knuckles = {"name": "a set of dull brass knuckles", "keyword": "knuckles","wear": 5, "tier": 1, "cost": 7500, "factor": 0.02}
->>>>>>> ed4f3fe8adf25b5c8e758e4c6f806c0acbf6a48e
 
 ########## Tier 2 Items ##########
 #Head-Worn Items
@@ -71,10 +63,7 @@ satin_blaiser =     {}
 cargo_pants1 = {"name": "a pair of black cargo pants", "keyword": "pants","wear": 3, "tier": 2, "cost": 8500, "factor": 0.03}
 #Foot-Worn Items
 combat_boots1 = {}
-<<<<<<< HEAD
 #Weapon-Slot Items
-=======
->>>>>>> ed4f3fe8adf25b5c8e758e4c6f806c0acbf6a48e
 
 ########## Tier 3 Items ##########
 police_helmet = {}
