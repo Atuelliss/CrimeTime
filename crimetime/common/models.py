@@ -49,7 +49,11 @@ class User(Base):
         return f"{self.pop_up_wins}:{self.pop_up_losses}"
     @property
     def total_pve_mug(self) -> str:
+<<<<<<< HEAD
         return f"{self.pve_win}:{self.pve_loss}"
+=======
+        return f"{self.mug_pve_win_count}:{self.mug_pve_loss_count}"
+>>>>>>> ed4f3fe8adf25b5c8e758e4c6f806c0acbf6a48e
 
 class GuildSettings(Base):
     users: dict[int, User] = {}
