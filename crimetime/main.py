@@ -478,24 +478,23 @@ class CrimeTime(commands.Cog):
             recent_targets = mugger_user.recent_targets
 
             if target.id in recent_targets:
-                await ctx.send(f"You have already mugged {target.display_name} recently. Mug other players to reset your list!")
+                await ctx.send(f"You have already mugged {target.display_name} recently. Mug other players to clear your target list!")
                 return
 
-            # Add the new target to the list
-            recent_targets.append(target.id)
-
-            # Keep only the last 5
-            if len(recent_targets) > 5:
-                recent_targets.pop(0)
-
-            # Save back to the user
-            mugger_user.recent_targets = recent_targets
             # PvP Mugging, Attacking another User who is not under the minimum amount.
-            # Run the actual contested check.    
+            # Check the pvp timer.    
             secondsleft = pvpbucket.update_rate_limit() # Add pvp timer to user.
             if secondsleft:
                 wait_time = humanize_timedelta(seconds=int(secondsleft))
                 return await ctx.send(f"You must wait {wait_time} until you can target another Player!")
+            # Add the new target to the list
+            recent_targets.append(target.id)
+            # Keep only the last 5
+            if len(recent_targets) > 5:
+                recent_targets.pop(0)
+            # Save back to the user
+            mugger_user.recent_targets = recent_targets
+            # Run the actual contested check.
             if pvp_attack > pvp_defend:
                 mug_amount = min(round(target_user.balance * 0.07), 1000)
 #Temp                mugger_user.player_exp += 5 # +5 to Player Experience
