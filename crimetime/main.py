@@ -474,24 +474,23 @@ class CrimeTime(commands.Cog):
 
             # Track pvp targets and make sure new target is allowed, this prevents attacking the same person over and over.
             # Check if the target is valid and enforce unique targets
-            if target_user:
-                recent_targets = self.recent_targets.get(ctx.author.id, [])
-    
-                if target.id in recent_targets:
-                    required_targets_left = self.target_limit - len(recent_targets)
-                    if required_targets_left > 0:
-                        await ctx.send(f"You cannot target {target.display_name} again until you mug at least {required_targets_left} other players.")
-                        return
+            # Get the list of recent targets from the user's data
+            recent_targets = mugger_user.recent_targets
 
-            # Update recent targets for the author
-            if target.id not in recent_targets:
-                recent_targets.append(target.id)
-                # Enforce the target limit
-                if len(recent_targets) > self.target_limit:
-                    recent_targets.pop(0)  # Remove the oldest target
-            self.recent_targets[ctx.author.id] = recent_targets
+            if target.id in recent_targets:
+                await ctx.send(f"You have already mugged {target.display_name} recently. Mug other players to reset your list!")
+                return
+
+            # Add the new target to the list
+            recent_targets.append(target.id)
+
+            # Keep only the last 5
+            if len(recent_targets) > 5:
+                recent_targets.pop(0)
+
+            # Save back to the user
+            mugger_user.recent_targets = recent_targets
             # PvP Mugging, Attacking another User who is not under the minimum amount.
-
             # Run the actual contested check.    
             secondsleft = pvpbucket.update_rate_limit() # Add pvp timer to user.
             if secondsleft:
