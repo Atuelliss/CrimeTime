@@ -286,16 +286,6 @@ class CrimeTime(commands.Cog):
             user.p_bonus = -0.25
         self.save()
     
-    # Bonus Check Only, no modification.
-    @commands.command()
-    async def pbcheck(self, ctx: commands.Context, member: discord.Member = None):
-        """Checks the Balance, Wins/Losses, and Ratio of a User."""
-        member  = member or ctx.author
-        guildsettings = self.db.get_conf(ctx.guild)
-        user = guildsettings.get_user(member)
-        pbonus = user.p_bonus
-        await ctx.send(f"**{member.display_name}**'s P-Bonus is {pbonus}")
-    
     # Manually update a users P-Bonus
     @commands.command()
     async def pbupdate(self, ctx: commands.Context, member: discord.Member = None):
@@ -362,7 +352,8 @@ class CrimeTime(commands.Cog):
         """Checks the Balance, Wins/Losses, and Ratio of a User."""
         member  = member or ctx.author
         guildsettings = self.db.get_conf(ctx.guild)
-        user = guildsettings.get_user(member)
+        await self.update_pbonus(ctx, member)
+        user = guildsettings.get_user(member)        
         p_ratio = user.p_ratio
         p_ratio_str = user.p_ratio_str
         p_bonus = user.p_bonus
@@ -372,7 +363,7 @@ class CrimeTime(commands.Cog):
         r_ratio_str = user.r_ratio_str
         h_wins = user.h_wins
         h_losses = user.h_losses
-        h_ratio_str = user.h_ratio_str
+        h_ratio_str = user.h_ratio_str        
         await ctx.send(f"**{member.display_name}**\nBalance: ${balance}\nP-Win/Loss Ratio: {p_ratio_str}[{p_ratio}]\nP-Bonus: {p_bonus}") #\nRobbery Win/Loss Ratio: {r_ratio_str}")
 
     # Actually run the MUG command.
@@ -558,6 +549,7 @@ class CrimeTime(commands.Cog):
         # Reset user's stats
         target_user.p_wins = 0
         target_user.p_losses = 0
+        await self.update_pbonus(ctx, target_user) # Updates the Player's PBonus with the new stats.
         target_user.mugclear_count += 1  # Corrected increment
         target_user.balance -= cost #Removes the cost of the clear from the users balance.
 
