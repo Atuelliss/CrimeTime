@@ -256,12 +256,12 @@ class CrimeTime(commands.Cog):
 ###### "Check" commands:
     # Check balance and stats specifically attributed to the Mug command.
     async def update_pbonus(self, ctx: commands.Context, member: discord.Member) -> None:
-        """Recalculate and update a user's PvP bonus based on their win/loss ratio."""
+        """Recalculate and update a user's P-bonus based on their win/loss ratio."""
         guildsettings = self.db.get_conf(ctx.guild)
         user = guildsettings.get_user(member)
         p_ratio = user.p_ratio
                 
-        # Determine PvP-Ratio Bonuses against other players.
+        # Determine Player's Ratio-Bonuses for attack rolls.
         if p_ratio >= 5:
             user.p_bonus = 0.25
         elif p_ratio >= 3.01:
@@ -294,7 +294,7 @@ class CrimeTime(commands.Cog):
         guildsettings = self.db.get_conf(ctx.guild)
         user = guildsettings.get_user(member)
         pbonus = user.p_bonus
-        await ctx.send(f"**{member.display_name}**'s P-Bonus is {pbonus}.")
+        await ctx.send(f"**{member.display_name}**'s P-Bonus is {pbonus}")
     
     # Manually update a users P-Bonus
     @commands.command()
@@ -303,7 +303,7 @@ class CrimeTime(commands.Cog):
         member  = member or ctx.author
         guildsettings = self.db.get_conf(ctx.guild)
         await self.update_pbonus(ctx, member)
-        await ctx.send(f"{member.display_name}'s PvP bonus has been updated to {guildsettings.get_user(member).p_bonus}.")
+        await ctx.send(f"{member.display_name}'s PvP bonus has been updated to {guildsettings.get_user(member).p_bonus}")
 
     # Check balance and stats specifically attributed to the Mug command.
     @commands.command()
@@ -318,17 +318,17 @@ class CrimeTime(commands.Cog):
         gems = user.gems_owned
         gem_value = gems * 5000
         total_wealth = cash + bar_value + gem_value
-        gear_bonus = str("Attack Bonus: Unused / Defense Bonus: Unused")
-        head_armor = str("Future Use")
-        chest_armor = str("Future Use")
-        leg_armor = str("Future Use")
-        foot_armor = str("Future Use")
-        weapon_slot = str("Future Use")
-        consume_slot = str("Future Use")
+        # gear_bonus = str("Attack Bonus: Unused / Defense Bonus: Unused")
+        # head_armor = str("Future Use")
+        # chest_armor = str("Future Use")
+        # leg_armor = str("Future Use")
+        # foot_armor = str("Future Use")
+        # weapon_slot = str("Future Use")
+        # consume_slot = str("Future Use")
         p_wins = user.p_wins
         p_loss = user.p_losses
         p_ratio = user.p_ratio
-        p_ratio_str = user.p_ratio_str
+        # p_ratio_str = user.p_ratio_str
         balance = user.balance
         r_wins = user.r_wins
         r_loss = user.r_losses
@@ -336,30 +336,6 @@ class CrimeTime(commands.Cog):
         h_wins = user.h_wins
         h_loss = user.h_losses
         h_ratio = user.h_ratio_str
-
-        # Determine PvP-Ratio Bonuses against other players.
-        if p_ratio >= 5:
-            p_bonus = 0.25
-        elif p_ratio >= 3.01:
-            p_bonus = 0.2
-        elif p_ratio >= 3:
-            p_bonus = 0.15
-        elif p_ratio >= 2:
-            p_bonus = 0.1
-        elif p_ratio >= 1:
-            p_bonus = 0.05
-        elif p_ratio == 0:
-            p_bonus = 0.0
-        elif p_ratio >= -1:
-            p_bonus = -0.05
-        elif -1 > p_ratio >= -2:
-            p_bonus = -0.1
-        elif -2 > p_ratio >= -3:
-            p_bonus = -0.15
-        elif p_ratio <= -3.01:
-            p_bonus = -0.2
-        elif p_ratio <= -5:
-            p_bonus = -0.25
         await ctx.send(f"------------------------------------------------------\n**[Player Information]**\nName: {member}\nLevel: {user.player_level}\nExp: {user.player_exp}\nToNextLevel: {user.tnl_exp}\n------------------------------------------------------\n**[Wealth]**\nGems: {gems} : ${gem_value}\nGold: {bars}  : ${bar_value}\nCash: ${balance}\nTotal Wealth: ${total_wealth}\n------------------------------------------------------\n**[Gear & Item Bonuses]**\n(Head)       - Future Use\n(Chest)      - Future Use\n(Legs)        - Future Use\n(Feet)        - Future Use\n(Weapon)    - Future Use\n(Consumable) - Future Use\n \nAttack Bonus : (Future Use)\nDefense Bonus: (Future Use)\n------------------------------------------------------\n**[Stats & Ratios]**\nPvP Stats     - {p_wins}/{p_loss} : {p_ratio}\nRobbery Stats - {r_wins}/{r_loss} : {r_ratio}\nHeist Stats   - {h_wins}/{h_loss} : {h_ratio}\n \nCurrent P-Bonus: {p_bonus}\n------------------------------------------------------")
 
 
@@ -387,8 +363,6 @@ class CrimeTime(commands.Cog):
         member  = member or ctx.author
         guildsettings = self.db.get_conf(ctx.guild)
         user = guildsettings.get_user(member)
-        p_wins = user.p_wins
-        p_losses = user.p_losses
         p_ratio = user.p_ratio
         p_ratio_str = user.p_ratio_str
         balance = user.balance
@@ -398,30 +372,6 @@ class CrimeTime(commands.Cog):
         h_wins = user.h_wins
         h_losses = user.h_losses
         h_ratio_str = user.h_ratio_str
-
-        # Determine Attack Bonuses against other players.
-        if p_ratio >= 5:
-            p_bonus = 0.25
-        elif p_ratio >= 3.01:
-            p_bonus = 0.2
-        elif p_ratio >= 3:
-            p_bonus = 0.15
-        elif p_ratio >= 2:
-            p_bonus = 0.1
-        elif p_ratio >= 1:
-            p_bonus = 0.05
-        elif p_ratio == 0:
-            p_bonus = 0.0
-        elif p_ratio >= -1:
-            p_bonus = -0.05
-        elif -1 > p_ratio >= -2:
-            p_bonus = -0.1
-        elif -2 > p_ratio >= -3:
-            p_bonus = -0.15
-        elif p_ratio <= -3.01:
-            p_bonus = -0.2
-        elif p_ratio <= -5:
-            p_bonus = -0.25
         await ctx.send(f"**{member.display_name}**\nBalance: ${balance}\nP-Win/Loss Ratio: {p_ratio_str}[{p_ratio}]\nP-Bonus: {p_bonus}") #\nRobbery Win/Loss Ratio: {r_ratio_str}")
 
     # Actually run the MUG command.
@@ -482,11 +432,13 @@ class CrimeTime(commands.Cog):
                 if pve_attack > rating_easy:
                     reward = random.randint(1, 35)
                     mugger_user.balance += reward
-                    mugger_user.pve_win += 1                    
+                    mugger_user.pve_win += 1
+                    await self.update_pbonus(ctx, author)               
                     await ctx.send(f"**{author.display_name}** successfully mugged *{strangerchoice}* and made off with ${reward}!")
 #Temp                    mugger_user.player_exp += 1 # +1 to Player Experience
                 else:
                     mugger_user.pve_loss += 1
+                    await self.update_pbonus(ctx, author)
                     await ctx.send(f"**{author.display_name}** looked around for someone to mug but found no one nearby...")
             elif difficulty_choice == stranger2:
                 strangerchoice = random.choice(difficulty_choice)
@@ -494,10 +446,12 @@ class CrimeTime(commands.Cog):
                     reward = random.randint(36, 65)
                     mugger_user.balance += reward
                     mugger_user.pve_win += 1
+                    await self.update_pbonus(ctx, author)
                     await ctx.send(f"**{author.display_name}** successfully mugged *{strangerchoice}* and made off with ${reward}!")
 #Temp                    mugger_user.player_exp += 2 # +2 to Player Experience
                 else:
                     mugger_user.pve_loss += 1
+                    await self.update_pbonus(ctx, author)
                     await ctx.send(f"**{author.display_name}** looked around for someone to mug but found no one nearby...")
             elif difficulty_choice == stranger3:
                 strangerchoice = random.choice(difficulty_choice)
@@ -505,10 +459,12 @@ class CrimeTime(commands.Cog):
                     reward = random.randint(66, 95)
                     mugger_user.balance += reward
                     mugger_user.pve_win += 1
+                    await self.update_pbonus(ctx, author)
                     await ctx.send(f"**{author.display_name}** successfully mugged *{strangerchoice}* and made off with ${reward}!")
 #Temp                    mugger_user.player_exp += 3 # +3 to Player Experience
                 else:
                     mugger_user.pve_loss += 1
+                    await self.update_pbonus(ctx, author)
                     await ctx.send(f"**{author.display_name}** looked around for someone to mug but found no one nearby...")
         else:
             # If we here, user targeted a player and now we check allowed status.
@@ -553,6 +509,7 @@ class CrimeTime(commands.Cog):
                 #+1 pwin to attacker, +1 ploss to target
                 mugger_user.p_wins += 1
                 target_user.p_losses += 1
+
             elif pvp_attack < pvp_defend:
                 await ctx.send(f"You attack {target} and find them well prepared!\nYou have failed this time!")
                 #+1 ploss to attacker, +1 pwin to target
