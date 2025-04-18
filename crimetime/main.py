@@ -433,39 +433,33 @@ class CrimeTime(commands.Cog):
                 if pve_attack > rating_easy:
                     reward = random.randint(1, 35)
                     mugger_user.balance += reward
-                    mugger_user.pve_win += 1
-                    await self.update_pbonus(ctx, author)               
+                    mugger_user.pve_win += 1                             
                     await ctx.send(f"**{author.display_name}** successfully mugged *{strangerchoice}* and made off with ${reward}!")
 #Temp                    mugger_user.player_exp += 1 # +1 to Player Experience
                 else:
                     mugger_user.pve_loss += 1
-                    await self.update_pbonus(ctx, author)
                     await ctx.send(f"**{author.display_name}** looked around for someone to mug but found no one nearby...")
             elif difficulty_choice == stranger2:
                 strangerchoice = random.choice(difficulty_choice)
                 if pve_attack > rating_medium:
                     reward = random.randint(36, 65)
                     mugger_user.balance += reward
-                    mugger_user.pve_win += 1
-                    await self.update_pbonus(ctx, author)
+                    mugger_user.pve_win += 1                    
                     await ctx.send(f"**{author.display_name}** successfully mugged *{strangerchoice}* and made off with ${reward}!")
 #Temp                    mugger_user.player_exp += 2 # +2 to Player Experience
                 else:
-                    mugger_user.pve_loss += 1
-                    await self.update_pbonus(ctx, author)
+                    mugger_user.pve_loss += 1                    
                     await ctx.send(f"**{author.display_name}** looked around for someone to mug but found no one nearby...")
             elif difficulty_choice == stranger3:
                 strangerchoice = random.choice(difficulty_choice)
                 if pve_attack > rating_hard:
                     reward = random.randint(66, 95)
                     mugger_user.balance += reward
-                    mugger_user.pve_win += 1
-                    await self.update_pbonus(ctx, author)
+                    mugger_user.pve_win += 1                    
                     await ctx.send(f"**{author.display_name}** successfully mugged *{strangerchoice}* and made off with ${reward}!")
 #Temp                    mugger_user.player_exp += 3 # +3 to Player Experience
                 else:
-                    mugger_user.pve_loss += 1
-                    await self.update_pbonus(ctx, author)
+                    mugger_user.pve_loss += 1                    
                     await ctx.send(f"**{author.display_name}** looked around for someone to mug but found no one nearby...")
         else:
             # If we here, user targeted a player and now we check allowed status.
@@ -510,12 +504,13 @@ class CrimeTime(commands.Cog):
                 #+1 pwin to attacker, +1 ploss to target
                 mugger_user.p_wins += 1
                 target_user.p_losses += 1
-
+                await asyncio.gather(self.update_pbonus(ctx, mugger_user), self.update_pbonus(ctx, target_user))
             elif pvp_attack < pvp_defend:
                 await ctx.send(f"You attack {target} and find them well prepared!\nYou have failed this time!")
                 #+1 ploss to attacker, +1 pwin to target
                 mugger_user.p_losses += 1
                 target_user.p_wins += 1
+                await asyncio.gather(self.update_pbonus(ctx, mugger_user), self.update_pbonus(ctx, target_user))
             elif pvp_attack == pvp_defend:
                 await ctx.send(f"You attack {target} and find that you are equally matched!\nYou flee before you suffer any losses.")
                 #Make no changes from here for the pvp aspect.
