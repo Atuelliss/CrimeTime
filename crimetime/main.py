@@ -495,13 +495,15 @@ class CrimeTime(commands.Cog):
                 #+1 pwin to attacker, +1 ploss to target
                 mugger_user.p_wins += 1
                 target_user.p_losses += 1
-                await asyncio.gather(self.update_pbonus(ctx, mugger_user), self.update_pbonus(ctx, target_user))
+                await self.update_pbonus(ctx, mugger_user)
+                await self.update_pbonus(ctx, target_user)
             elif pvp_attack < pvp_defend:
                 await ctx.send(f"You attack {target} and find them well prepared!\nYou have failed this time!")
                 #+1 ploss to attacker, +1 pwin to target
                 mugger_user.p_losses += 1
                 target_user.p_wins += 1
-                await asyncio.gather(self.update_pbonus(ctx, mugger_user), self.update_pbonus(ctx, target_user))
+                await self.update_pbonus(ctx, mugger_user)
+                await self.update_pbonus(ctx, target_user)
             elif pvp_attack == pvp_defend:
                 await ctx.send(f"You attack {target} and find that you are equally matched!\nYou flee before you suffer any losses.")
                 #Make no changes from here for the pvp aspect.
@@ -549,7 +551,7 @@ class CrimeTime(commands.Cog):
         # Reset user's stats
         target_user.p_wins = 0
         target_user.p_losses = 0
-        await self.update_pbonus(ctx, target_user) # Updates the Player's PBonus with the new stats.
+        await self.update_pbonus(ctx, target) # Updates the Player's PBonus with the new stats.
         target_user.mugclear_count += 1  # Corrected increment
         target_user.balance -= cost #Removes the cost of the clear from the users balance.
 
