@@ -255,6 +255,57 @@ class CrimeTime(commands.Cog):
 
 ###### "Check" commands:
     # Check balance and stats specifically attributed to the Mug command.
+    async def update_pbonus(self, ctx: commands.Context, member: discord.Member) -> None:
+        """Recalculate and update a user's PvP bonus based on their win/loss ratio."""
+        guildsettings = self.db.get_conf(ctx.guild)
+        user = guildsettings.get_user(member)
+        p_ratio = user.p_ratio
+                
+        # Determine PvP-Ratio Bonuses against other players.
+        if p_ratio >= 5:
+            user.p_bonus = 0.25
+        elif p_ratio >= 3.01:
+            user.p_bonus = 0.2
+        elif p_ratio >= 3:
+            user.p_bonus = 0.15
+        elif p_ratio >= 2:
+            user.p_bonus = 0.1
+        elif p_ratio >= 1:
+            user.p_bonus = 0.05
+        elif p_ratio == 0:
+            user.p_bonus = 0.0
+        elif p_ratio >= -1:
+            user.p_bonus = -0.05
+        elif -1 > p_ratio >= -2:
+            user.p_bonus = -0.1
+        elif -2 > p_ratio >= -3:
+            user.p_bonus = -0.15
+        elif p_ratio <= -3.01:
+            user.p_bonus = -0.2
+        elif p_ratio <= -5:
+            user.p_bonus = -0.25
+        self.save()
+    
+    # Bonus Check Only, no modification.
+    @commands.command()
+    async def pbcheck(self, ctx: commands.Context, member: discord.Member = None):
+        """Checks the Balance, Wins/Losses, and Ratio of a User."""
+        member  = member or ctx.author
+        guildsettings = self.db.get_conf(ctx.guild)
+        user = guildsettings.get_user(member)
+        pbonus = user.p_bonus
+        await ctx.send(f"**{member.display_name}**'s P-Bonus is {pbonus}.")
+    
+    # Manually update a users P-Bonus
+    @commands.command()
+    async def pbupdate(self, ctx: commands.Context, member: discord.Member = None):
+        """Checks the Balance, Wins/Losses, and Ratio of a User."""
+        member  = member or ctx.author
+        guildsettings = self.db.get_conf(ctx.guild)
+        await self.update_pbonus(ctx, member)
+        await ctx.send(f"{member.display_name}'s PvP bonus has been updated to {guildsettings.get_user(member).p_bonus}.")
+
+    # Check balance and stats specifically attributed to the Mug command.
     @commands.command()
     async def ctstat(self, ctx: commands.Context, member: discord.Member = None):
         """Displays Player's wealth, gear, and stats."""
@@ -395,7 +446,7 @@ class CrimeTime(commands.Cog):
                     "a boy dressed as a Stormtrooper", "a girl dressed as Princess Leia", "a baby in a stroller", "a group of drunk frat boys", 
                     "a poor girl doing the morning walk of shame", "another mugger who's bad at their job", "a man in a transparent banana costume",
                     "an angry jawa holding an oddly-thrusting mechanism", "two Furries fighting over an 'Uwu'",
-                    "a dude in drag posting a thirst-trap on tiktok", "a mighty keyboard-warrior with cheetoh dust on his face", "a goat-hearder"
+                    "a dude in drag posting a thirst-trap on tiktok", "a mighty keyboard-warrior with cheetoh dust on his face", "a goat-hearder",
                     "Stormtrooper TK-421 who's firing at you and missing every shot", "an escaped mental patient oblivious to their surroundings",
                     "a Mogwai doused in water", "a tiny fairy trying to eat an oversized grape"]
         #Rating = Medium
@@ -460,8 +511,6 @@ class CrimeTime(commands.Cog):
                     mugger_user.pve_loss += 1
                     await ctx.send(f"**{author.display_name}** looked around for someone to mug but found no one nearby...")
         else:
-            # If we are here, user has targeted another player.
-              
             # If we here, user targeted a player and now we check allowed status.
             target_user = guildsettings.get_user(target)
             if mugger_user.balance < 50:
@@ -470,6 +519,7 @@ class CrimeTime(commands.Cog):
             if target_user.balance < 50:
                 await ctx.send(f"The target has less than $50 and isn't worth mugging.")
                 return
+            # PvP Mugging, Attacking another User who is not under the minimum amount.
             pvp_defend = random.uniform(0, 1) + target_user.p_bonus #need to add in armor bonus later
 
             # Track pvp targets and make sure new target is allowed, this prevents attacking the same person over and over.
@@ -480,8 +530,7 @@ class CrimeTime(commands.Cog):
             if target.id in recent_targets:
                 await ctx.send(f"You have already mugged {target.display_name} recently. Mug other players to clear your target list!")
                 return
-
-            # PvP Mugging, Attacking another User who is not under the minimum amount.
+            
             # Check the pvp timer.    
             secondsleft = pvpbucket.update_rate_limit() # Add pvp timer to user.
             if secondsleft:
