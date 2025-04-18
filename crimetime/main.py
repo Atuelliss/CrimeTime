@@ -365,6 +365,7 @@ class CrimeTime(commands.Cog):
         user = guildsettings.get_user(member)
         p_ratio = user.p_ratio
         p_ratio_str = user.p_ratio_str
+        p_bonus = user.p_bonus
         balance = user.balance
         r_wins = user.r_wins
         r_losses = user.r_losses
