@@ -318,6 +318,7 @@ class CrimeTime(commands.Cog):
         p_wins = user.p_wins
         p_loss = user.p_losses
         p_ratio = user.p_ratio
+        p_bonus = user.p_bonus
         # p_ratio_str = user.p_ratio_str
         balance = user.balance
         r_wins = user.r_wins
