@@ -129,12 +129,12 @@ class CrimeTime(commands.Cog):
         cash_needed = amount * gold_value
 
         secondsleft = investbucket.update_rate_limit()
+        if user.balance < cash_needed:
+            await ctx.send(f"You do not have the ${cash_needed} needed for that transaction.")
+            return
         if secondsleft:
             wait_time = humanize_timedelta(seconds=int(secondsleft))
             await ctx.send(f"You must wait {wait_time} before investing again.")
-            return
-        if user.balance < cash_needed:
-            await ctx.send(f"You do not have the ${cash_needed} needed for that transaction.")
             return
         else:
             user.balance -= cash_needed
@@ -166,13 +166,13 @@ class CrimeTime(commands.Cog):
         cash_needed = amount * gem_value
 
         secondsleft = investbucket.update_rate_limit()
-        if secondsleft:
-            wait_time = humanize_timedelta(seconds=int(secondsleft))
-            await ctx.send(f"You must wait {wait_time} before investing again.")
-            return
         if user.balance < cash_needed:
             await ctx.send(f"You do not have the ${cash_needed} for that transaction.")
             return
+        if secondsleft:
+            wait_time = humanize_timedelta(seconds=int(secondsleft))
+            await ctx.send(f"You must wait {wait_time} before investing again.")
+            return        
         else:
             user.balance -= cash_needed
             user.gems_owned += amount
