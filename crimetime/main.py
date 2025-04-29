@@ -286,15 +286,6 @@ class CrimeTime(commands.Cog):
             user.p_bonus = -0.25
         self.save()
     
-    # Manually update a users P-Bonus
-    @commands.command()
-    async def pbupdate(self, ctx: commands.Context, member: discord.Member = None):
-        """Checks the Balance, Wins/Losses, and Ratio of a User."""
-        member  = member or ctx.author
-        guildsettings = self.db.get_conf(ctx.guild)
-        await self.update_pbonus(ctx, member)
-        await ctx.send(f"{member.display_name}'s PvP bonus has been updated to {guildsettings.get_user(member).p_bonus}")
-
     # Check balance and stats specifically attributed to the Mug command.
     @commands.command()
     async def ctstat(self, ctx: commands.Context, member: discord.Member = None):
@@ -624,6 +615,15 @@ class CrimeTime(commands.Cog):
             await ctx.send(f"You gave {target.mention} {amount} gold bars.")
 
 ##########  Admin Commands  ##########
+    # Manually update a users P-Bonus
+    @commands.command()
+    @commands.admin_or_permissions(manage_guild=True)  # Only Admins can use this command
+    async def pbupdate(self, ctx: commands.Context, member: discord.Member = None):
+        """Checks the Balance, Wins/Losses, and Ratio of a User."""
+        member  = member or ctx.author
+        guildsettings = self.db.get_conf(ctx.guild)
+        await self.update_pbonus(ctx, member)
+        await ctx.send(f"{member.display_name}'s PvP bonus has been updated to {guildsettings.get_user(member).p_bonus}")
 
     # This group allows the Administrator to CLEAR amounts, not set them.
     @commands.group()
