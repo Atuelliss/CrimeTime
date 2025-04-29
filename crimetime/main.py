@@ -403,7 +403,7 @@ class CrimeTime(commands.Cog):
         stranger3 = ["Elon Musk leaving a DOGE meeting", "Bill Clinton, walking with his zipper down", "Vladamir Putin, humming 'Putin on the ritz'", "Bigfoot!!", "Steve Job's Corpse", 
                      "Roseanne Barr running from a BET awards show", "Borat!!", "a shirtless Florida-man", "Megatron", "John Wick's dog", "Bill Murray in a tracksuit with a cigar", 
                      "Joe Rogan", "Michelle Obama eating an ice-cream cone", "Will Smith's right-hand", "Macho-Man Randy Savage, 'Oooooh yeeeah'", "Greta Thunberg chasing cow farts", 
-                     "Bill Murray in a zombie costume staring into the distance", "Mrs. Doubtfire awkwardly running to help someone", "90-year old Hulk Hogan in his iconic red/yellow wrestling gear"
+                     "Bill Murray in a zombie costume staring into the distance", "Mrs. Doubtfire awkwardly running to help someone", "90-year old Hulk Hogan in his iconic red/yellow wrestling gear",
                      "Forest Gump screaming, 'How are you run-nang so fast'"]
         rating_easy    = 0.2
         rating_medium  = 0.5
