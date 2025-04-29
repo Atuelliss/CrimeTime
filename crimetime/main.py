@@ -182,6 +182,34 @@ class CrimeTime(commands.Cog):
             else:
                 await ctx.send(f"You invested ${cash_needed} into {amount} gems!\nYour investment is safe from mugging for now!")
 
+    @ctinvest.command(name="b2g")
+    async def bars_to_gems(self, ctx: commands.Context, amount: int = None):
+        """Allows a Player to convert Gold Bars to Gems."""
+        member = ctx.author
+        investbucket = self.investcooldown.get_bucket(ctx.message)
+        guildsettings = self.db.get_conf(ctx.guild)
+        user = guildsettings.get_user(member)  
+        if user is None:
+            await ctx.send("User data not found. Please try again later.")
+            return
+        if amount is None:
+            await ctx.send("You must specify the amount of gold bars to invest in.")
+            return
+        if amount <= 0:
+            await ctx.send("Please enter a valid number of gold bars to invest in.")
+            return
+        if amount % 2 != 0:
+            await ctx.send("You must input an even number of gold bars. (2 bars = 1 gem)")
+            return
+        if user.gold_bars < amount:
+            await ctx.send("You do not have enough gold bars for that transaction.")
+            return
+        gems_to_add = amount // 2
+        user.gold_bars -= amount
+        user.gems_owned += gems_to_add
+        self.save()
+        await ctx.send(f"You successfully converted {amount} gold bars into {gems_to_add} gems!")
+     
 # ctLiquidate
     # Convert Assets to Cash
     @commands.group(invoke_without_command=True, aliases=["ctld"])
