@@ -92,8 +92,8 @@ class CrimeTime(commands.Cog):
                 value="Crimetime is a Discord game designed to allow Players to take on the role of a Criminal and attempt to gain as much wealth as possible through various means.\n \nThe game came about as a joke at first on the Vertyco Ark Servers but has since expanded in scope after interest from Players was shown. It is currently in development and is nowhere near complete yet.",
                 inline=False)
             info_embed.add_field(
-                name="What commands can you use in the game?",
-                value="Currently, the commands that can be used are:\n`$mug`\n`$mugcheck`\n`$mugclear`\n`$ctwealth`\n`$ctgive`\n`$ctinvest`\n`$ctliquidate`",
+                name="The current commands available for use in the game are:",
+                value="`$mug` - Command to mug NPCs and Players.\n`$mugcheck` - Checks a User's Cash Balance and Ratio.\n`$mugclear` - Resets your stats for a fee.\n`$ctwealth` - Displays total wealth $ assets of a User.\n`$ctgive` - Transfer assets to another Player.\n`$ctinvest` - Convert Cash to Gold Bars or Gems.\n`$ctliquidate` - Convert Bars or Gems to Cash.",
                 inline=False)
             await ctx.send(embed=info_embed)
         except discord.HTTPException:
