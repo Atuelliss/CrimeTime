@@ -23,9 +23,7 @@ class User(Base):
     player_level: int = 0 #Future variable for Player level.
     tnl_exp: int = 0 #Exp needed for next level.
     recent_targets: list[int] = []
-
-    
-
+  
     # Ratio property sets
     @property # Ratio for player pvp mugging stats
     def p_ratio(self) -> float:

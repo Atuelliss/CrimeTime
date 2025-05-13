@@ -93,7 +93,7 @@ class CrimeTime(commands.Cog):
                 inline=False)
             info_embed.add_field(
                 name="What commands can you use in the game?",
-                value="Currently, the `$mug`, `$mugcheck`, `$mugclear`, `$ctwealth`, `$ctgive`, `$ctinvest`, and `$ctliquidate` commands can be used.",
+                value="Currently, the commands that can be used are:\n`$mug`\n`$mugcheck`\n`$mugclear`\n`$ctwealth`\n`$ctgive`\n`$ctinvest`\n`$ctliquidate`",
                 inline=False)
             await ctx.send(embed=info_embed)
         except discord.HTTPException:
