@@ -88,11 +88,11 @@ class CrimeTime(commands.Cog):
                 description="A criminal mini-game cog for Red-DiscordBot created by Jayar(aka-Vainne).", 
                 color=0xffd700)
             info_embed.add_field(
-                name="What is the purpose of the game?",
+                name="*What is the purpose of the game?*",
                 value="Crimetime is a Discord game designed to allow Players to take on the role of a Criminal and attempt to gain as much wealth as possible through various means.\n \nThe game came about as a joke at first on the Vertyco Ark Servers but has since expanded in scope after interest from Players was shown. It is currently in development and is nowhere near complete yet.",
                 inline=False)
             info_embed.add_field(
-                name="The current commands available for use in the game are:",
+                name="*The current commands available for use in the game are:*",
                 value="`$mug` - Command to mug NPCs and Players.\n`$mugcheck` - Checks a User's Cash Balance and Ratio.\n`$mugclear` - Resets your stats for a fee.\n`$ctwealth` - Displays total wealth $ assets of a User.\n`$ctgive` - Transfer assets to another Player.\n`$ctinvest` - Convert Cash to Gold Bars or Gems.\n`$ctliquidate` - Convert Bars or Gems to Cash.",
                 inline=False)
             await ctx.send(embed=info_embed)
