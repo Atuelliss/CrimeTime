@@ -98,6 +98,12 @@ class CrimeTime(commands.Cog):
             await ctx.send(embed=info_embed)
         except discord.HTTPException:
             await ctx.send("An error occurred while sending the message. Please try again later.")
+
+# CtTimer function
+    # Displays a user's remaining timers.
+    @commands.command()
+    async def cttimer(self, ctx: commands.Context):
+        await ctx.send(f"-=-=-=-=-=-=-=-=-=-=-=-=-\nPvP Timer: {self.pvpcooldown}\nPvE Timer: {self.pvecooldown}\nInvest Timer: {self.investcooldown}\n-=-=-=-=-=-=-=-=-=-=-=-=-")
             
 # CtInvest function
     # Convert Cash to Gold or Gemstones
