@@ -101,16 +101,7 @@ class CrimeTime(commands.Cog):
 
 # CtTimer function
     # Displays a user's remaining timers.
-'''    @commands.command()
-    async def cttimer(self, ctx: commands.Context):
-        investbucket = self.investcooldown.get_bucket(ctx.message)
-        pvpbucket = self.pvpcooldown.get_bucket(ctx.message)
-        pvebucket = self.pvecooldown.get_bucket(ctx.message)
-        investtimer = investbucket.update_rate_limit()
-        pvptimer = pvpbucket.update_rate_limit()
-        pvetimer = pvebucket.update_rate_limit()
-        await ctx.send(f"-=-=-=-=-=-=-=-=-=-=-=-=-\nPvP Timer: {pvptimer}\nPvE Timer: {pvetimer}\nInvest Timer: {investtimer}\n-=-=-=-=-=-=-=-=-=-=-=-=-")
-            '''
+
 # CtInvest function
     # Convert Cash to Gold or Gemstones
     @commands.group(invoke_without_command=True)
