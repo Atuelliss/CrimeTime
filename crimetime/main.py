@@ -109,7 +109,7 @@ class CrimeTime(commands.Cog):
         investtimer = investbucket.update_rate_limit()
         pvptimer = pvpbucket.update_rate_limit()
         pvetimer = pvebucket.update_rate_limit()
-        await ctx.send(f"-=-=-=-=-=-=-=-=-=-=-=-=-\nPvP Timer: {pvptimer}\nPvE Timer: {pvetimer}\nInvest Timer: {investbucket}\n-=-=-=-=-=-=-=-=-=-=-=-=-")
+        await ctx.send(f"-=-=-=-=-=-=-=-=-=-=-=-=-\nPvP Timer: {pvptimer}\nPvE Timer: {pvetimer}\nInvest Timer: {investtimer}\n-=-=-=-=-=-=-=-=-=-=-=-=-")
             
 # CtInvest function
     # Convert Cash to Gold or Gemstones
