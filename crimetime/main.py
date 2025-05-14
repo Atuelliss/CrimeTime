@@ -104,8 +104,11 @@ class CrimeTime(commands.Cog):
     @commands.command()
     async def cttimer(self, ctx: commands.Context):
         investbucket = self.investcooldown.get_bucket(ctx.message)
-        pvptimer = self.pvpcooldown.get_bucket(ctx.message)
-        pvetimer = self.pvecooldown.get_bucket(ctx.message)
+        pvpbucket = self.pvpcooldown.get_bucket(ctx.message)
+        pvebucket = self.pvecooldown.get_bucket(ctx.message)
+        investtimer = investbucket.update_rate_limit()
+        pvptimer = pvpbucket.update_rate_limit()
+        pvetimer = pvebucket.update_rate_limit()
         await ctx.send(f"-=-=-=-=-=-=-=-=-=-=-=-=-\nPvP Timer: {pvptimer}\nPvE Timer: {pvetimer}\nInvest Timer: {investbucket}\n-=-=-=-=-=-=-=-=-=-=-=-=-")
             
 # CtInvest function
