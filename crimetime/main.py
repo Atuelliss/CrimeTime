@@ -947,11 +947,11 @@ class CrimeTime(commands.Cog):
 
                 member = ctx.guild.get_member(user_id)
                 if member:
-                    username = f"{member.display_name} - {user_id}"
+                    username = f"{member.display_name} ({user_id})"
                 else:
-                    username = f"Unknown User - {user_id}"
+                    username = f"Unknown User ({user_id})"
 
-                txt += f"{position + 1}. {value} : {username}\n"
+                txt += f"{position + 1}. `{value}` : {username}\n"
 
             title = f"{stat.capitalize()} Leaderboard!"
             embed = discord.Embed(description=txt, title=title)
