@@ -120,7 +120,7 @@ class CrimeTime(commands.Cog):
                 recent_targets.append(f"Unknown User ({uid})")
 
         target_list = ", ".join(recent_targets) if recent_targets else "no one recently"
-        await ctx.send(f"You have recently attacked: {target_list}.\nTry attacking others NOT on this list to continue.")
+        await ctx.send(f"*You have recently attacked*:   {target_list}.\nTry attacking others not on this list to continue.")
 
 # CtInvest function
     # Convert Cash to Gold or Gemstones
