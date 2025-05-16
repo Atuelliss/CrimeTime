@@ -915,7 +915,7 @@ class CrimeTime(commands.Cog):
             txt = ""
             for position in range(start, stop):
                 user_id, user_obj = sorted_users[position]
-                if stat == "balance":
+                if stat == "balance" or "bal":
                     value = user_obj.balance
                 elif stat == "wins":
                     value = user_obj.p_wins
