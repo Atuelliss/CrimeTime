@@ -910,41 +910,52 @@ class CrimeTime(commands.Cog):
 
 ##########  End of Admin Commands  ##########
 
-###### Start of Leaderboard Commands
-    @commands.command() # Leaderboard Commands for Mugging
+# Start of Leaderboard Commands
+    @commands.command()  # Leaderboard Commands for Mugging
     async def muglb(self, ctx: commands.Context, stat: t.Literal["balance", "wins", "ratio"]):
         """Displays leaderboard for Player Mugging stats."""
         guildsettings = self.db.get_conf(ctx.guild)
         users: dict[int, User] = guildsettings.users
+
         if stat == "balance":
             sorted_users: list[tuple[int, User]] = sorted(users.items(), key=lambda x: x[1].balance, reverse=True)
-            sorted_users: list[tuple[int, User]] = [i for i in sorted_users if i[1].balance] # Removes users with 0 for balance.
+            sorted_users = [i for i in sorted_users if i[1].balance]  # Removes users with 0 balance
         elif stat == "wins":
-            sorted_users: list[tuple[int, User]] = sorted(users.items(), key=lambda x: x[1].p_wins, reverse=True)
-            sorted_users: list[tuple[int, User]] = [i for i in sorted_users if i[1].p_wins]
-        else: # Ratio
-            sorted_users: list[tuple[int, User]] = sorted(users.items(), key=lambda x: x[1].p_ratio, reverse=True)
-            sorted_users: list[tuple[int, User]] = [i for i in sorted_users if i[1].p_ratio]
+            sorted_users = sorted(users.items(), key=lambda x: x[1].p_wins, reverse=True)
+            sorted_users = [i for i in sorted_users if i[1].p_wins]
+        else:  # Ratio
+            sorted_users = sorted(users.items(), key=lambda x: x[1].p_ratio, reverse=True)
+            sorted_users = [i for i in sorted_users if i[1].p_ratio]
 
         embeds = []
         pages = math.ceil(len(sorted_users) / 15)
         start = 0
         stop = 15
+
         for index in range(pages):
             stop = min(stop, len(sorted_users))
             txt = ""
             for position in range(start, stop):
                 user_id, user_obj = sorted_users[position]
+
                 if stat == "balance":
                     value = user_obj.balance
                 elif stat == "wins":
                     value = user_obj.p_wins
                 else:
                     value = user_obj.p_ratio
-                txt += f"{position + 1}. <@{user_id}> `{value}`\n"
+
+                member = ctx.guild.get_member(user_id)
+                if member:
+                    username = f"{member.display_name} ({user_id})"
+                else:
+                    username = f"Unknown User ({user_id})"
+
+                txt += f"{position + 1}. {username} `{value}`\n"
+
             title = f"{stat.capitalize()} Leaderboard!"
             embed = discord.Embed(description=txt, title=title)
-            embed.set_footer(text=f"Page {index+1}/{pages}")
+            embed.set_footer(text=f"Page {index + 1}/{pages}")
             embeds.append(embed)
             start += 15
             stop += 15
