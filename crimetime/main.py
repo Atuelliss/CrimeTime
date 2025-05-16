@@ -926,6 +926,11 @@ class CrimeTime(commands.Cog):
         else:  # Ratio
             sorted_users = sorted(users.items(), key=lambda x: x[1].p_ratio, reverse=True)
             sorted_users = [i for i in sorted_users if i[1].p_ratio]
+        
+        # ⛔ Prevent IndexError if list is empty
+        if not sorted_users:
+            await ctx.send("No users found with any data for that stat.")
+            return
 
         embeds = []
         pages = math.ceil(len(sorted_users) / 15)
