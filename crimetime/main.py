@@ -896,7 +896,7 @@ class CrimeTime(commands.Cog):
         """Displays leaderboard for Player Mugging stats."""
         guildsettings = self.db.get_conf(ctx.guild)
         users: dict[int, User] = guildsettings.users
-        if stat == "balance":
+        if stat == "balance" or "bal":
             sorted_users: list[tuple[int, User]] = sorted(users.items(), key=lambda x: x[1].balance, reverse=True)
             sorted_users: list[tuple[int, User]] = [i for i in sorted_users if i[1].balance] # Removes users with 0 for balance.
         elif stat == "wins":
@@ -915,7 +915,7 @@ class CrimeTime(commands.Cog):
             txt = ""
             for position in range(start, stop):
                 user_id, user_obj = sorted_users[position]
-                if stat == "balance" or "bal":
+                if stat == "balance":
                     value = user_obj.balance
                 elif stat == "wins":
                     value = user_obj.p_wins
