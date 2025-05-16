@@ -99,8 +99,15 @@ class CrimeTime(commands.Cog):
         except discord.HTTPException:
             await ctx.send("An error occurred while sending the message. Please try again later.")
 
-# CtTimer function
-    # Displays a user's remaining timers.
+# CTmyTarget function
+    # Displays a user's recent targets.
+    @commands.command(aliases=["cttarget"])
+    async def display_my_target_list(self, ctx: commands.Context):
+        '''Prints out a brief list of the users most recent target list.'''
+        member = ctx.author
+        guildsettings = self.db.get_conf(ctx.guild)
+        user = guildsettings.get_user(member)
+        await ctx.send (f"You have recently attacked: {user.recent_targets}.\nTry attacking others NOT on this list to continue.")
 
 # CtInvest function
     # Convert Cash to Gold or Gemstones
