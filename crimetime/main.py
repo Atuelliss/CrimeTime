@@ -892,7 +892,7 @@ class CrimeTime(commands.Cog):
 
 ###### Start of Leaderboard Commands
     @commands.command() # Leaderboard Commands for Mugging
-    async def muglb(self, ctx: commands.Context, stat: t.Literal["balance", "wins", "ratio"]):
+    async def muglb(self, ctx: commands.Context, stat: t.Literal["balance", "bal", "wins", "ratio"]):
         """Displays leaderboard for Player Mugging stats."""
         guildsettings = self.db.get_conf(ctx.guild)
         users: dict[int, User] = guildsettings.users
