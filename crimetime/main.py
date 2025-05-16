@@ -918,8 +918,8 @@ class CrimeTime(commands.Cog):
         users: dict[int, User] = guildsettings.users
 
         if stat == "balance":
-            sorted_users: list[tuple[int, User]] = sorted(users.items(), key=lambda x: x[1].balance, reverse=True)
-            sorted_users = [i for i in sorted_users if i[1].balance]  # Removes users with 0 balance
+            sorted_users = sorted(users.items(), key=lambda x: x[1].balance, reverse=True)
+            sorted_users = [i for i in sorted_users if i[1].balance]
         elif stat == "wins":
             sorted_users = sorted(users.items(), key=lambda x: x[1].p_wins, reverse=True)
             sorted_users = [i for i in sorted_users if i[1].p_wins]
@@ -947,11 +947,11 @@ class CrimeTime(commands.Cog):
 
                 member = ctx.guild.get_member(user_id)
                 if member:
-                    username = f"{member.display_name} ({user_id})"
+                    username = f"{member.display_name} - {user_id}"
                 else:
-                    username = f"Unknown User ({user_id})"
+                    username = f"Unknown User - {user_id}"
 
-                txt += f"{position + 1}. {username} `{value}`\n"
+                txt += f"{position + 1}. {value} : {username}\n"
 
             title = f"{stat.capitalize()} Leaderboard!"
             embed = discord.Embed(description=txt, title=title)
