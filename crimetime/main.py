@@ -105,9 +105,22 @@ class CrimeTime(commands.Cog):
     async def display_my_target_list(self, ctx: commands.Context):
         '''Prints out a brief list of the users most recent target list.'''
         member = ctx.author
+        guild = ctx.guild
         guildsettings = self.db.get_conf(ctx.guild)
         user = guildsettings.get_user(member)
-        await ctx.send (f"You have recently attacked: {user.recent_targets}.\nTry attacking others NOT on this list to continue.")
+        # Convert user IDs to member display names
+        recent_target_ids = user.recent_targets
+        recent_targets = []
+
+        for uid in recent_target_ids:
+            target = guild.get_member(uid)
+            if target:
+                recent_targets.append(target.display_name)
+            else:
+                recent_targets.append(f"Unknown User ({uid})")
+
+        target_list = ", ".join(recent_targets) if recent_targets else "no one recently"
+        await ctx.send(f"You have recently attacked: {target_list}.\nTry attacking others NOT on this list to continue.")
 
 # CtInvest function
     # Convert Cash to Gold or Gemstones
