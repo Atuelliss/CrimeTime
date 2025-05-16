@@ -892,14 +892,11 @@ class CrimeTime(commands.Cog):
 
 ###### Start of Leaderboard Commands
     @commands.command() # Leaderboard Commands for Mugging
-    async def muglb(self, ctx: commands.Context, stat: t.Literal["balance", "bal", "wins", "ratio"]):
+    async def muglb(self, ctx: commands.Context, stat: t.Literal["balance", "wins", "ratio"]):
         """Displays leaderboard for Player Mugging stats."""
         guildsettings = self.db.get_conf(ctx.guild)
         users: dict[int, User] = guildsettings.users
         if stat == "balance":
-            sorted_users: list[tuple[int, User]] = sorted(users.items(), key=lambda x: x[1].balance, reverse=True)
-            sorted_users: list[tuple[int, User]] = [i for i in sorted_users if i[1].balance] # Removes users with 0 for balance.
-        elif stat == "bal":
             sorted_users: list[tuple[int, User]] = sorted(users.items(), key=lambda x: x[1].balance, reverse=True)
             sorted_users: list[tuple[int, User]] = [i for i in sorted_users if i[1].balance] # Removes users with 0 for balance.
         elif stat == "wins":
