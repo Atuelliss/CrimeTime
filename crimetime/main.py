@@ -11,7 +11,6 @@ from redbot.core.bot import Red
 from redbot.core.data_manager import cog_data_path
 from .common.models import DB, User
 from .dynamic_menu import DynamicMenu
-from discord.ext import commands
 #from blackmarket import all_items
 
 log = logging.getLogger("red.crimetime")
