@@ -24,21 +24,6 @@ class User(Base):
     tnl_exp: int = 0 #Exp needed for next level.
     recent_targets: list[int] = []
   
-    # Equipped gear.
-    worn_head: str | None = None
-    worn_chest: str | None = None
-    worn_legs: str | None = None
-    worn_feet: str | None = None
-    worn_weapon: str | None = None
-    worn_hold: str | None = None
-    # Inventory setup.
-    inventory_head: dict[str, int] = {}
-    inventory_chest: dict[str, int] = {}
-    inventory_legs: dict[str, int] = {}
-    inventory_feet: dict[str, int] = {}
-    inventory_weapon: dict[str, int] = {}
-    #inventory_consumable: dict[str, int] = {}   # Not in just yet.
-
     # Ratio property sets
     @property # Ratio for player pvp mugging stats
     def p_ratio(self) -> float:

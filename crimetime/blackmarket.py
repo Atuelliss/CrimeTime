@@ -1,7 +1,5 @@
 import discord
-import random
-import time
-import asyncio
+
 from . import Base
 
 class BlackMarketData(Base):
@@ -84,25 +82,3 @@ tier_1_grouping = [tier_1_head, tier_1_chest, tier_1_legs, tier_1_feet, tier_1_w
 all_items = []
 for group in tier_1_grouping:  # add other tier groupings if needed
     all_items.extend(group)
-
-
-class BlackMarket:
-    def __init__(self):
-        self.items = []  # This will store the current 3 items
-        self.last_update = 0
-        self.rotation_interval = 1800  # 30 minutes in seconds
-
-    def _generate_new_items(self):
-        return random.sample(all_items, 3)
-
-    async def update_items(self):
-        now = int(time.time())
-        if now - self.last_update >= self.rotation_interval or not self.items:
-            self.items = self._generate_new_items()
-            self.last_update = now
-
-    def get_current_items(self):
-        return self.items
-
-# ✅ This instance is what your main.py will import
-black_market = BlackMarket()
