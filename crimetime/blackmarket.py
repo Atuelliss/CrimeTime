@@ -1,5 +1,7 @@
 import discord
-
+import random
+import time
+import asyncio
 from . import Base
 
 class BlackMarketData(Base):
@@ -47,28 +49,28 @@ wood_club =      {"name": "a small wooden club", "keyword": "club","wear": 5, "t
 brass_knuckles = {"name": "a set of dull brass knuckles", "keyword": "knuckles","wear": 5, "tier": 1, "cost": 7500, "factor": 0.05}
 
 ########## Tier 2 Items ##########
-#Head-Worn Items
-football_helmet = {"name": "a football helmet", "keyword": "helmet","wear": 1, "tier": 2, "cost": 6500, "factor": 0.02}
-hard_hat =        {}
-plastic_beerhat = {}
-ski_mask =        {}
-old_war_helmet1 = {"name": "a WWII OD-Green Helmet", "keyword": "helmet1","wear": 1, "tier": 2, "cost": 8500, "factor": 0.03}
-#Chest-Worn Items
-padded_jacket =     {}
-zip_up_hoodie =     {}
-ugly_xmas_sweater = {}
-satin_blaiser =     {}
+# #Head-Worn Items
+# football_helmet = {"name": "a football helmet", "keyword": "helmet","wear": 1, "tier": 2, "cost": 6500, "factor": 0.02}
+# hard_hat =        {}
+# plastic_beerhat = {}
+# ski_mask =        {}
+# old_war_helmet1 = {"name": "a WWII OD-Green Helmet", "keyword": "helmet1","wear": 1, "tier": 2, "cost": 8500, "factor": 0.03}
+# #Chest-Worn Items
+# padded_jacket =     {}
+# zip_up_hoodie =     {}
+# ugly_xmas_sweater = {}
+# satin_blaiser =     {}
 
-#Leg-Worn Items
-cargo_pants1 = {"name": "a pair of black cargo pants", "keyword": "pants","wear": 3, "tier": 2, "cost": 8500, "factor": 0.03}
-#Foot-Worn Items
-combat_boots1 = {}
-#Weapon-Slot Items
+# #Leg-Worn Items
+# cargo_pants1 = {"name": "a pair of black cargo pants", "keyword": "pants","wear": 3, "tier": 2, "cost": 8500, "factor": 0.03}
+# #Foot-Worn Items
+# combat_boots1 = {}
+# #Weapon-Slot Items
 
-########## Tier 3 Items ##########
-police_helmet = {}
-riot_helmet = {}
-flak_helmet = {}
+# ########## Tier 3 Items ##########
+# police_helmet = {}
+# riot_helmet = {}
+# flak_helmet = {}
 
 ##### Assigning Tier-1 Items into a grouping #####
 tier_1_head = [black_bandana, baseball_cap, fez, sunglasses, fedora]
@@ -77,4 +79,30 @@ tier_1_legs = [running_shorts, mini_skirt, boxer_shorts, denim_jeans, black_slac
 tier_1_feet = [flip_flops, high_heels, ballet_slippers, tennis_shoes, work_boots]
 tier_1_weapon = [small_rock, wood_stick, leather_gloves, wood_club, brass_knuckles]
 # Put the groups into one List of all Tier-1 items.
-tier_1_grouping = [tier_1_legs, tier_1_chest, tier_1_legs, tier_1_feet, tier_1_weapon]
+tier_1_grouping = [tier_1_head, tier_1_chest, tier_1_legs, tier_1_feet, tier_1_weapon]
+
+all_items = []
+for group in tier_1_grouping:  # add other tier groupings if needed
+    all_items.extend(group)
+
+
+class BlackMarket:
+    def __init__(self):
+        self.items = []  # This will store the current 3 items
+        self.last_update = 0
+        self.rotation_interval = 1800  # 30 minutes in seconds
+
+    def _generate_new_items(self):
+        return random.sample(all_items, 3)
+
+    async def update_items(self):
+        now = int(time.time())
+        if now - self.last_update >= self.rotation_interval or not self.items:
+            self.items = self._generate_new_items()
+            self.last_update = now
+
+    def get_current_items(self):
+        return self.items
+
+# ✅ This instance is what your main.py will import
+black_market = BlackMarket()

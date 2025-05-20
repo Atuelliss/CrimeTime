@@ -4,6 +4,7 @@ import discord
 import random
 import typing as t
 import math
+import time
 
 from redbot.core.utils.chat_formatting import humanize_timedelta
 from redbot.core import commands
@@ -11,6 +12,8 @@ from redbot.core.bot import Red
 from redbot.core.data_manager import cog_data_path
 from .common.models import DB, User
 from .dynamic_menu import DynamicMenu
+from discord.ext import commands, tasks
+from .blackmarket import black_market, all_items
 
 log = logging.getLogger("red.crimetime")
 
@@ -38,8 +41,31 @@ class CrimeTime(commands.Cog):
         self.blitzcooldown = commands.CooldownMapping.from_cooldown(1, 3600, commands.BucketType.user)
         # Future cooldown spot for Robberies.
 
+        # Restart the Blackmarket cycling
+        self.rotate_black_market.start()
         # States
         self._saving = False
+
+        @tasks.loop(seconds=60)
+        async def rotate_black_market(self):
+            now = time.time()
+            local_time = time.localtime(now)
+            minutes = local_time.tm_min
+            seconds = local_time.tm_sec
+
+            # On first run, items will be empty, so force update
+            if not black_market.items:
+                await black_market.update_items()
+                print("Black market initialized with starting items.")
+
+            # Rotate only at :00 and :30 minutes (within 5 seconds window)
+            elif minutes % 30 == 0 and seconds < 5:
+                await black_market.update_items()
+                print("Black market rotated.")
+
+        @rotate_black_market.before_loop
+        async def before_black_market(self):
+            await self.bot.wait_until_ready()
 
     def format_help_for_context(self, ctx: commands.Context):
         helpcmd = super().format_help_for_context(ctx)
@@ -370,7 +396,6 @@ class CrimeTime(commands.Cog):
         h_loss = user.h_losses
         h_ratio = user.h_ratio_str
         await ctx.send(f"------------------------------------------------------\n**[Player Information]**\nName: {member}\nLevel: {user.player_level}\nExp: {user.player_exp}\nToNextLevel: {user.tnl_exp}\n------------------------------------------------------\n**[Wealth]**\nGems: {gems} : ${gem_value}\nGold: {bars}  : ${bar_value}\nCash: ${balance}\nTotal Wealth: ${total_wealth}\n------------------------------------------------------\n**[Gear & Item Bonuses]**\n(Head)       - Future Use\n(Chest)      - Future Use\n(Legs)        - Future Use\n(Feet)        - Future Use\n(Weapon)    - Future Use\n(Consumable) - Future Use\n \nAttack Bonus : (Future Use)\nDefense Bonus: (Future Use)\n------------------------------------------------------\n**[Stats & Ratios]**\nPvP Stats     - {p_wins}/{p_loss} : {p_ratio}\nRobbery Stats - {r_wins}/{r_loss} : {r_ratio}\nHeist Stats   - {h_wins}/{h_loss} : {h_ratio}\n \nCurrent P-Bonus: {p_bonus}\n------------------------------------------------------")
-
 
     # Check total wealth of all currencies.
     @commands.command()
@@ -966,3 +991,307 @@ class CrimeTime(commands.Cog):
             stop += 15
 
         await DynamicMenu(ctx, embeds).refresh()
+
+########################## Inventory Section ##########################
+    WEAR_LOC_MAP = {
+        1: "inventory_head",
+        2: "inventory_chest",
+        3: "inventory_legs",
+        4: "inventory_feet",
+        5: "inventory_weapon",
+        6: "inventory_hold",
+    }
+    def can_user_add_item(self, user, item) -> bool:
+        wear_loc = item["wear"]
+        inv_attr = self.WEAR_LOC_MAP.get(wear_loc)
+        if not inv_attr:
+            return False
+        inventory: dict = getattr(user, inv_attr, {})
+        total_items = sum(inventory.values())
+        return total_items < 3
+
+    def add_item_to_inventory(self, user, item):
+        wear_loc = item["wear"]
+        inv_attr = self.WEAR_LOC_MAP[wear_loc]
+        inventory = getattr(user, inv_attr)
+        keyword = item["keyword"]
+        inventory[keyword] = inventory.get(keyword, 0) + 1
+
+    @commands.command(name="ctwear")
+    async def wear_item(self, ctx: commands.Context, item_keyword: str):
+        """Wear an item you own by keyword."""
+        member  = ctx.author
+        guildsettings = self.db.get_conf(ctx.guild)
+        user = guildsettings.get_user(member)   
+        
+        item = next((i for i in all_items if i["keyword"] == item_keyword.lower()), None)
+        if not item:
+            await ctx.send(f"Item `{item_keyword}` not found in the black market.")
+            return
+
+        inv_attr = self.WEAR_LOC_MAP.get(item["wear"])
+        if not inv_attr:
+            await ctx.send("Invalid item wear location.")
+            return
+
+        inventory = getattr(user, inv_attr)
+        if item_keyword not in inventory or inventory[item_keyword] == 0:
+            await ctx.send(f"You do not own `{item['name']}`.")
+            return
+
+        worn_attr = f"worn_{inv_attr.split('_')[1]}"
+        setattr(user, worn_attr, item_keyword)
+
+        await ctx.send(f"You are now wearing `{item['name']}`.")
+
+        self.save()
+
+    @commands.command(name="ctrem")
+    async def remove_item(self, ctx: commands.Context, wear_location: str):
+        """Remove an item you are currently wearing from a specific slot."""
+        member  = ctx.author
+        guildsettings = self.db.get_conf(ctx.guild)
+        user = guildsettings.get_user(member)   
+
+        valid_slots = {
+            "head": "worn_head",
+            "chest": "worn_chest",
+            "legs": "worn_legs",
+            "feet": "worn_feet",
+            "weapon": "worn_weapon",
+            "hold": "worn_hold",
+        }
+        worn_attr = valid_slots.get(wear_location.lower())
+        if not worn_attr:
+            await ctx.send("Invalid wear location. Choose from head, chest, legs, feet, weapon, or hold.")
+            return
+
+        current_item = getattr(user, worn_attr)
+        if not current_item:
+            await ctx.send(f"You are not wearing anything in the {wear_location} slot.")
+            return
+
+        setattr(user, worn_attr, None)
+        await ctx.send(f"You have removed `{current_item}` from your {wear_location} slot.")
+
+        self.save()
+
+    @commands.command(name="ctinv")
+    async def inventory(self, ctx: commands.Context):
+        """Show your inventory items by wear-location."""
+        member  = ctx.author
+        guildsettings = self.db.get_conf(ctx.guild)
+        user = guildsettings.get_user(member)   
+
+        inv_sections = {
+            "Head": user.inventory_head,
+            "Chest": user.inventory_chest,
+            "Legs": user.inventory_legs,
+            "Feet": user.inventory_feet,
+            "Weapon": user.inventory_weapon,
+        }
+
+        lines = [f"**{ctx.author.display_name}'s Inventory:**"]
+
+        for section_name, inventory_dict in inv_sections.items():
+            if not inventory_dict:
+                continue
+
+            items_list = []
+            for keyword, count in inventory_dict.items():
+                if count <= 0:
+                    continue
+                item = next((i for i in all_items if i["keyword"] == keyword), None)
+                item_name = item["name"] if item else keyword
+                items_list.append(f"{item_name} x{count}")
+
+            if items_list:
+                lines.append(f"\n__{section_name} Items:__")
+                lines.extend(items_list)
+
+        if len(lines) == 1:
+            await ctx.send("You have no items in your inventory.")
+            return
+
+        await ctx.send("\n".join(lines))
+
+    @commands.command(name="ctworn")
+    async def worn(self, ctx: commands.Context):
+        """Show what gear you are currently wearing."""
+        member  = ctx.author
+        guildsettings = self.db.get_conf(ctx.guild)
+        user = guildsettings.get_user(member)   
+
+        worn_slots = {
+            "Head": user.worn_head,
+            "Chest": user.worn_chest,
+            "Legs": user.worn_legs,
+            "Feet": user.worn_feet,
+            "Weapon": user.worn_weapon,
+            "Hold": user.worn_hold,
+        }
+
+        lines = [f"**{ctx.author.display_name}'s Worn Gear:**"]
+
+        has_any = False
+        for slot_name, item_keyword in worn_slots.items():
+            if item_keyword:
+                item = next((i for i in all_items if i["keyword"] == item_keyword), None)
+                item_name = item["name"] if item else item_keyword
+                lines.append(f"{slot_name}: {item_name}")
+                has_any = True
+
+        if not has_any:
+            await ctx.send("You are not wearing any gear.")
+            return
+
+        await ctx.send("\n".join(lines))
+
+    @commands.command(name="cteq")
+    async def cteq(self, ctx: commands.Context):
+        """Show worn items and inventory grouped by wear location."""
+        member = ctx.author
+        guildsettings = self.db.get_conf(ctx.guild)
+        user = guildsettings.get_user(member)
+
+        # Reverse mapping wear location IDs to display names for user-friendly output
+        wear_loc_names = {
+            1: "Head",
+            2: "Chest",
+            3: "Legs",
+            4: "Feet",
+            5: "Weapon",
+            6: "Hold",
+        }
+
+        lines = [f"**{member.display_name}'s Equipment and Inventory:**\n"]
+
+        # Show worn items first
+        lines.append("__**Worn Items:**__")
+        for wear_loc, inv_attr in self.WEAR_LOC_MAP.items():
+            worn_attr = f"worn_{inv_attr.split('_')[1]}"  # e.g. inventory_head -> worn_head
+            worn_keyword = getattr(user, worn_attr, None)
+            if worn_keyword:
+                item = next((i for i in all_items if i["keyword"] == worn_keyword), None)
+                item_name = item["name"] if item else worn_keyword
+                lines.append(f"**{wear_loc_names[wear_loc]}:** {item_name}")
+            else:
+                lines.append(f"**{wear_loc_names[wear_loc]}:** None")
+
+        # Show inventory items grouped by wear location
+        lines.append("\n__**Inventory:**__")
+        for wear_loc, inv_attr in self.WEAR_LOC_MAP.items():
+            inventory = getattr(user, inv_attr, {})
+            if not inventory or all(count <= 0 for count in inventory.values()):
+                lines.append(f"**{wear_loc_names[wear_loc]}:** Empty")
+                continue
+
+            items_list = []
+            for keyword, count in inventory.items():
+                if count > 0:
+                    item = next((i for i in all_items if i["keyword"] == keyword), None)
+                    item_name = item["name"] if item else keyword
+                    items_list.append(f"{item_name} x{count}")
+
+            if items_list:
+                lines.append(f"**{wear_loc_names[wear_loc]}:** {', '.join(items_list)}")
+            else:
+                lines.append(f"**{wear_loc_names[wear_loc]}:** Empty")
+
+        await ctx.send("\n".join(lines))
+
+    @commands.group(name="ctbm", invoke_without_command=True)
+    async def ctbm(self, ctx: commands.Context):
+        """Show the current rotating black market items."""
+        member = ctx.author
+        guildsettings = self.db.get_conf(ctx.guild)
+        user = guildsettings.get_user(member)
+
+        items = black_market.get_current_items()
+        if not items:
+            await ctx.send("The black market is currently empty. Please check back later.")
+            return
+
+        lines = ["**Current Black Market Items:**"]
+        for idx, item in enumerate(items, start=1):
+            price = item.get("price", "N/A")
+            lines.append(f"{idx}. {item['name']} - Price: ${price} - Keyword: `{item['keyword']}`")
+
+        lines.append("\nTo buy an item, use `!ctbm buy <number>` (e.g. `!ctbm buy 1`)")
+        await ctx.send("\n".join(lines))
+
+
+    @ctbm.command(name="buy")
+    async def ctbm_buy(self, ctx: commands.Context, item_number: int):
+        """Purchase an item from the current black market by its number."""
+        member = ctx.author
+        guildsettings = self.db.get_conf(ctx.guild)
+        user = guildsettings.get_user(member)
+
+        items = black_market.get_current_items()
+        if not items:
+            await ctx.send("The black market is currently empty. Please check back later.")
+            return
+
+        if item_number < 1 or item_number > len(items):
+            await ctx.send(f"Invalid item number. Please choose between 1 and {len(items)}.")
+            return
+
+        item = items[item_number - 1]
+
+        price = item.get("price", 0)
+        if user.balance < price:
+            await ctx.send(f"You do not have enough cash to buy `{item['name']}`. Price: ${price}")
+            return
+
+        if not self.can_user_add_item(user, item):
+            await ctx.send(f"You cannot carry more `{item['name']}` items in your inventory for that wear location.")
+            return
+
+        # Deduct price and add the item to inventory
+        user.balance -= price
+        self.add_item_to_inventory(user, item)
+
+        self.save()
+
+        await ctx.send(f"You have purchased `{item['name']}` for ${price}!")
+
+    @ctbm.command(name="sell")
+    async def ctbm_sell(self, ctx: commands.Context, item_keyword: str):
+        """Sell an item from your inventory for 75% of its value."""
+        member = ctx.author
+        guildsettings = self.db.get_conf(ctx.guild)
+        user = guildsettings.get_user(member)
+
+        # Find the item by keyword from all_items
+        item = next((i for i in all_items if i["keyword"] == item_keyword.lower()), None)
+        if not item:
+            await ctx.send(f"Item `{item_keyword}` not found.")
+            return
+
+        # Find which inventory slot this item would be in
+        inv_attr = self.WEAR_LOC_MAP.get(item["wear"])
+        if not inv_attr:
+            await ctx.send("Invalid wear location for this item.")
+            return
+
+        inventory = getattr(user, inv_attr, {})
+        if item_keyword not in inventory or inventory[item_keyword] <= 0:
+            await ctx.send(f"You do not have any `{item['name']}` to sell.")
+            return
+
+        # Calculate sell price (75% of item price)
+        price = item.get("price", 0)
+        sell_price = int(price * 0.75)
+
+        # Remove one from inventory
+        inventory[item_keyword] -= 1
+        if inventory[item_keyword] <= 0:
+            del inventory[item_keyword]
+
+        # Add cash to user
+        user.balance += sell_price
+
+        self.save()
+
+        await ctx.send(f"You sold one `{item['name']}` for ${sell_price}. You now have ${user.cash}.")
