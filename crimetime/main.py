@@ -12,7 +12,7 @@ from redbot.core.data_manager import cog_data_path
 from .common.models import DB, User
 from .dynamic_menu import DynamicMenu
 from discord.ext import commands
-from blackmarket import all_items
+#from blackmarket import all_items
 
 log = logging.getLogger("red.crimetime")
 
@@ -968,91 +968,3 @@ class CrimeTime(commands.Cog):
             stop += 15
 
         await DynamicMenu(ctx, embeds).refresh()
-
-########################## Inventory Section ##########################
-# Maps wear-location IDs to the corresponding inventory attribute names
-WEAR_LOC_MAP = {
-    1: "inventory_head",
-    2: "inventory_chest",
-    3: "inventory_legs",
-    4: "inventory_feet",
-    5: "inventory_hold",  # Optional if you have weapon/held item inventory
-}
-
-# Checks if the user can add another item to that wear-location's inventory
-def can_user_add_item(user, item) -> bool:
-    wear_loc = item["wear"]
-    inv_attr = WEAR_LOC_MAP.get(wear_loc)
-    if not inv_attr:
-        return False
-    inventory: dict = getattr(user, inv_attr, {})
-    total_items = sum(inventory.values())
-    return total_items < 3
-
-# Adds the item to the correct inventory dictionary if space allows
-def add_item_to_inventory(user, item):
-    wear_loc = item["wear"]
-    inv_attr = WEAR_LOC_MAP[wear_loc]
-    inventory = getattr(user, inv_attr)
-    keyword = item["keyword"]
-    inventory[keyword] = inventory.get(keyword, 0) + 1
-
-@commands.command()
-async def wear_item(self, ctx: commands.Context, item_keyword: str):
-    """Wear an item you own by keyword."""
-    guildsettings = self.db.get_conf(ctx.guild)
-    user = guildsettings.get_user(ctx.author)
-
-    # Assuming all_items is a list of all items from blackmarket.py
-    item = next((i for i in all_items if i["keyword"] == item_keyword.lower()), None)
-    if not item:
-        await ctx.send(f"Item `{item_keyword}` not found in the black market.")
-        return
-
-    inv_attr = WEAR_LOC_MAP.get(item["wear"])
-    if not inv_attr:
-        await ctx.send("Invalid item wear location.")
-        return
-
-    inventory = getattr(user, inv_attr)
-    if item_keyword not in inventory or inventory[item_keyword] == 0:
-        await ctx.send(f"You do not own `{item['name']}`.")
-        return
-
-    worn_attr = f"worn_{inv_attr.split('_')[1]}"
-    setattr(user, worn_attr, item_keyword)
-
-    await ctx.send(f"You are now wearing `{item['name']}`.")
-
-    # Explicitly save after modification
-    self.save()
-
-
-@commands.command()
-async def remove_item(self, ctx: commands.Context, wear_location: str):
-    """Remove an item you are currently wearing from a specific slot."""
-    guildsettings = self.db.get_conf(ctx.guild)
-    user = guildsettings.get_user(ctx.author)
-
-    valid_slots = {
-        "head": "worn_head",
-        "chest": "worn_chest",
-        "legs": "worn_legs",
-        "feet": "worn_feet",
-        "hold": "worn_hold",
-    }
-    worn_attr = valid_slots.get(wear_location.lower())
-    if not worn_attr:
-        await ctx.send("Invalid wear location. Choose from head, chest, legs, feet, or hold.")
-        return
-
-    current_item = getattr(user, worn_attr)
-    if not current_item:
-        await ctx.send(f"You are not wearing anything in the {wear_location} slot.")
-        return
-
-    setattr(user, worn_attr, None)
-    await ctx.send(f"You have removed `{current_item}` from your {wear_location} slot.")
-
-    # Explicitly save after modification
-    self.save()
