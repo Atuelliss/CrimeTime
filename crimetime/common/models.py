@@ -23,7 +23,23 @@ class User(Base):
     player_level: int = 0 #Future variable for Player level.
     tnl_exp: int = 0 #Exp needed for next level.
     recent_targets: list[int] = []
-  
+
+    # Player worn Inventory bits
+    worn_weapon: str | None = None
+    worn_head: str | None = None
+    worn_chest: str | None = None
+    worn_legs: str | None = None
+    worn_feet: str | None = None
+    worn_consumable: str | None = None
+
+    # Player inventory storage bits
+    owned_weapon: dict[str, int] = {}
+    owned_head: dict[str, int] = {}
+    owned_chest: dict[str, int] = {}
+    owned_legs: dict[str, int] = {}
+    owned_feet: dict[str, int] = {}
+    owned_consumable: dict[str, int] = {}
+
     # Ratio property sets
     @property # Ratio for player pvp mugging stats
     def p_ratio(self) -> float:

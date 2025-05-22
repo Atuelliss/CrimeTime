@@ -966,3 +966,45 @@ class CrimeTime(commands.Cog):
             stop += 15
 
         await DynamicMenu(ctx, embeds).refresh()
+
+############### BlackMarket Commands ###############
+    @commands.group(invoke_without_command=True)
+    @commands.admin_or_permissions(manage_guild=True)  # Only Admins can use this command
+    async def ctbm(self, ctx: commands.Context):
+        """Blackmarket code."""
+        await ctx.send("Please specify a valid subcommand, e.g.:\n"
+                       "`ctbm display` - Will list all items that exist.\n"
+                       "`ctbm list` - Will list the three current available items to buy.\n"
+                       "`ctbm buy #` - Will purchase the item if you don't already own it.\n"
+                       "`ctbm sell (item you own) - Sells the item for a little less than it's worth.`"
+                       )
+    
+    @ctbm.command(name="display")
+    async def display_my_target_list(self, ctx: commands.Context):
+        '''Prints out a list of all the currently created gear.'''
+        member = ctx.author
+        guild = ctx.guild
+        guildsettings = self.db.get_conf(guild)
+        user = guildsettings.get_user(member)
+
+
+############### Player Equipment Commands ###############
+    @commands.group(invoke_without_command=True)
+    async def ctinv(self, ctx: commands.Context):
+        """All commands for player interactions with gear."""
+        await ctx.send("Please specify a valid subcommand, e.g.:\n"
+                       "`ctinv all` - Will list a full display of your items.\n"
+                       "`ctinv worn` - Will list what you are currently wearing.\n"
+                       "`ctinv owned` - Items in your carried inventory.\n"
+                       "`ctinv wear (item)` - Wear an item you own.\n"
+                       "`ctinv remove (item)` - Remove a worn item."
+                       )
+    
+    @ctbm.command(name="worn")
+    async def display_user_worn_items(self, ctx: commands.Context):
+        '''Prints out a list of all the currently worn gear.'''
+        member = ctx.author
+        guild = ctx.guild
+        guildsettings = self.db.get_conf(guild)
+        user = guildsettings.get_user(member)
+        await ctx.send(f"-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n[{member}'s Worn Equipment]\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n[Weapon] : {user.worn_weapon}\n[Head] : {user.worn_head}\n[Chest] : {user.worn_chest}\n[Legs] : {user.worn_legs}\n[Feet] : {user.worn_feet}\n[Consumable] : {user.worn_consumable}\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-")
