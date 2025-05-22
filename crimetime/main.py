@@ -1008,8 +1008,8 @@ class CrimeTime(commands.Cog):
         member = ctx.author
         guild = ctx.guild
         guildsettings = self.db.get_conf(guild)
-        user = guildsettings.get_user(member)
-        await ctx.send(f"This feature is not yet available, {user}!\nIt is being worked on as we speak.")
+        #user = guildsettings.get_user(member)
+        await ctx.send(f"This feature is not yet available, {member}!\nIt is being worked on as we speak.")
 
 ############### Player Equipment Commands ###############
     @commands.group(invoke_without_command=True)
