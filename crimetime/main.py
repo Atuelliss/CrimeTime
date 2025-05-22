@@ -970,14 +970,13 @@ class CrimeTime(commands.Cog):
 
 ############### BlackMarket Commands ###############
     @commands.group(invoke_without_command=True)
-    @commands.admin_or_permissions(manage_guild=True)  # Only Admins can use this command
     async def ctbm(self, ctx: commands.Context):
         """Blackmarket code."""
         await ctx.send("Please specify a valid subcommand, e.g.:\n"
-                       "`ctbm display` - Will list all items that exist.\n"
+                       "`ctbm display` - (Admin only) Will list all items that exist.\n"
                        "`ctbm list` - Will list the three current available items to buy.\n"
-                       "`ctbm buy #` - Will purchase the item if you don't already own it.\n"
-                       "`ctbm sell (item you own) - Sells the item for a little less than it's worth.`"
+                       "`ctbm buy (#)` - Will purchase the item if you don't already own it.\n"
+                       "`ctbm sell (inventory location) (item) - Sells the item for a little less than it's worth.`"
                        )
     
     @ctbm.command(name="display")
@@ -1001,6 +1000,16 @@ class CrimeTime(commands.Cog):
             )
             lines.append(line)
         await ctx.send("\n".join(lines))
+
+    # Command Players will use to see what's in the Blackmarket currently
+    @ctbm.command(name="list")
+    async def display_current_items_list(self, ctx: commands.Context):
+        """Print all items available to purchase this cycle."""
+        member = ctx.author
+        guild = ctx.guild
+        guildsettings = self.db.get_conf(guild)
+        user = guildsettings.get_user(member)
+        await ctx.send(f"This feature is not yet available, {user}!\nIt is being worked on as we speak.")
 
 ############### Player Equipment Commands ###############
     @commands.group(invoke_without_command=True)
