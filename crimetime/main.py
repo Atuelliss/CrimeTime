@@ -993,13 +993,14 @@ class CrimeTime(commands.Cog):
             "Weapons": blackmarket.tier_1_weapon,
         }
 
-        lines = ["**__All Tier 1 Gear Items:__**\n"]
-        for category, items in categories.items():
-            line = f"__**{category}:**__ " + ", ".join(
-                f"{item['name']} (${item['cost']})" for item in items
-            )
-            lines.append(line)
-        await ctx.send("\n".join(lines))
+        lines = ["**__Current Gear Listing:__**\n"]
+
+        lines.append(f"__**{category}**__")
+        for item in items:
+            lines.append(f"- {item['name']} (${item['cost']})")
+        lines.append("")  # <-- adds a blank line after each category
+
+    await ctx.send("\n".join(lines))
 
 ############### Player Equipment Commands ###############
     @commands.group(invoke_without_command=True)
