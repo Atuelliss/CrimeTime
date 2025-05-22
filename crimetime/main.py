@@ -15,7 +15,6 @@ from .dynamic_menu import DynamicMenu
 
 log = logging.getLogger("red.crimetime")
 
-
 class CrimeTime(commands.Cog):
     """
     A crime mini-game cog for Red-DiscordBot.
