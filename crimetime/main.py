@@ -9,6 +9,7 @@ from redbot.core.utils.chat_formatting import humanize_timedelta
 from redbot.core import commands
 from redbot.core.bot import Red
 from redbot.core.data_manager import cog_data_path
+from crimetime import blackmarket
 from .common.models import DB, User
 from .dynamic_menu import DynamicMenu
 #from blackmarket import all_items
@@ -980,13 +981,25 @@ class CrimeTime(commands.Cog):
                        )
     
     @ctbm.command(name="display")
-    async def display_allitems__list(self, ctx: commands.Context):
-        '''Prints out a list of all the currently created gear.'''
-        member = ctx.author
-        guild = ctx.guild
-        guildsettings = self.db.get_conf(guild)
-        user = guildsettings.get_user(member)
+    @commands.admin_or_permissions(manage_guild=True)
+    async def display_allitems_list(self, ctx: commands.Context):
+        """Print all currently created Tier 1 gear grouped by category on separate lines."""
 
+        categories = {
+            "Head Gear": blackmarket.tier_1_head,
+            "Chest Gear": blackmarket.tier_1_chest,
+            "Leg Gear": blackmarket.tier_1_legs,
+            "Foot Gear": blackmarket.tier_1_feet,
+            "Weapons": blackmarket.tier_1_weapon,
+        }
+
+        lines = ["**__All Tier 1 Gear Items:__**\n"]
+        for category, items in categories.items():
+            line = f"__**{category}:**__ " + ", ".join(
+                f"{item['name']} (${item['cost']})" for item in items
+            )
+            lines.append(line)
+        await ctx.send("\n".join(lines))
 
 ############### Player Equipment Commands ###############
     @commands.group(invoke_without_command=True)
