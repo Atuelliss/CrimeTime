@@ -2,13 +2,13 @@ import discord
 
 #from . import Base
 
-class BlackMarketData(Base):
-    '''Stored Item Info'''
-    item_name: dict = {}
-    wear_loc: int = 0  #Need to define the wear_loc as 1-Head, 2-Chest, 3-Legs, 4-Feet, 5-Weapon
-    tier: int = 0  #What tier of item it is. Represented 1-5. (Common, Uncommon, Rare, Military, Raid)
-    item_cost: int = 0 #Cost of the item itself.
-    item_factor_value: float = 0 #Impact on pvp-mugging attack/defense.
+# class BlackMarketData(Base):
+#     '''Stored Item Info'''
+#     item_name: dict = {}
+#     wear_loc: int = 0  #Need to define the wear_loc as 1-Head, 2-Chest, 3-Legs, 4-Feet, 5-Weapon
+#     tier: int = 0  #What tier of item it is. Represented 1-5. (Common, Uncommon, Rare, Military, Raid)
+#     item_cost: int = 0 #Cost of the item itself.
+#     item_factor_value: float = 0 #Impact on pvp-mugging attack/defense.
 
 #Item list, contains Name, Keyword, Wear_loc, Tier, Cost, Factor Value,
 # {"name": , "keyword": , "wear": , "tier": , "cost": , "factor": }
