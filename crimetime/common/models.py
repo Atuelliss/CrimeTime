@@ -1,6 +1,7 @@
 import discord
 
 from . import Base
+from .. import blackmarket
 
 class User(Base):
     '''Stored User Info'''
@@ -31,6 +32,8 @@ class User(Base):
     worn_legs: str | None = None
     worn_feet: str | None = None
     worn_consumable: str | None = None
+    player_atk_bonus: int = 0
+    player_def_bonus: int = 0
 
     # Player inventory storage bits
     owned_weapon: dict[str, int] = {}
@@ -69,6 +72,36 @@ class User(Base):
     def total_pve_mug(self) -> str:
         return f"{self.pve_win}:{self.pve_loss}"
 #        return f"{self.mug_pve_win_count}:{self.mug_pve_loss_count}"
+
+    #Update the Users atk bonus above when wearing a weapon.
+    @property
+    def player_atk_bonus(self) -> float:
+        if not self.worn_weapon:
+            return 0
+        for item in blackmarket.all_items:
+            if item["keyword"] == self.worn_weapon:
+                return item.get("factor", 0)
+        return 0
+
+    #Update the Users def bonus above when wearing armor.
+    @property
+    def player_def_bonus(self) -> float:
+        """Calculate total defense bonus from equipped armor (head, chest, legs, feet)."""
+        total = 0.0
+        worn_slots = [
+            self.worn_head,
+            self.worn_chest,
+            self.worn_legs,
+            self.worn_feet,
+        ]
+        for keyword in worn_slots:
+            if not keyword:
+                continue
+            for item in blackmarket.all_items:
+                if item["keyword"] == keyword:
+                    total += item.get("factor", 0)
+                    break
+        return round(total, 4)  # Rounded for display or comparison
 
 class GuildSettings(Base):
     users: dict[int, User] = {}
