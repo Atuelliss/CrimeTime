@@ -13,7 +13,6 @@ import discord
 #Item list, contains Name, Keyword, Wear_loc, Tier, Cost, Factor Value,
 # {"name": , "keyword": , "wear": , "tier": , "cost": , "factor": }
 
-
 ########## Tier 1 Items ##########
 #Head-Worn Items
 black_bandana = {"name": "a black bandana", "keyword": "bandana", "wear": 1, "tier": 1, "cost": 3000, "factor": 0.01}
