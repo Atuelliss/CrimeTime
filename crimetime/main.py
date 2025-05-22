@@ -1007,4 +1007,4 @@ class CrimeTime(commands.Cog):
         guild = ctx.guild
         guildsettings = self.db.get_conf(guild)
         user = guildsettings.get_user(member)
-        await ctx.send(f"-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n[**{member}**'s Worn Equipment]\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n[Weapon]          : {user.worn_head}\n[Head]             : {user.worn_head}\n[Chest]             : {user.worn_chest}\n[Legs]               : {user.worn_legs}\n[Feet]               : {user.worn_feet}\n[Consumable] : {user.worn_consumable}\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-")
+        await ctx.send(f"-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n[**{member}**'s Worn Equipment]\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n[Weapon]           : {user.worn_head}\n[Head]               : {user.worn_head}\n[Chest]              : {user.worn_chest}\n[Legs]                : {user.worn_legs}\n[Feet]                : {user.worn_feet}\n[Consumable] : {user.worn_consumable}\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-")
