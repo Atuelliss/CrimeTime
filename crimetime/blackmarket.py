@@ -31,14 +31,14 @@ leather_biker_cut = {"name": "a black leather biker's cut", "keyword": "cut","we
 running_shorts = {"name": "a pair of thin running shorts", "keyword": "shorts","wear": 3, "tier": 1, "cost": 3000, "factor": 0.01}
 mini_skirt =     {"name": "a tight black mini-skirt", "keyword": "skirt","wear": 3, "tier": 1, "cost": 3000, "factor": 0.01}
 boxer_shorts =   {"name": "a pair of SpongeBob boxer shorts", "keyword": "shorts","wear": 3, "tier": 1, "cost": 3000, "factor": 0.01}
-denim_jeans =    {"name": "a pair faded blue denim jeans", "keyword": "jeans", "wear": 3, "tier": 1, "cost": 4500, "factor": 0.02}
+denim_jeans =    {"name": "a pair of faded blue denim jeans", "keyword": "jeans", "wear": 3, "tier": 1, "cost": 4500, "factor": 0.02}
 black_slacks =   {"name": "a pair of black business slacks", "keyword": "slacks","wear": 3, "tier": 1, "cost": 4500, "factor": 0.02}
 #Foot-Worn Items
-flip_flops =      {"name": "a pair sea-green flip-flops", "keyword": "flip-flops","wear": 4, "tier": 1, "cost": 3000, "factor": 0.01}
-high_heels =      {"name": "a pair red stiletto high heels", "keyword": "heels","wear": 4, "tier": 1, "cost": 3000, "factor": 0.01}
+flip_flops =      {"name": "a pair of sea-green flip-flops", "keyword": "flip-flops","wear": 4, "tier": 1, "cost": 3000, "factor": 0.01}
+high_heels =      {"name": "a pair of red stiletto high heels", "keyword": "heels","wear": 4, "tier": 1, "cost": 3000, "factor": 0.01}
 ballet_slippers = {"name": "a pair of flimsy white ballet slippers", "keyword": "slippers","wear": 4, "tier": 1, "cost": 3000, "factor": 0.01}
-tennis_shoes =    {"name": "a pair black Converse tennis shoes", "keyword": "shoes","wear": 4, "tier": 1, "cost": 4500, "factor": 0.02}
-work_boots =      {"name": "a pair Timberland work boots", "keyword": "boots","wear": 4, "tier": 1, "cost": 4500, "factor": 0.02}
+tennis_shoes =    {"name": "a pair of black Converse tennis shoes", "keyword": "shoes","wear": 4, "tier": 1, "cost": 4500, "factor": 0.02}
+work_boots =      {"name": "a pair of Timberland work boots", "keyword": "boots","wear": 4, "tier": 1, "cost": 4500, "factor": 0.02}
 #Weapon-Slot Items
 small_rock =     {"name": "a small smooth-faced rock", "keyword": "rock","wear": 5, "tier": 1, "cost": 5000, "factor": 0.03}
 wood_stick =     {"name": "a small pointy wood stick", "keyword": "stick","wear": 5, "tier": 1, "cost": 5000, "factor": 0.03}
