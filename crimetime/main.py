@@ -995,12 +995,12 @@ class CrimeTime(commands.Cog):
 
         lines = ["**__Current Gear Listing:__**\n"]
 
-        lines.append(f"__**{category}**__")
-        for item in items:
-            lines.append(f"- {item['name']} (${item['cost']})")
-        lines.append("")  # <-- adds a blank line after each category
-
-    await ctx.send("\n".join(lines))
+        for category, items in categories.items():
+            line = f"__**{category}:**__ " + ", ".join(
+                f"{item['name']} (${item['cost']})" for item in items
+            )
+            lines.append(line)
+        await ctx.send("\n".join(lines))
 
 ############### Player Equipment Commands ###############
     @commands.group(invoke_without_command=True)
