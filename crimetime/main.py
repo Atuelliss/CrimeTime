@@ -1017,3 +1017,13 @@ class CrimeTime(commands.Cog):
         guildsettings = self.db.get_conf(guild)
         user = guildsettings.get_user(member)
         await ctx.send(f"-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n[**{member}**'s Inventory]\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n[Weapon]          : {user.owned_weapon}\n[Head]               : {user.owned_head}\n[Chest]              : {user.owned_chest}\n[Legs]                : {user.owned_legs}\n[Feet]                : {user.owned_feet}\n[Consumable] : {user.owned_consumable}\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-")
+
+    @ctinv.command(name="all")
+    async def display_all_user__items(self, ctx: commands.Context):
+        '''Prints out a list of all the currently owned and worn gear.'''
+        member = ctx.author
+        guild = ctx.guild
+        guildsettings = self.db.get_conf(guild)
+        user = guildsettings.get_user(member)
+        await ctx.send(f"-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n[**{member}**'s Worn Equipment]\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n[Weapon]          : {user.worn_weapon}\n[Head]               : {user.worn_head}\n[Chest]              : {user.worn_chest}\n[Legs]                : {user.worn_legs}\n[Feet]                : {user.worn_feet}\n[Consumable] : {user.worn_consumable}\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n---------------------------------\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n[**{member}**'s Inventory]\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n(Weapon)          : {user.owned_weapon}\n(Head)               : {user.owned_head}\n(Chest)              : {user.owned_chest}\n(Legs)                : {user.owned_legs}\n(Feet)                : {user.owned_feet}\n(Consumable) : {user.owned_consumable}\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-")
+    
