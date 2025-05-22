@@ -980,7 +980,7 @@ class CrimeTime(commands.Cog):
                        )
     
     @ctbm.command(name="display")
-    async def display_my_target_list(self, ctx: commands.Context):
+    async def display_allitems__list(self, ctx: commands.Context):
         '''Prints out a list of all the currently created gear.'''
         member = ctx.author
         guild = ctx.guild
@@ -1000,7 +1000,7 @@ class CrimeTime(commands.Cog):
                        "`ctinv remove (item)` - Remove a worn item."
                        )
     
-    @ctbm.command(name="worn")
+    @ctinv.command(name="worn")
     async def display_user_worn_items(self, ctx: commands.Context):
         '''Prints out a list of all the currently worn gear.'''
         member = ctx.author
