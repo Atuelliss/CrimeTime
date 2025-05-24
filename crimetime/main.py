@@ -75,7 +75,8 @@ class CrimeTime(commands.Cog):
 
         asyncio.create_task(_save())
 
-##### Crimetime Info Message
+########## Information Commands ##########
+    # Crimetime Info Message
     @commands.command()
     async def crimetime(self, ctx: commands.Context):
         """Sends an embedded message with information on the overall game."""
@@ -123,7 +124,111 @@ class CrimeTime(commands.Cog):
         target_list = "\n".join(recent_targets) if recent_targets else "no one recently"
         await ctx.send(f"-=-=-=-=-=-=-=-=-=-=-=-=-=-\n*You have recently attacked:*\n-=-=-=-=-=-=-=-=-=-=-=-=-=-\n{target_list}\n-=-=-=-=-=-=-=-=-=-=-=-=-=-\nTry attacking others NOT on this list to continue.")
 
-# CtInvest function
+    # Check balance and stats specifically attributed to the Mug command.
+    async def update_pbonus(self, ctx: commands.Context, member: discord.Member) -> None:
+        """Recalculate and update a user's P-bonus based on their win/loss ratio."""
+        guildsettings = self.db.get_conf(ctx.guild)
+        user = guildsettings.get_user(member)
+        p_ratio = user.p_ratio
+        # Determine Player's Ratio-Bonuses for attack rolls.
+        if p_ratio >= 5:
+            user.p_bonus = 0.25
+        elif p_ratio >= 3.01:
+            user.p_bonus = 0.2
+        elif p_ratio >= 3:
+            user.p_bonus = 0.15
+        elif p_ratio >= 2:
+            user.p_bonus = 0.1
+        elif p_ratio >= 1:
+            user.p_bonus = 0.05
+        elif p_ratio == 0:
+            user.p_bonus = 0.0
+        elif p_ratio >= -1:
+            user.p_bonus = -0.05
+        elif -1 > p_ratio >= -2:
+            user.p_bonus = -0.1
+        elif -2 > p_ratio >= -3:
+            user.p_bonus = -0.15
+        elif p_ratio <= -3.01:
+            user.p_bonus = -0.2
+        elif p_ratio <= -5:
+            user.p_bonus = -0.25
+        self.save()
+
+    # Check balance and stats specifically attributed to the Mug command.
+    @commands.command()
+    async def ctstat(self, ctx: commands.Context, member: discord.Member = None):
+        """Displays Player's wealth, gear, and stats."""
+        member  = member or ctx.author
+        guildsettings = self.db.get_conf(ctx.guild)
+        user = guildsettings.get_user(member)
+        cash = user.balance
+        bars = user.gold_bars
+        bar_value = bars * 2500
+        gems = user.gems_owned
+        gem_value = gems * 5000
+        total_wealth = cash + bar_value + gem_value
+        # gear_bonus = str("Attack Bonus: Unused / Defense Bonus: Unused")
+        # head_armor = str("Future Use")
+        # chest_armor = str("Future Use")
+        # leg_armor = str("Future Use")
+        # foot_armor = str("Future Use")
+        # weapon_slot = str("Future Use")
+        # consume_slot = str("Future Use")
+        p_wins = user.p_wins
+        p_loss = user.p_losses
+        p_ratio = user.p_ratio
+        p_bonus = user.p_bonus
+        # p_ratio_str = user.p_ratio_str
+        balance = user.balance
+        r_wins = user.r_wins
+        r_loss = user.r_losses
+        r_ratio = user.r_ratio_str
+        h_wins = user.h_wins
+        h_loss = user.h_losses
+        h_ratio = user.h_ratio_str
+        await ctx.send(f"------------------------------------------------------\n**[Player Information]**\nName: {member}\nLevel: {user.player_level}\nExp: {user.player_exp}\nToNextLevel: {user.tnl_exp}\n------------------------------------------------------\n**[Wealth]**\nGems: {gems} : ${gem_value}\nGold: {bars}  : ${bar_value}\nCash: ${balance}\nTotal Wealth: ${total_wealth}\n------------------------------------------------------\n**[Gear & Item Bonuses]**\n(Head)       - Future Use\n(Chest)      - Future Use\n(Legs)        - Future Use\n(Feet)        - Future Use\n(Weapon)    - Future Use\n(Consumable) - Future Use\n \nAttack Bonus : (Future Use)\nDefense Bonus: (Future Use)\n------------------------------------------------------\n**[Stats & Ratios]**\nPvP Stats     - {p_wins}/{p_loss} : {p_ratio}\nRobbery Stats - {r_wins}/{r_loss} : {r_ratio}\nHeist Stats   - {h_wins}/{h_loss} : {h_ratio}\n \nCurrent P-Bonus: {p_bonus}\n------------------------------------------------------")
+
+
+    # Check total wealth of all currencies.
+    @commands.command()
+    async def ctwealth(self, ctx: commands.Context, member: discord.Member = None):
+        """Checks the total assets of a User."""
+        member  = member or ctx.author
+        guildsettings = self.db.get_conf(ctx.guild)
+        user = guildsettings.get_user(member)
+        cash = user.balance
+        gold = user.gold_bars
+        gold_value = 2500
+        gems = user.gems_owned
+        gem_value = 5000
+        gold_total = gold * gold_value
+        gem_total = gems * gem_value
+        total_value = cash + gold_total + gem_total
+        await ctx.send(f"**{member.display_name}**\n-=-=-=-=-=-=-=-=-=-=-\n**Cash Balance**: ${cash}\n**Gold Bars**: {gold} - ${gold_total}\n**Gems**: {gems} - ${gem_total}\n-=-=-=-=-=-=-=-=-=-=-\nTotal Wealth: ${total_value}")
+
+    # Check balance and stats specifically attributed to the Mug command.
+    @commands.command()
+    async def mugcheck(self, ctx: commands.Context, member: discord.Member = None):
+        """Checks the Balance, Wins/Losses, and Ratio of a User."""
+        member  = member or ctx.author
+        guildsettings = self.db.get_conf(ctx.guild)
+        await self.update_pbonus(ctx, member)
+        user = guildsettings.get_user(member)        
+        p_ratio = user.p_ratio
+        p_ratio_str = user.p_ratio_str
+        p_bonus = user.p_bonus
+        balance = user.balance
+        r_wins = user.r_wins
+        r_losses = user.r_losses
+        r_ratio_str = user.r_ratio_str
+        h_wins = user.h_wins
+        h_losses = user.h_losses
+        h_ratio_str = user.h_ratio_str        
+        await ctx.send(f"**{member.display_name}**\nBalance: ${balance}\nP-Win/Loss Ratio: {p_ratio_str}[{p_ratio}]\nP-Bonus: {p_bonus}") #\nRobbery Win/Loss Ratio: {r_ratio_str}")
+
+########## Economic/Asset Commands ##########
+    # CtInvest function
     # Convert Cash to Gold or Gemstones
     @commands.group(invoke_without_command=True)
     async def ctinvest(self, ctx: commands.Context):
@@ -234,8 +339,7 @@ class CrimeTime(commands.Cog):
         self.save()
         await ctx.send(f"You successfully converted {amount} gold bars into {gems_to_add} gems!")
      
-# ctLiquidate
-    # Convert Assets to Cash
+    # Liquidation commands, turns gems/bars into cash.
     @commands.group(invoke_without_command=True, aliases=["ctld"])
     async def ctliquidate(self, ctx: commands.Context):
         """Ability for players to convert currency forms."""
@@ -304,112 +408,79 @@ class CrimeTime(commands.Cog):
                 await ctx.send(f"You converted {amount} gem into ${cash_payout}!")
             else:
                 await ctx.send(f"You converted {amount} gems into ${cash_payout}!")
-
-###### "Check" commands:
-    # Check balance and stats specifically attributed to the Mug command.
-    async def update_pbonus(self, ctx: commands.Context, member: discord.Member) -> None:
-        """Recalculate and update a user's P-bonus based on their win/loss ratio."""
-        guildsettings = self.db.get_conf(ctx.guild)
-        user = guildsettings.get_user(member)
-        p_ratio = user.p_ratio
-                
-        # Determine Player's Ratio-Bonuses for attack rolls.
-        if p_ratio >= 5:
-            user.p_bonus = 0.25
-        elif p_ratio >= 3.01:
-            user.p_bonus = 0.2
-        elif p_ratio >= 3:
-            user.p_bonus = 0.15
-        elif p_ratio >= 2:
-            user.p_bonus = 0.1
-        elif p_ratio >= 1:
-            user.p_bonus = 0.05
-        elif p_ratio == 0:
-            user.p_bonus = 0.0
-        elif p_ratio >= -1:
-            user.p_bonus = -0.05
-        elif -1 > p_ratio >= -2:
-            user.p_bonus = -0.1
-        elif -2 > p_ratio >= -3:
-            user.p_bonus = -0.15
-        elif p_ratio <= -3.01:
-            user.p_bonus = -0.2
-        elif p_ratio <= -5:
-            user.p_bonus = -0.25
-        self.save()
     
-    # Check balance and stats specifically attributed to the Mug command.
-    @commands.command()
-    async def ctstat(self, ctx: commands.Context, member: discord.Member = None):
-        """Displays Player's wealth, gear, and stats."""
-        member  = member or ctx.author
+    # Ability for Players to give currency to others.
+    @commands.group(invoke_without_command=True)
+    async def ctgive(self, ctx: commands.Context):
+        """Ability for players to transfer currency forms."""
+        await ctx.send("Please specify a valid subcommand, e.g., `!ctgive cash @user amount`.")
+
+    #Give another player Cash.
+    @ctgive.command(name="cash")
+    async def give_cash(self, ctx: commands.Context, target: discord.Member, amount: int):
+        """Allows a Player to give a form of Currency to another user."""
+        
+        # Ensure target is not None and not the giver
+        if target == ctx.author:
+            await ctx.send("You cannot do this alone; you must target another user.")
+            return
+
+        # Get user data
         guildsettings = self.db.get_conf(ctx.guild)
-        user = guildsettings.get_user(member)
-        cash = user.balance
-        bars = user.gold_bars
-        bar_value = bars * 2500
-        gems = user.gems_owned
-        gem_value = gems * 5000
-        total_wealth = cash + bar_value + gem_value
-        # gear_bonus = str("Attack Bonus: Unused / Defense Bonus: Unused")
-        # head_armor = str("Future Use")
-        # chest_armor = str("Future Use")
-        # leg_armor = str("Future Use")
-        # foot_armor = str("Future Use")
-        # weapon_slot = str("Future Use")
-        # consume_slot = str("Future Use")
-        p_wins = user.p_wins
-        p_loss = user.p_losses
-        p_ratio = user.p_ratio
-        p_bonus = user.p_bonus
-        # p_ratio_str = user.p_ratio_str
-        balance = user.balance
-        r_wins = user.r_wins
-        r_loss = user.r_losses
-        r_ratio = user.r_ratio_str
-        h_wins = user.h_wins
-        h_loss = user.h_losses
-        h_ratio = user.h_ratio_str
-        await ctx.send(f"------------------------------------------------------\n**[Player Information]**\nName: {member}\nLevel: {user.player_level}\nExp: {user.player_exp}\nToNextLevel: {user.tnl_exp}\n------------------------------------------------------\n**[Wealth]**\nGems: {gems} : ${gem_value}\nGold: {bars}  : ${bar_value}\nCash: ${balance}\nTotal Wealth: ${total_wealth}\n------------------------------------------------------\n**[Gear & Item Bonuses]**\n(Head)       - Future Use\n(Chest)      - Future Use\n(Legs)        - Future Use\n(Feet)        - Future Use\n(Weapon)    - Future Use\n(Consumable) - Future Use\n \nAttack Bonus : (Future Use)\nDefense Bonus: (Future Use)\n------------------------------------------------------\n**[Stats & Ratios]**\nPvP Stats     - {p_wins}/{p_loss} : {p_ratio}\nRobbery Stats - {r_wins}/{r_loss} : {r_ratio}\nHeist Stats   - {h_wins}/{h_loss} : {h_ratio}\n \nCurrent P-Bonus: {p_bonus}\n------------------------------------------------------")
+        giver = guildsettings.get_user(ctx.author)
+        target_user = guildsettings.get_user(target)
 
+        # Validate amount
+        if amount <= 0:
+            await ctx.send("You must send a positive amount.")
+            return
 
-    # Check total wealth of all currencies.
-    @commands.command()
-    async def ctwealth(self, ctx: commands.Context, member: discord.Member = None):
-        """Checks the total assets of a User."""
-        member  = member or ctx.author
+        # Ensure giver has enough balance
+        if giver.balance < amount:
+            await ctx.send("You do not have that much to give!!")
+            return
+
+        # Transfer currency
+        giver.balance -= amount
+        target_user.balance += amount
+        self.save()
+        await ctx.send(f"You gave {target.mention} ${amount}.")
+
+    #Give another player Gold Bars
+    @ctgive.command(name="bars")
+    async def give_gold_bars(self, ctx: commands.Context, target: discord.Member, amount: int):
+        """Allows a Player to give a form of Currency to another user."""
+        
+        # Ensure target is not None and not the giver
+        if target == ctx.author:
+            await ctx.send("You cannot do this alone; you must target another user.")
+            return
+
+        # Get user data
         guildsettings = self.db.get_conf(ctx.guild)
-        user = guildsettings.get_user(member)
-        cash = user.balance
-        gold = user.gold_bars
-        gold_value = 2500
-        gems = user.gems_owned
-        gem_value = 5000
-        gold_total = gold * gold_value
-        gem_total = gems * gem_value
-        total_value = cash + gold_total + gem_total
-        await ctx.send(f"**{member.display_name}**\n-=-=-=-=-=-=-=-=-=-=-\n**Cash Balance**: ${cash}\n**Gold Bars**: {gold} - ${gold_total}\n**Gems**: {gems} - ${gem_total}\n-=-=-=-=-=-=-=-=-=-=-\nTotal Wealth: ${total_value}")
+        giver = guildsettings.get_user(ctx.author)
+        target_user = guildsettings.get_user(target)
 
-    # Check balance and stats specifically attributed to the Mug command.
-    @commands.command()
-    async def mugcheck(self, ctx: commands.Context, member: discord.Member = None):
-        """Checks the Balance, Wins/Losses, and Ratio of a User."""
-        member  = member or ctx.author
-        guildsettings = self.db.get_conf(ctx.guild)
-        await self.update_pbonus(ctx, member)
-        user = guildsettings.get_user(member)        
-        p_ratio = user.p_ratio
-        p_ratio_str = user.p_ratio_str
-        p_bonus = user.p_bonus
-        balance = user.balance
-        r_wins = user.r_wins
-        r_losses = user.r_losses
-        r_ratio_str = user.r_ratio_str
-        h_wins = user.h_wins
-        h_losses = user.h_losses
-        h_ratio_str = user.h_ratio_str        
-        await ctx.send(f"**{member.display_name}**\nBalance: ${balance}\nP-Win/Loss Ratio: {p_ratio_str}[{p_ratio}]\nP-Bonus: {p_bonus}") #\nRobbery Win/Loss Ratio: {r_ratio_str}")
+        # Validate amount
+        if amount <= 0:
+            await ctx.send("You must send a positive amount.")
+            return
 
+        # Ensure giver has enough balance
+        if giver.gold_bars < amount:
+            await ctx.send("You do not have that much to give!!")
+            return
+
+        # Transfer currency
+        giver.gold_bars -= amount
+        target_user.gold_bars += amount
+        self.save()
+        if amount == 1:
+            await ctx.send(f"You gave {target.mention} {amount} gold bar.")
+        else:
+            await ctx.send(f"You gave {target.mention} {amount} gold bars.")
+
+########## Actual Gameplay Commands ##########
     # Actually run the MUG command.
     @commands.command()
     async def mug(self, ctx: commands.Context, target: discord.Member = None):
@@ -596,75 +667,6 @@ class CrimeTime(commands.Cog):
 
         await ctx.send("Your PvP Wins/Losses have been reset to 0.")
         self.save()
-
-# Ability for Players to give currency to others.
-    @commands.group(invoke_without_command=True)
-    async def ctgive(self, ctx: commands.Context):
-        """Ability for players to transfer currency forms."""
-        await ctx.send("Please specify a valid subcommand, e.g., `!ctgive cash @user amount`.")
-
-    @ctgive.command(name="cash")
-    async def give_cash(self, ctx: commands.Context, target: discord.Member, amount: int):
-        """Allows a Player to give a form of Currency to another user."""
-        
-        # Ensure target is not None and not the giver
-        if target == ctx.author:
-            await ctx.send("You cannot do this alone; you must target another user.")
-            return
-
-        # Get user data
-        guildsettings = self.db.get_conf(ctx.guild)
-        giver = guildsettings.get_user(ctx.author)
-        target_user = guildsettings.get_user(target)
-
-        # Validate amount
-        if amount <= 0:
-            await ctx.send("You must send a positive amount.")
-            return
-
-        # Ensure giver has enough balance
-        if giver.balance < amount:
-            await ctx.send("You do not have that much to give!!")
-            return
-
-        # Transfer currency
-        giver.balance -= amount
-        target_user.balance += amount
-        self.save()
-        await ctx.send(f"You gave {target.mention} ${amount}.")
-
-    @ctgive.command(name="bars")
-    async def give_gold_bars(self, ctx: commands.Context, target: discord.Member, amount: int):
-        """Allows a Player to give a form of Currency to another user."""
-        
-        # Ensure target is not None and not the giver
-        if target == ctx.author:
-            await ctx.send("You cannot do this alone; you must target another user.")
-            return
-
-        # Get user data
-        guildsettings = self.db.get_conf(ctx.guild)
-        giver = guildsettings.get_user(ctx.author)
-        target_user = guildsettings.get_user(target)
-
-        # Validate amount
-        if amount <= 0:
-            await ctx.send("You must send a positive amount.")
-            return
-
-        # Ensure giver has enough balance
-        if giver.gold_bars < amount:
-            await ctx.send("You do not have that much to give!!")
-            return
-
-        # Transfer currency
-        giver.gold_bars -= amount
-        target_user.gold_bars += amount
-        self.save()
-        if amount == 1:
-            await ctx.send(f"You gave {target.mention} {amount} gold bar.")
-        else:
-            await ctx.send(f"You gave {target.mention} {amount} gold bars.")
 
 ##########  Admin Commands  ##########
     # Manually update a users P-Bonus
@@ -882,7 +884,7 @@ class CrimeTime(commands.Cog):
         await ctx.send(f"**{target.display_name}**'s Heist losses have been set to {amount}.")
         self.save()
 
-# Admin-Initiated Events
+    # Admin-Initiated Events
     @commands.group(invoke_without_command=True)
     @commands.admin_or_permissions(manage_guild=True)  # Only Admins can use this command
     async def ctevent(self, ctx: commands.Context):
@@ -908,10 +910,9 @@ class CrimeTime(commands.Cog):
             await ctx.send(embed=info_embed)
         except discord.HTTPException:
             await ctx.send("An error occurred while sending the message. Please try again later.")
-
 ##########  End of Admin Commands  ##########
 
-# Start of Leaderboard Commands
+    # Start of Leaderboard Commands
     @commands.command()  # Leaderboard Commands for Mugging
     async def muglb(self, ctx: commands.Context, stat: t.Literal["balance", "wins", "ratio"]):
         """Displays leaderboard for Player Mugging stats."""
@@ -1050,3 +1051,20 @@ class CrimeTime(commands.Cog):
         user = guildsettings.get_user(member)
         await ctx.send(f"-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n[**{member}**'s Gear]\n[*Worn Equipment*]\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n[Weapon]          : {user.worn_weapon}\n[Head]               : {user.worn_head}\n[Chest]              : {user.worn_chest}\n[Legs]                : {user.worn_legs}\n[Feet]                : {user.worn_feet}\n[Consumable] : {user.worn_consumable}\n \n[*Carried Inventory*]\n(Weapon)          : {user.owned_weapon}\n(Head)               : {user.owned_head}\n(Chest)              : {user.owned_chest}\n(Legs)                : {user.owned_legs}\n(Feet)                : {user.owned_feet}\n(Consumable) : {user.owned_consumable}\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-")
     
+    @ctinv.command(name="wear")
+    async def wear_user_owned_item(self, ctx: commands.Context):
+        '''Equips an item owned by the User.'''
+        member = ctx.author
+        guild = ctx.guild
+        guildsettings = self.db.get_conf(guild)
+        user = guildsettings.get_user(member)
+        pass    
+    @ctinv.command(name="remove")
+    async def remove_user_worn_item(self, ctx: commands.Context):
+        '''Removes a currently worn piece of gear.'''
+        member = ctx.author
+        guild = ctx.guild
+        guildsettings = self.db.get_conf(guild)
+        user = guildsettings.get_user(member)
+        pass
+############### End of Equipment Commands ###############
