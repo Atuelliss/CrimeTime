@@ -668,6 +668,108 @@ class CrimeTime(commands.Cog):
         await ctx.send("Your PvP Wins/Losses have been reset to 0.")
         self.save()
 
+############### BlackMarket Commands ###############
+    @commands.group(invoke_without_command=True)
+    async def ctbm(self, ctx: commands.Context):
+        """Blackmarket code."""
+        await ctx.send("Please specify a valid subcommand, e.g.:\n"
+                       "`ctbm display` - (Admin only) Will list all items that exist.\n"
+                       "`ctbm list` - Will list the three current available items to buy.\n"
+                       "`ctbm buy (#)` - Will purchase the item if you don't already own it.\n"
+                       "`ctbm sell (inventory location) (item) - Sells the item for a little less than it's worth.`"
+                       )
+    #Shows a list of ALL items that have been created in blackmarket.py, whether actively in the market or not.
+    @ctbm.command(name="display")
+    @commands.admin_or_permissions(manage_guild=True)
+    async def display_allitems_list(self, ctx: commands.Context):
+        """Print all currently created Tier 1 gear grouped by category on separate lines."""
+
+        categories = {
+            "Head Gear": blackmarket.tier_1_head,
+            "Chest Gear": blackmarket.tier_1_chest,
+            "Leg Gear": blackmarket.tier_1_legs,
+            "Foot Gear": blackmarket.tier_1_feet,
+            "Weapons": blackmarket.tier_1_weapon,
+        }
+
+        lines = ["**__Current Gear Listing:__**\n"]
+
+        for category, items in categories.items():
+            line = f"__**{category}:**__ " + ", ".join(
+                f"{item['name']} (${item['cost']})" for item in items
+            )
+            lines.append(line)
+        await ctx.send("\n".join(lines))
+
+    #Shows a list of all items currently available for purchase in the market's cycle.
+    @ctbm.command(name="list")
+    async def display_current_items_list(self, ctx: commands.Context):
+        """Print all items available to purchase this cycle."""
+        member = ctx.author
+        guild = ctx.guild
+        guildsettings = self.db.get_conf(guild)
+        #user = guildsettings.get_user(member)
+        await ctx.send(f"This feature is not yet available, {member}!\nIt is being worked on as we speak.")
+
+############### Player Equipment Commands ###############
+    #Player Inventory command group.
+    @commands.group(invoke_without_command=True)
+    async def ctinv(self, ctx: commands.Context):
+        """All commands for player interactions with gear."""
+        await ctx.send("Please specify a valid subcommand, e.g.:\n"
+                       "`ctinv all` - Will list a full display of your items.\n"
+                       "`ctinv worn` - Will list what you are currently wearing.\n"
+                       "`ctinv owned` - Items in your carried inventory.\n"
+                       "`ctinv wear (item)` - Wear an item you own.\n"
+                       "`ctinv remove (item)` - Remove a worn item."
+                       )
+    #Displays currently worn items, but not what else they own.
+    @ctinv.command(name="worn")
+    async def display_user_worn_items(self, ctx: commands.Context):
+        '''Prints out a list of all the currently worn gear.'''
+        member = ctx.author
+        guild = ctx.guild
+        guildsettings = self.db.get_conf(guild)
+        user = guildsettings.get_user(member)
+        await ctx.send(f"-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n[**{member}**'s Worn Equipment]\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n[Weapon]          : {user.worn_weapon}\n[Head]               : {user.worn_head}\n[Chest]              : {user.worn_chest}\n[Legs]                : {user.worn_legs}\n[Feet]                : {user.worn_feet}\n[Consumable] : {user.worn_consumable}\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-")
+    #Displays only a list of the items owned by the player, but not worn.
+    @ctinv.command(name="owned")
+    async def display_user_owned_items(self, ctx: commands.Context):
+        '''Prints out a list of all the currently worn gear.'''
+        member = ctx.author
+        guild = ctx.guild
+        guildsettings = self.db.get_conf(guild)
+        user = guildsettings.get_user(member)
+        await ctx.send(f"-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n[**{member}**'s Inventory]\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n[Weapon]          : {user.owned_weapon}\n[Head]               : {user.owned_head}\n[Chest]              : {user.owned_chest}\n[Legs]                : {user.owned_legs}\n[Feet]                : {user.owned_feet}\n[Consumable] : {user.owned_consumable}\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-")
+    #Displays all worn and owned items in one screen.
+    @ctinv.command(name="all")
+    async def display_all_user__items(self, ctx: commands.Context):
+        '''Prints out a list of all the currently owned and worn gear.'''
+        member = ctx.author
+        guild = ctx.guild
+        guildsettings = self.db.get_conf(guild)
+        user = guildsettings.get_user(member)
+        await ctx.send(f"-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n[**{member}**'s Gear]\n[*Worn Equipment*]\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n[Weapon]          : {user.worn_weapon}\n[Head]               : {user.worn_head}\n[Chest]              : {user.worn_chest}\n[Legs]                : {user.worn_legs}\n[Feet]                : {user.worn_feet}\n[Consumable] : {user.worn_consumable}\n \n[*Carried Inventory*]\n(Weapon)          : {user.owned_weapon}\n(Head)               : {user.owned_head}\n(Chest)              : {user.owned_chest}\n(Legs)                : {user.owned_legs}\n(Feet)                : {user.owned_feet}\n(Consumable) : {user.owned_consumable}\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-")
+    #Command to wear an item into a specific worn_slot.
+    @ctinv.command(name="wear")
+    async def wear_user_owned_item(self, ctx: commands.Context):
+        '''Equips an item owned by the User.'''
+        member = ctx.author
+        guild = ctx.guild
+        guildsettings = self.db.get_conf(guild)
+        user = guildsettings.get_user(member)
+        pass
+    #Command to take an item out of a specific slot and put it into regular inventory.
+    @ctinv.command(name="remove")
+    async def remove_user_worn_item(self, ctx: commands.Context):
+        '''Removes a currently worn piece of gear.'''
+        member = ctx.author
+        guild = ctx.guild
+        guildsettings = self.db.get_conf(guild)
+        user = guildsettings.get_user(member)
+        pass
+############### End of Equipment Commands ###############
+
 ##########  Admin Commands  ##########
     # Manually update a users P-Bonus
     @commands.command()
@@ -912,6 +1014,7 @@ class CrimeTime(commands.Cog):
             await ctx.send("An error occurred while sending the message. Please try again later.")
 ##########  End of Admin Commands  ##########
 
+########## Leaderboard Section, be careful ##########
     # Start of Leaderboard Commands
     @commands.command()  # Leaderboard Commands for Mugging
     async def muglb(self, ctx: commands.Context, stat: t.Literal["balance", "wins", "ratio"]):
@@ -968,103 +1071,3 @@ class CrimeTime(commands.Cog):
             stop += 15
 
         await DynamicMenu(ctx, embeds).refresh()
-
-############### BlackMarket Commands ###############
-    @commands.group(invoke_without_command=True)
-    async def ctbm(self, ctx: commands.Context):
-        """Blackmarket code."""
-        await ctx.send("Please specify a valid subcommand, e.g.:\n"
-                       "`ctbm display` - (Admin only) Will list all items that exist.\n"
-                       "`ctbm list` - Will list the three current available items to buy.\n"
-                       "`ctbm buy (#)` - Will purchase the item if you don't already own it.\n"
-                       "`ctbm sell (inventory location) (item) - Sells the item for a little less than it's worth.`"
-                       )
-    
-    @ctbm.command(name="display")
-    @commands.admin_or_permissions(manage_guild=True)
-    async def display_allitems_list(self, ctx: commands.Context):
-        """Print all currently created Tier 1 gear grouped by category on separate lines."""
-
-        categories = {
-            "Head Gear": blackmarket.tier_1_head,
-            "Chest Gear": blackmarket.tier_1_chest,
-            "Leg Gear": blackmarket.tier_1_legs,
-            "Foot Gear": blackmarket.tier_1_feet,
-            "Weapons": blackmarket.tier_1_weapon,
-        }
-
-        lines = ["**__Current Gear Listing:__**\n"]
-
-        for category, items in categories.items():
-            line = f"__**{category}:**__ " + ", ".join(
-                f"{item['name']} (${item['cost']})" for item in items
-            )
-            lines.append(line)
-        await ctx.send("\n".join(lines))
-
-    # Command Players will use to see what's in the Blackmarket currently
-    @ctbm.command(name="list")
-    async def display_current_items_list(self, ctx: commands.Context):
-        """Print all items available to purchase this cycle."""
-        member = ctx.author
-        guild = ctx.guild
-        guildsettings = self.db.get_conf(guild)
-        #user = guildsettings.get_user(member)
-        await ctx.send(f"This feature is not yet available, {member}!\nIt is being worked on as we speak.")
-
-############### Player Equipment Commands ###############
-    @commands.group(invoke_without_command=True)
-    async def ctinv(self, ctx: commands.Context):
-        """All commands for player interactions with gear."""
-        await ctx.send("Please specify a valid subcommand, e.g.:\n"
-                       "`ctinv all` - Will list a full display of your items.\n"
-                       "`ctinv worn` - Will list what you are currently wearing.\n"
-                       "`ctinv owned` - Items in your carried inventory.\n"
-                       "`ctinv wear (item)` - Wear an item you own.\n"
-                       "`ctinv remove (item)` - Remove a worn item."
-                       )
-    
-    @ctinv.command(name="worn")
-    async def display_user_worn_items(self, ctx: commands.Context):
-        '''Prints out a list of all the currently worn gear.'''
-        member = ctx.author
-        guild = ctx.guild
-        guildsettings = self.db.get_conf(guild)
-        user = guildsettings.get_user(member)
-        await ctx.send(f"-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n[**{member}**'s Worn Equipment]\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n[Weapon]          : {user.worn_weapon}\n[Head]               : {user.worn_head}\n[Chest]              : {user.worn_chest}\n[Legs]                : {user.worn_legs}\n[Feet]                : {user.worn_feet}\n[Consumable] : {user.worn_consumable}\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-")
-    
-    @ctinv.command(name="owned")
-    async def display_user_owned_items(self, ctx: commands.Context):
-        '''Prints out a list of all the currently worn gear.'''
-        member = ctx.author
-        guild = ctx.guild
-        guildsettings = self.db.get_conf(guild)
-        user = guildsettings.get_user(member)
-        await ctx.send(f"-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n[**{member}**'s Inventory]\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n[Weapon]          : {user.owned_weapon}\n[Head]               : {user.owned_head}\n[Chest]              : {user.owned_chest}\n[Legs]                : {user.owned_legs}\n[Feet]                : {user.owned_feet}\n[Consumable] : {user.owned_consumable}\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-")
-
-    @ctinv.command(name="all")
-    async def display_all_user__items(self, ctx: commands.Context):
-        '''Prints out a list of all the currently owned and worn gear.'''
-        member = ctx.author
-        guild = ctx.guild
-        guildsettings = self.db.get_conf(guild)
-        user = guildsettings.get_user(member)
-        await ctx.send(f"-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n[**{member}**'s Gear]\n[*Worn Equipment*]\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n[Weapon]          : {user.worn_weapon}\n[Head]               : {user.worn_head}\n[Chest]              : {user.worn_chest}\n[Legs]                : {user.worn_legs}\n[Feet]                : {user.worn_feet}\n[Consumable] : {user.worn_consumable}\n \n[*Carried Inventory*]\n(Weapon)          : {user.owned_weapon}\n(Head)               : {user.owned_head}\n(Chest)              : {user.owned_chest}\n(Legs)                : {user.owned_legs}\n(Feet)                : {user.owned_feet}\n(Consumable) : {user.owned_consumable}\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-")
-    
-    @ctinv.command(name="wear")
-    async def wear_user_owned_item(self, ctx: commands.Context):
-        '''Equips an item owned by the User.'''
-        member = ctx.author
-        guild = ctx.guild
-        guildsettings = self.db.get_conf(guild)
-        user = guildsettings.get_user(member)
-        pass    
-    @ctinv.command(name="remove")
-    async def remove_user_worn_item(self, ctx: commands.Context):
-        '''Removes a currently worn piece of gear.'''
-        member = ctx.author
-        guild = ctx.guild
-        guildsettings = self.db.get_conf(guild)
-        user = guildsettings.get_user(member)
-        pass
-############### End of Equipment Commands ###############
