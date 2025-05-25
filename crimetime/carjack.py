@@ -16,7 +16,12 @@ rarest9 = { "make" : "Ford", "year" : 1965, "model" : "Shelby Cobra", "max" : 6,
 rarest10 = { "make" : "Ferrari", "year" : 1962, "model" : "250 LM", "max" : 32, "value" : 6900000, }
 
 # Semi-Rare Cars:
-
+semirare1 = { "make" : "BMW", "year" : 1959, "model" : "507", "max" : 252, "value" : 1700000,}
+semirare2 = { "make" : "Dodge", "year" : 1970, "model" : "Coronet R/T 426 Hemi Convertible", "max" : 2, "value" : 1100000,}
+semirare3 = { "make" : "Lamborghini", "year" : 1974, "model" : "Countach", "max" : 2000, "value" : 964100,}
+semirare4 = { "make" : "Aston Martin", "year" : 1963, "model" : "DB5", "max" : 1059, "value" : 879000,}
+semirare5 = { "make" : "Ford", "year" : 1932, "model" : "T-Bucket Roadster", "max" : 12597, "value" : 221500,}
+semirare6 = { "make" : "Porsche", "year" : 1965, "model" : "911", "max" : 3300, "value" : 205000,}
 
 
 # Common Cars:
@@ -26,7 +31,7 @@ rarest10 = { "make" : "Ferrari", "year" : 1962, "model" : "250 LM", "max" : 32, 
 
 # Groupings
 rarest_cars = [rarest1, rarest2, rarest3, rarest4, rarest5, rarest6, rarest7, rarest8, rarest9, rarest10]
-semi_rare_cars = []
+semi_rare_cars = [semirare1, semirare2, semirare3, semirare4, semirare5, semirare6]
 common_cars = []
 junk_cars = []
 all_cars = [rarest_cars, semi_rare_cars, common_cars, junk_cars]
