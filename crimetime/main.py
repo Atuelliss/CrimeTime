@@ -673,10 +673,10 @@ class CrimeTime(commands.Cog):
     @commands.group(name="ctcarjack", aliases=["ctcj"], invoke_without_command=True)
     async def ctcarjack(self, ctx: commands.Context):
         """Used to perform Carjacking or view Information."""
-        await ctx.send("Please specify a valid subcommand, e.g.:\n"
-                       "`ctcj list` - Lists all possible cars in the game.\n"
-                       "`ctcj inv`  - Displays your Collector's Garage(max 3).\n"
-                       "`ctcj hunt` - Search for potential cars to steal.")
+        await ctx.send("**Please specify a valid subcommand, e.g.:**\n"
+                       "`ctcj list` - *Lists all possible cars in the game.*\n"
+                       "`ctcj inv`  - *Displays your Collector's Garage(max 3).*\n"
+                       "`ctcj hunt` - *Search for potential cars to steal.*")
     
     # Displays all cars in the game
     @ctcarjack.command(name="list")
@@ -691,10 +691,9 @@ class CrimeTime(commands.Cog):
             if not car_list:  # skip empty categories
                 continue
             
-            # Format the car entries for this category
             car_lines = []
             for car in car_list:
-                line = f"{car['year']} {car['make']} {car['model']} (Max: {car['max']})"
+                line = f"{car['year']} {car['make']} {car['model']} (Max: {car['max']}) - Value: ${car['value']:,}"
                 car_lines.append(line)
             
             embed.add_field(
@@ -704,6 +703,7 @@ class CrimeTime(commands.Cog):
             )
 
         await ctx.send(embed=embed)
+
 
 ############### BlackMarket Commands ###############
     @commands.group(invoke_without_command=True)
