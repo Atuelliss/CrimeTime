@@ -682,7 +682,7 @@ class CrimeTime(commands.Cog):
     @ctcarjack.command(name="list")
     async def list_all_cars(self, ctx: commands.Context):
         """Lists all cars in the game categorized by rarity."""
-        embed = Embed(title="Carjack: Available Cars", color=discord.Color.orange())
+        embed = discord.Embed(title="Carjack: Available Cars", color=discord.Color.orange())
 
         categories = [
             ("Rarest", carjack.rarest_cars, True),
