@@ -47,6 +47,6 @@ junk7 = { "make" : "Dodge", "year" : 1999, "model" : "Neon", "max" : 250000, "va
 # Groupings
 rarest_cars = [rarest1, rarest2, rarest3, rarest4, rarest5, rarest6, rarest7, rarest8, rarest9, rarest10]
 semi_rare_cars = [semirare1, semirare2, semirare3, semirare4, semirare5, semirare6]
-common_cars = [chevy1, chevy2, chevy3, chevy4, chevy5]
-junk_cars = [junk1, junk2, junk3, junk4]
+common_cars = [chevy1, chevy2, chevy3, chevy4, chevy5, dodge1, dodge2, dodge3]
+junk_cars = [junk1, junk2, junk3, junk4, junk5, junk6, junk7]
 all_cars = [rarest_cars, semi_rare_cars, common_cars, junk_cars]
