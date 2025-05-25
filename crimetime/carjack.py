@@ -3,6 +3,8 @@ import discord
 # This file is for the Carjacking Code of CrimeTime.
 # It should contain the dictionaries of the cars and values.
 
+# Blank Dict - { "make" : "", "year" : , "model" : "", "max" : , "value" : ,}
+
 # Most Rare Cars:
 rarest1 = { "make" : "Ferrari", "year" : 1957, "model" : "250 Testa Rossa", "max" : 22, "value" : 12100000, }
 rarest2 = { "make" : "Ferrari", "year" : 1961, "model" : "GT SWB California Spyder", "max" : 50, "value" : 10900000, }
@@ -23,15 +25,21 @@ semirare4 = { "make" : "Aston Martin", "year" : 1963, "model" : "DB5", "max" : 1
 semirare5 = { "make" : "Ford", "year" : 1932, "model" : "T-Bucket Roadster", "max" : 12597, "value" : 221500,}
 semirare6 = { "make" : "Porsche", "year" : 1965, "model" : "911", "max" : 3300, "value" : 205000,}
 
-
 # Common Cars:
+chevy1 = { "make" : "Chevrolet", "year" : 2004, "model" : "Corvette", "max" : float(inf), "value" : 17650,}
+chevy2 = { "make" : "Chevrolet", "year" : 1965, "model" : "Impala", "max" : float(inf), "value" : 15041,}
+chevy3 = { "make" : "Chevrolet", "year" : 2012, "model" : "Silverado", "max" : float(inf), "value" : 13974,}
+chevy4 = { "make" : "Chevrolet", "year" : 2022, "model" : "Tahoe", "max" : float(inf), "value" : 41989,}
+chevy5 = { "make" : "Chevrolet", "year" : 1973, "model" : "Nova", "max" : float(inf), "value" : 10610,}
 
-
-
-
+# Junk Cars:
+junk1 = { "make" : "Chevrolet", "year" : 1982, "model" : "Cavalier", "max" : float(inf), "value" : 1450,}
+junk2 = { "make" : "Chevrolet", "year" : 2001, "model" : "Camaro", "max" : float(inf), "value" : 2449,}
+junk3 = { "make" : "Chevrolet", "year" : 2001, "model" : "S-10", "max" : float(inf), "value" : 4989,}
+junk4 = { "make" : "Chevrolet", "year" : 2016, "model" : "Malibu", "max" : float(inf), "value" : 9987,}
 # Groupings
 rarest_cars = [rarest1, rarest2, rarest3, rarest4, rarest5, rarest6, rarest7, rarest8, rarest9, rarest10]
 semi_rare_cars = [semirare1, semirare2, semirare3, semirare4, semirare5, semirare6]
-common_cars = []
-junk_cars = []
+common_cars = [chevy1, chevy2, chevy3, chevy4, chevy5]
+junk_cars = [junk1, junk2, junk3, junk4]
 all_cars = [rarest_cars, semi_rare_cars, common_cars, junk_cars]
