@@ -31,12 +31,19 @@ chevy2 = { "make" : "Chevrolet", "year" : 1965, "model" : "Impala", "max" : 2500
 chevy3 = { "make" : "Chevrolet", "year" : 2012, "model" : "Silverado", "max" : 250000, "value" : 13974,}
 chevy4 = { "make" : "Chevrolet", "year" : 2022, "model" : "Tahoe", "max" : 250000, "value" : 41989,}
 chevy5 = { "make" : "Chevrolet", "year" : 1973, "model" : "Nova", "max" : 250000, "value" : 10610,}
+dodge1 = { "make" : "Dodge", "year" : 1972, "model" : "Charger", "max" : 250000, "value" : 16100,}
+dodge2 = { "make" : "Dodge", "year" : 1970, "model" : "Dart", "max" : 250000, "value" : 52500,}
+dodge3 = { "make" : "Dodge", "year" : 2003, "model" : "Ram 1500", "max" : 250000, "value" : 9109,}
+
 
 # Junk Cars:
 junk1 = { "make" : "Chevrolet", "year" : 1982, "model" : "Cavalier", "max" : 250000, "value" : 1450,}
 junk2 = { "make" : "Chevrolet", "year" : 2001, "model" : "Camaro", "max" : 250000, "value" : 2449,}
 junk3 = { "make" : "Chevrolet", "year" : 2001, "model" : "S-10", "max" : 250000, "value" : 4989,}
 junk4 = { "make" : "Chevrolet", "year" : 2016, "model" : "Malibu", "max" : 250000, "value" : 9987,}
+junk5 = { "make" : "Dodge", "year" 1970: , "model" : "Challenger", "max" : 250000, "value" : 3173,}
+junk6 = { "make" : "Dodge", "year" : 1993, "model" : "Intrepid", "max" : 250000, "value" : 1204,}
+junk7 = { "make" : "Dodge", "year" : 1999, "model" : "Neon", "max" : 250000, "value" : 1226,}
 # Groupings
 rarest_cars = [rarest1, rarest2, rarest3, rarest4, rarest5, rarest6, rarest7, rarest8, rarest9, rarest10]
 semi_rare_cars = [semirare1, semirare2, semirare3, semirare4, semirare5, semirare6]

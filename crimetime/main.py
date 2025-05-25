@@ -681,26 +681,30 @@ class CrimeTime(commands.Cog):
     # Displays all cars in the game
     @ctcarjack.command(name="list")
     async def list_all_cars(self, ctx: commands.Context):
-        """Lists all cars in the game by rarity category."""
-        embed = discord.Embed(title="Car List", color=discord.Color.blue())
+        """Lists all cars in the game categorized by rarity."""
+        embed = Embed(title="Carjack: Available Cars", color=discord.Color.orange())
 
-        category_titles = ["Rarest", "Semi-Rare", "Common", "Junk"]
+        categories = [
+            ("Rarest", carjack.rarest_cars, True),
+            ("Semi-Rare", carjack.semi_rare_cars, True),
+            ("Common", carjack.common_cars, False),
+            ("Junk", carjack.junk_cars, False),
+        ]
 
-        # all_cars is a list of lists: [rarest_cars, semi_rare_cars, common_cars, junk_cars]
-        for idx, car_list in enumerate(carjack.all_cars):
-            if not car_list:  # skip empty categories
+        for title, car_list, show_max in categories:
+            if not car_list:
                 continue
-            
-            car_lines = []
+
+            lines = []
             for car in car_list:
-                line = f"{car['year']} {car['make']} {car['model']} (Max: {car['max']}) - Value: ${car['value']:,}"
-                car_lines.append(line)
-            
-            embed.add_field(
-                name=category_titles[idx],
-                value="\n".join(car_lines),
-                inline=False
-            )
+                max_display = "∞" if car["max"] == float("inf") else car["max"]
+                if show_max:
+                    line = f"{car['year']} {car['make']} {car['model']} (Max: {max_display}) - Value: ${car['value']:,}"
+                else:
+                    line = f"{car['year']} {car['make']} {car['model']} - Value: ${car['value']:,}"
+                lines.append(line)
+
+            embed.add_field(name=title, value="\n".join(lines), inline=False)
 
         await ctx.send(embed=embed)
 
