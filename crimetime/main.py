@@ -674,8 +674,8 @@ class CrimeTime(commands.Cog):
     async def ctcarjack(self, ctx: commands.Context):
         """Used to perform Carjacking or view Information."""
         await ctx.send("Please specify a valid subcommand, e.g.:\n"
-                       "`ctcj list` - Lists all possible cars in the game."
-                       "`ctcj inv`  - Displays your Collector's Garage(max 3)."
+                       "`ctcj list` - Lists all possible cars in the game.\n"
+                       "`ctcj inv`  - Displays your Collector's Garage(max 3).\n"
                        "`ctcj hunt` - Search for potential cars to steal.")
     
     # Displays all cars in the game
