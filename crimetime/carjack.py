@@ -41,7 +41,7 @@ junk1 = { "make" : "Chevrolet", "year" : 1982, "model" : "Cavalier", "max" : 250
 junk2 = { "make" : "Chevrolet", "year" : 2001, "model" : "Camaro", "max" : 250000, "value" : 2449,}
 junk3 = { "make" : "Chevrolet", "year" : 2001, "model" : "S-10", "max" : 250000, "value" : 4989,}
 junk4 = { "make" : "Chevrolet", "year" : 2016, "model" : "Malibu", "max" : 250000, "value" : 9987,}
-junk5 = { "make" : "Dodge", "year" 1970: , "model" : "Challenger", "max" : 250000, "value" : 3173,}
+junk5 = { "make" : "Dodge", "year" : 1970, "model" : "Challenger", "max" : 250000, "value" : 3173,}
 junk6 = { "make" : "Dodge", "year" : 1993, "model" : "Intrepid", "max" : 250000, "value" : 1204,}
 junk7 = { "make" : "Dodge", "year" : 1999, "model" : "Neon", "max" : 250000, "value" : 1226,}
 # Groupings
