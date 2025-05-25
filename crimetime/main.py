@@ -10,6 +10,7 @@ from redbot.core import commands
 from redbot.core.bot import Red
 from redbot.core.data_manager import cog_data_path
 from crimetime import blackmarket
+from crimetime import carjack
 from .common.models import DB, User
 from .dynamic_menu import DynamicMenu
 #from blackmarket import all_items
@@ -667,6 +668,42 @@ class CrimeTime(commands.Cog):
 
         await ctx.send("Your PvP Wins/Losses have been reset to 0.")
         self.save()
+
+    # Carjacking Command Group
+    @commands.group(name="ctcarjack", aliases=["ctcj"], invoke_without_command=True)
+    async def ctcarjack(self, ctx: commands.Context):
+        """Used to perform Carjacking or view Information."""
+        await ctx.send("Please specify a valid subcommand, e.g.:\n"
+                       "`ctcj list` - Lists all possible cars in the game."
+                       "`ctcj inv`  - Displays your Collector's Garage(max 3)."
+                       "`ctcj hunt` - Search for potential cars to steal.")
+    
+    # Displays all cars in the game
+    @ctcarjack.command(name="list")
+    async def list_all_cars(self, ctx: commands.Context):
+        """Lists all cars in the game by rarity category."""
+        embed = discord.Embed(title="Car List", color=discord.Color.blue())
+
+        category_titles = ["Rarest", "Semi-Rare", "Common", "Junk"]
+
+        # all_cars is a list of lists: [rarest_cars, semi_rare_cars, common_cars, junk_cars]
+        for idx, car_list in enumerate(carjack.all_cars):
+            if not car_list:  # skip empty categories
+                continue
+            
+            # Format the car entries for this category
+            car_lines = []
+            for car in car_list:
+                line = f"{car['year']} {car['make']} {car['model']} (Max: {car['max']})"
+                car_lines.append(line)
+            
+            embed.add_field(
+                name=category_titles[idx],
+                value="\n".join(car_lines),
+                inline=False
+            )
+
+        await ctx.send(embed=embed)
 
 ############### BlackMarket Commands ###############
     @commands.group(invoke_without_command=True)
