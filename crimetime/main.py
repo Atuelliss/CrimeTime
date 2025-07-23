@@ -9,8 +9,8 @@ from redbot.core.utils.chat_formatting import humanize_timedelta
 from redbot.core import commands
 from redbot.core.bot import Red
 from redbot.core.data_manager import cog_data_path
-from crimetime import blackmarket
-from crimetime import carjack
+from . import blackmarket
+from . import carjack
 from .common.models import DB, User
 from .dynamic_menu import DynamicMenu
 #from blackmarket import all_items
