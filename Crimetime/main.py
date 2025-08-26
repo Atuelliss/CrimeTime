@@ -97,7 +97,7 @@ class CrimeTime(commands.Cog):
                 inline=False)
             info_embed.add_field(
                 name="*The current commands available for use in the game are:*",
-                value="`$mug` - Command to mug NPCs and Players.\n`$mugcheck` - Checks a User's Cash Balance and Ratio.\n`$mugclear` - Resets your stats for a fee.\n`$ctwealth` - Displays total wealth $ assets of a User.\n`$ctgive` - Transfer assets to another Player.\n`$ctinvest` - Convert Cash to Gold Bars or Gems.\n`$ctliquidate` - Convert Bars or Gems to Cash.",
+                value="`$mug` - Command to mug NPCs and Players.\n`mugcheck` - Checks a User's Cash Balance and Ratio.\n`mugclear` - Resets your stats for a fee.\n`ctwealth` - Displays total wealth $ assets of a User.\n`ctgive` - Transfer assets to another Player.\n`ctinvest` - Convert Cash to Gold Bars or Gems.\n`ctliquidate` - Convert Bars or Gems to Cash.\n`ctconvert` - Converts Gems into Discord Currency.",
                 inline=False)
             await ctx.send(embed=info_embed)
         except discord.HTTPException:
@@ -387,7 +387,7 @@ class CrimeTime(commands.Cog):
     @commands.group(invoke_without_command=True)
     async def ctgive(self, ctx: commands.Context):
         """Ability for players to transfer currency forms."""
-        await ctx.send("Please specify a valid subcommand, e.g., `!ctgive cash @user amount`.")
+        await ctx.send("Please specify a valid subcommand, e.g., `.ctgive cash @user amount`.")
 
     #Give another player Cash.
     @ctgive.command(name="cash")
