@@ -1069,10 +1069,10 @@ class CrimeTime(commands.Cog):
                 # Skip users not in the guild
                 continue
                 
-            # Calculate total wealth
+            # Calculate total wealth using hardcoded values
             cash = user_data.balance
-            gold_value = user_data.gold_bars * self.db.bar_value
-            gem_value = user_data.gems_owned * self.db.gem_value
+            gold_value = user_data.gold_bars * 2500  # Using hardcoded value instead of self.db.bar_value
+            gem_value = user_data.gems_owned * 5000  # Using hardcoded value instead of self.db.gem_value
             total_value = cash + gold_value + gem_value
             
             all_users.append({
@@ -1104,7 +1104,7 @@ class CrimeTime(commands.Cog):
                 f"Gems: {user_data['gems']} (${user_data['gem_value']})"
             )
         
-        await ctx.send("\n".join(leaderboard))    
+        await ctx.send("\n".join(leaderboard))
 ##########  End of Admin Commands  ##########
 
 ########## Leaderboard Section, be careful ##########
