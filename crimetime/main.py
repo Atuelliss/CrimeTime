@@ -1053,6 +1053,58 @@ class CrimeTime(commands.Cog):
             await ctx.send(embed=info_embed)
         except discord.HTTPException:
             await ctx.send("An error occurred while sending the message. Please try again later.")
+
+    @commands.command()
+    @commands.admin_or_permissions(manage_guild=True)
+    async def ctwealthtotal(self, ctx: commands.Context):
+        """Displays a leaderboard of the top 10 wealthiest users."""
+        guildsettings = self.db.get_conf(ctx.guild)
+        
+        # Get all users in the guild database
+        all_users = []
+        for user_id, user_data in guildsettings.users.items():
+            # Try to get the member object from the guild
+            member = ctx.guild.get_member(user_id)
+            if member is None:
+                # Skip users not in the guild
+                continue
+                
+            # Calculate total wealth
+            cash = user_data.balance
+            gold_value = user_data.gold_bars * self.db.bar_value
+            gem_value = user_data.gems_owned * self.db.gem_value
+            total_value = cash + gold_value + gem_value
+            
+            all_users.append({
+                "member": member,
+                "cash": cash,
+                "gold_bars": user_data.gold_bars,
+                "gold_value": gold_value,
+                "gems": user_data.gems_owned,
+                "gem_value": gem_value,
+                "total_value": total_value
+            })
+        
+        # Sort users by total wealth in descending order
+        all_users.sort(key=lambda x: x["total_value"], reverse=True)
+        
+        # Display the top 10 users
+        if not all_users:
+            await ctx.send("No users found in the database.")
+            return
+            
+        leaderboard = ["**__Wealth Leaderboard:__**\n"]
+        
+        for i, user_data in enumerate(all_users[:10], 1):
+            member = user_data["member"]
+            leaderboard.append(
+                f"**{i}. {member.display_name}** - ${user_data['total_value']}\n"
+                f"   Cash: ${user_data['cash']} | "
+                f"Gold: {user_data['gold_bars']} (${user_data['gold_value']}) | "
+                f"Gems: {user_data['gems']} (${user_data['gem_value']})"
+            )
+        
+        await ctx.send("\n".join(leaderboard))    
 ##########  End of Admin Commands  ##########
 
 ########## Leaderboard Section, be careful ##########
